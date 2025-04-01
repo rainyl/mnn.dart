@@ -1,0 +1,12 @@
+# FVM Version Cache
+.fvm/
+
+.dart_tool/
+pubspec.lock
+
+.ccls-cache
+
+.vscode/
+*.framework
+build/
+.DS_Store

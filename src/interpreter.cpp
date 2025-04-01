@@ -1,0 +1,367 @@
+//
+// interpreter.cpp
+// MNN C API for Interpreter implementation
+//
+// This file implements the C-style API for MNN's Interpreter functionality
+// All functions use snake_case naming convention
+//
+
+#include "interpreter.h"
+#include "MNN/Interpreter.hpp"
+#include "MNN/MNNForwardType.h"
+#include "error_code.h"
+#include "tensor.h"
+#include <cstddef>
+#include <cstring>
+
+// Interpreter creation/destruction
+mnn_interpreter_t mnn_interpreter_create_from_file(const char *file_path, mnn_callback_0 callback) {
+  try {
+    auto r = (mnn_interpreter_t)MNN::Interpreter::createFromFile(file_path);
+    if (callback) callback();
+    return r;
+  } catch (...) {
+    if (callback) callback();
+    return nullptr;
+  }
+}
+
+mnn_interpreter_t
+mnn_interpreter_create_from_buffer(const void *buffer, size_t size, mnn_callback_0 callback) {
+  try {
+    auto r = (mnn_interpreter_t)MNN::Interpreter::createFromBuffer(buffer, size);
+    if (callback) callback();
+    return r;
+  } catch (...) {
+    if (callback) callback();
+    return nullptr;
+  }
+}
+
+void mnn_interpreter_destroy(mnn_interpreter_t self) {
+  if (self) { delete (MNN::Interpreter *)self; }
+}
+
+const char *mnn_interpreter_biz_code(mnn_interpreter_t self) {
+  if (!self) return nullptr;
+  try {
+    return ((MNN::Interpreter *)self)->bizCode();
+  } catch (...) { return nullptr; }
+}
+
+const char *mnn_interpreter_uuid(mnn_interpreter_t self) {
+  if (!self) return nullptr;
+  try {
+    return ((MNN::Interpreter *)self)->uuid();
+  } catch (...) { return nullptr; }
+}
+
+void mnn_interpreter_set_cache_file(
+    mnn_interpreter_t self, const char *cache_file, size_t key_size
+) {
+  if (!self || !cache_file) return;
+  try {
+    ((MNN::Interpreter *)self)->setCacheFile(cache_file, key_size);
+  } catch (...) {}
+}
+
+void mnn_interpreter_set_external_file(mnn_interpreter_t self, const char *file, size_t flag) {
+  if (!self || !file) return;
+  try {
+    ((MNN::Interpreter *)self)->setExternalFile(file, flag);
+  } catch (...) {}
+}
+
+mnn_error_code_t
+mnn_interpreter_update_cache_file(mnn_interpreter_t self, mnn_session_t session, int flag) {
+  if (!self || !session) return MNN_INVALID_PTR;
+  try {
+    return (mnn_error_code_t)((MNN::Interpreter *)self)
+        ->updateCacheFile((MNN::Session *)session, flag);
+  } catch (...) { return UNKNOWN_ERROR; }
+}
+
+void mnn_interpreter_set_session_hint(mnn_interpreter_t self, int mode, int value) {
+  if (!self) return;
+  try {
+    ((MNN::Interpreter *)self)->setSessionHint((MNN::Interpreter::HintMode)mode, value);
+  } catch (...) {}
+}
+
+void mnn_interpreter_release_model(mnn_interpreter_t self) {
+  if (!self) return;
+  try {
+    ((MNN::Interpreter *)self)->releaseModel();
+  } catch (...) {}
+}
+
+size_t mnn_interpreter_get_model_buffer(mnn_interpreter_t self, const void **buffer) {
+  if (!self || !buffer) return 0;
+  try {
+    auto pair = ((MNN::Interpreter *)self)->getModelBuffer();
+    *buffer = pair.first;
+    return pair.second;
+  } catch (...) {
+    *buffer = nullptr;
+    return 0;
+  }
+}
+
+const char *mnn_interpreter_get_model_version(mnn_interpreter_t self) {
+  if (!self) return nullptr;
+  try {
+    return ((MNN::Interpreter *)self)->getModelVersion();
+  } catch (...) { return nullptr; }
+}
+
+mnn_error_code_t
+mnn_interpreter_update_session_to_model(mnn_interpreter_t self, mnn_session_t session) {
+  if (!self || !session) return MNN_INVALID_PTR;
+  try {
+    return (mnn_error_code_t)((MNN::Interpreter *)self)
+        ->updateSessionToModel((MNN::Session *)session);
+  } catch (...) { return UNKNOWN_ERROR; }
+}
+
+// Runtime info management
+mnn_runtime_info_t
+mnn_interpreter_create_runtime(const mnn_schedule_config_t *configs, size_t count) {
+  try {
+    std::vector<MNN::ScheduleConfig> vecConfigs;
+    for (size_t i = 0; i < count; i++) {
+      MNN::ScheduleConfig config;
+      config.type = (MNNForwardType)configs[i].type;
+      config.numThread = configs[i].num_thread;
+      config.mode = configs[i].mode;
+      config.backendConfig = (MNN::BackendConfig *)configs[i].backend_config;
+      vecConfigs.push_back(config);
+    }
+    auto r = MNN::Interpreter::createRuntime(vecConfigs);
+    return new MNN::RuntimeInfo(r);
+  } catch (...) { return nullptr; }
+}
+
+void mnn_runtime_info_destroy(mnn_runtime_info_t runtime) {
+  if (runtime) { delete (MNN::RuntimeInfo *)runtime; }
+}
+
+// Session management
+mnn_session_t mnn_interpreter_create_session(
+    mnn_interpreter_t self, const mnn_schedule_config_t *config, mnn_callback_0 callback
+) {
+  if (!self || !config) {
+    if (callback) callback();
+    return nullptr;
+  }
+  try {
+    MNN::ScheduleConfig scheduleConfig;
+    scheduleConfig.type = (MNNForwardType)config->type;
+    scheduleConfig.numThread = config->num_thread;
+    scheduleConfig.backendConfig = (MNN::BackendConfig *)config->backend_config;
+    auto r = (mnn_session_t)((MNN::Interpreter *)self)->createSession(scheduleConfig);
+    if (callback) callback();
+    return r;
+  } catch (...) {
+    if (callback) callback();
+    return nullptr;
+  }
+}
+
+mnn_session_t mnn_interpreter_create_session_with_runtime(
+    mnn_interpreter_t self,
+    const mnn_schedule_config_t *config,
+    mnn_runtime_info_t runtime,
+    mnn_callback_0 callback
+) {
+  if (!self || !config || !runtime) {
+    if (callback) callback();
+    return nullptr;
+  }
+  try {
+    MNN::ScheduleConfig scheduleConfig;
+    scheduleConfig.type = (MNNForwardType)config->type;
+    scheduleConfig.numThread = config->num_thread;
+    scheduleConfig.backendConfig = (MNN::BackendConfig *)config->backend_config;
+    auto r = (mnn_session_t)((MNN::Interpreter *)self)
+                 ->createSession(scheduleConfig, *(MNN::RuntimeInfo *)runtime);
+    if (callback) callback();
+    return r;
+  } catch (...) {
+    if (callback) callback();
+    return nullptr;
+  }
+}
+
+mnn_error_code_t mnn_interpreter_release_session(
+    mnn_interpreter_t self, mnn_session_t session, mnn_callback_0 callback
+) {
+  if (!self || !session) {
+    if (callback) callback();
+    return MNN_INVALID_PTR;
+  }
+  try {
+    auto r = ((MNN::Interpreter *)self)->releaseSession((MNN::Session *)session);
+    if (callback) callback();
+    return r ? BOOL_TRUE : BOOL_FALSE;
+  } catch (...) {
+    if (callback) callback();
+    return UNKNOWN_ERROR;
+  }
+}
+
+mnn_error_code_t mnn_interpreter_resize_session(
+    mnn_interpreter_t self, mnn_session_t session, mnn_callback_0 callback
+) {
+  if (!self || !session) {
+    if (callback) callback();
+    return MNN_INVALID_PTR;
+  }
+  try {
+    ((MNN::Interpreter *)self)->resizeSession((MNN::Session *)session);
+    if (callback) callback();
+    return NO_ERROR;
+  } catch (...) {
+    if (callback) callback();
+    return UNKNOWN_ERROR;
+  }
+}
+
+mnn_error_code_t mnn_interpreter_run_session(
+    mnn_interpreter_t self, mnn_session_t session, mnn_callback_0 callback
+) {
+  if (!self || !session) {
+    if (callback) callback();
+    return MNN_INVALID_PTR;
+  }
+  try {
+    auto code = ((MNN::Interpreter *)self)->runSession((MNN::Session *)session);
+    if (callback) callback();
+    return (mnn_error_code_t)code;
+  } catch (...) {
+    if (callback) callback();
+    return UNKNOWN_ERROR;
+  }
+}
+
+// Tensor operations
+mnn_tensor_t
+mnn_interpreter_get_session_input(mnn_interpreter_t self, mnn_session_t session, const char *name) {
+  if (!self || !session) return nullptr;
+  try {
+    return (mnn_tensor_t)((MNN::Interpreter *)self)->getSessionInput((MNN::Session *)session, name);
+  } catch (...) { return nullptr; }
+}
+
+mnn_tensor_t mnn_interpreter_get_session_output(
+    mnn_interpreter_t self, mnn_session_t session, const char *name
+) {
+  if (!self || !session) return nullptr;
+  try {
+    return (mnn_tensor_t)((MNN::Interpreter *)self)
+        ->getSessionOutput((MNN::Session *)session, name);
+  } catch (...) { return nullptr; }
+}
+
+// Session configuration
+void mnn_interpreter_set_session_mode(mnn_interpreter_t self, mnn_session_mode_t mode) {
+  if (!self) return;
+  try {
+    ((MNN::Interpreter *)self)->setSessionMode((MNN::Interpreter::SessionMode)mode);
+  } catch (...) {
+    // Ignore errors
+  }
+}
+
+// Version info
+const char *mnn_get_version() { return MNN::getVersion(); }
+
+// Session info and tensor operations
+mnn_error_code_t mnn_interpreter_get_session_info(
+    mnn_interpreter_t self, mnn_session_t session, int session_info_code, void **info
+) {
+  if (!self || !session || !info) return MNN_INVALID_PTR;
+  try {
+    bool success =
+        ((MNN::Interpreter *)self)
+            ->getSessionInfo(
+                (MNN::Session *)session, (MNN::Interpreter::SessionInfoCode)session_info_code, *info
+            );
+    return success ? NO_ERROR : UNKNOWN_ERROR;
+  } catch (...) { return UNKNOWN_ERROR; }
+}
+
+mnn_error_code_t mnn_interpreter_get_session_output_all(
+    mnn_interpreter_t self,
+    mnn_session_t session,
+    mnn_tensor_t **tensors,
+    const char ***names,
+    size_t *count
+) {
+  if (!self || !session || !tensors || !names || !count) return MNN_INVALID_PTR;
+  try {
+    auto outputs = ((MNN::Interpreter *)self)->getSessionOutputAll((MNN::Session *)session);
+    *count = outputs.size();
+    *tensors = (mnn_tensor_t *)malloc(sizeof(mnn_tensor_t) * (*count));
+    *names = (const char **)malloc(sizeof(const char *) * (*count));
+    size_t i = 0;
+    for (const auto &pair : outputs) {
+      (*tensors)[i] = (mnn_tensor_t)pair.second;
+      (*names)[i] = pair.first.c_str();
+      i++;
+    }
+    return NO_ERROR;
+  } catch (...) { return UNKNOWN_ERROR; }
+}
+
+mnn_error_code_t mnn_interpreter_get_session_input_all(
+    mnn_interpreter_t self,
+    mnn_session_t session,
+    mnn_tensor_t **tensors,
+    const char ***names,
+    size_t *count
+) {
+  if (!self || !session || !tensors || !names || !count) return MNN_INVALID_PTR;
+  try {
+    auto inputs = ((MNN::Interpreter *)self)->getSessionInputAll((MNN::Session *)session);
+    *count = inputs.size();
+    *tensors = (mnn_tensor_t *)malloc(sizeof(mnn_tensor_t) * (*count));
+    *names = (const char **)malloc(sizeof(const char *) * (*count));
+    size_t i = 0;
+    for (const auto &pair : inputs) {
+      (*tensors)[i] = (mnn_tensor_t)pair.second;
+      (*names)[i] = pair.first.c_str();
+      i++;
+    }
+    return NO_ERROR;
+  } catch (...) { return UNKNOWN_ERROR; }
+}
+
+mnn_error_code_t mnn_interpreter_resize_tensor(
+    mnn_interpreter_t self, mnn_tensor_t tensor, const int *dims, int dim_count
+) {
+  if (!tensor || !dims || dim_count <= 0) return MNN_INVALID_PTR;
+  try {
+    std::vector<int> dims_vec(dims, dims + dim_count);
+    ((MNN::Interpreter *)self)->resizeTensor((MNN::Tensor *)tensor, dims_vec);
+    return NO_ERROR;
+  } catch (...) { return UNKNOWN_ERROR; }
+}
+
+mnn_error_code_t mnn_interpreter_resize_tensor_1(
+    mnn_interpreter_t self, mnn_tensor_t tensor, int batch, int channel, int height, int width
+) {
+  if (!self || !tensor) return MNN_INVALID_PTR;
+  try {
+    ((MNN::Interpreter *)self)->resizeTensor((MNN::Tensor *)tensor, batch, channel, height, width);
+    return NO_ERROR;
+  } catch (...) { return UNKNOWN_ERROR; }
+}
+
+mnn_backend_t
+mnn_interpreter_get_backend(mnn_interpreter_t self, mnn_session_t session, mnn_tensor_t tensor) {
+  if (!self || !session) return nullptr;
+  try {
+    return (mnn_backend_t)((MNN::Interpreter *)self)
+        ->getBackend((MNN::Session *)session, (MNN::Tensor *)tensor);
+  } catch (...) { return nullptr; }
+}

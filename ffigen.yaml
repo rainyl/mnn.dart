@@ -1,0 +1,53 @@
+# Run with `dart --enable-experiment=native-assets run ffigen --config ffigen.yaml`.
+name: NativeMNN
+description: |
+  Bindings for `MNN`.
+
+  Regenerate bindings with `dart --enable-experiment=native-assets run ffigen --config ffigen.yaml`.
+output: "lib/src/g/mnn.g.dart"
+ffi-native:
+  asset-id: "package:mnn/mnn.dart"
+sort: false
+silence-enum-warning: true
+include-unused-typedefs: false
+headers:
+  entry-points:
+    - "src/autotime.h"
+    - "src/error_code.h"
+    - "src/interpreter.h"
+    - "src/mnn_forward_type.h"
+    - "src/tensor.h"
+    - "src/MNN/HalideRuntime.h"
+  include-directives:
+    - "src/autotime.h"
+    - "src/error_code.h"
+    - "src/interpreter.h"
+    - "src/mnn_forward_type.h"
+    - "src/tensor.h"
+    - "src/MNN/HalideRuntime.h"
+compiler-opts:
+  - "-Isrc -Isrc/MNN -Wno-nullability-completeness"
+functions:
+  # leaf:
+  #   include:
+  #     - 'llama_apply_adapter_cvec'
+  # exclude:
+  #   - 'llama_load_model_from_file'
+  symbol-address:
+    include:
+      - '.*destroy.*'
+enums:
+  rename:
+    'halide_type_code_t': 'HalideTypeCode'
+    'mnn_dimension_type_t': 'DimensionType'
+    'mnn_error_code_t': 'ErrorCode'
+    'mnn_map_type_t': 'MapType'
+    'mnn_handle_data_type_t': 'HandleDataType'
+
+preamble: |
+  // Copyright (c) 2025, rainyl.  Please see the AUTHORS file
+  // for details. All rights reserved. Use of this source code is governed by a
+  // BSD-style license that can be found in the LICENSE file.
+comments:
+  style: any
+  length: full
