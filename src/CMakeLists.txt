@@ -1,29 +1,51 @@
-cmake_minimum_required(VERSION 3.0)
-project(mnn_c_api)
+cmake_minimum_required(VERSION 3.11)
+project(mnn_c_api VERSION 1.0 LANGUAGES C CXX)
 
-# 设置C++标准
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 添加源文件
+option(MNNC_BUILD_TEST "Build test" OFF)
+
+set(MNN_VERSION 3.1.1)
+
+cmake_policy(SET CMP0077 NEW)
+set(MNN_BUILD_BENCHMARK OFF)
+set(MNN_BUILD_TEST OFF)
+set(MNN_BUILD_TOOLS OFF)
+set(MNN_SUPPORT_BF16 ON)
+set(MNN_SEP_BUILD OFF)
+set(MNN_BUILD_SHARED_LIBS OFF)
+
+include(FetchContent)
+FetchContent_Declare(
+  MNN
+  GIT_REPOSITORY "https://github.com/alibaba/MNN.git"
+  GIT_TAG ${MNN_VERSION}
+  DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+FetchContent_MakeAvailable(MNN)
+
+set(MNNC_LINK_LIBS MNN)
+if(APPLE)
+  set(MNNC_LINK_LIBS ${MNNC_LINK_LIBS} "-framework Foundation" "-framework Metal" "-framework Cocoa")
+endif(APPLE)
+
 set(SOURCES
     autotime.cpp
     interpreter.cpp
     tensor.cpp
 )
 
-# 添加头文件路径
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/MNN
 )
 
-# 创建共享库
 add_library(mnn_c_api SHARED ${SOURCES})
 
-# 链接MNN库
-set(MNN_LIB /Users/rainy/DEV/mnn.dart/MNN.framework/MNN)
-find_library(COCOA_LIB Cocoa)
-find_library(FOUNDATION_LIB Foundation)
-find_library(METAL_LIB Metal)
-target_link_libraries(mnn_c_api PRIVATE ${MNN_LIB} ${COCOA_LIB} ${FOUNDATION_LIB} ${METAL_LIB})
+target_link_libraries(mnn_c_api PUBLIC ${MNNC_LINK_LIBS})
+
+if(MNNC_BUILD_TEST)
+  add_executable(test_a test/test_interpreter.cpp)
+  target_link_libraries(test_a mnn_c_api)
+endif(MNNC_BUILD_TEST)

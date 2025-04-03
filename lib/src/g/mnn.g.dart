@@ -67,8 +67,9 @@ external void mnn_auto_time_destroy(
 @ffi.Native<ffi.Pointer<halide_type_t> Function()>()
 external ffi.Pointer<halide_type_t> mnn_halide_type_create();
 
-@ffi.Native<ffi.Pointer<halide_type_t> Function(ffi.UnsignedInt, ffi.Uint8, ffi.Uint16)>(
-    symbol: 'mnn_halide_type_create_1')
+@ffi.Native<
+    ffi.Pointer<halide_type_t> Function(ffi.UnsignedInt, ffi.Uint8,
+        ffi.Uint16)>(symbol: 'mnn_halide_type_create_1')
 external ffi.Pointer<halide_type_t> _mnn_halide_type_create_1(
   int code,
   int bits,
@@ -95,7 +96,8 @@ external void mnn_halide_type_destroy(
 /// @param dim_size Dimension size
 /// @param type Dimension type
 /// @return Tensor instance or NULL if failed
-@ffi.Native<mnn_tensor_t Function(ffi.Int, ffi.UnsignedInt)>(symbol: 'mnn_tensor_create')
+@ffi.Native<mnn_tensor_t Function(ffi.Int, ffi.UnsignedInt)>(
+    symbol: 'mnn_tensor_create')
 external mnn_tensor_t _mnn_tensor_create(
   int dim_size,
   int type,
@@ -140,8 +142,9 @@ mnn_tensor_t mnn_tensor_create_from_tensor(
 /// @param type Data type
 /// @param dim_type Dimension type
 /// @return Tensor instance or NULL if failed
-@ffi.Native<mnn_tensor_t Function(ffi.Pointer<ffi.Int>, ffi.Int, halide_type_t, ffi.UnsignedInt)>(
-    symbol: 'mnn_tensor_create_device')
+@ffi.Native<
+    mnn_tensor_t Function(ffi.Pointer<ffi.Int>, ffi.Int, halide_type_t,
+        ffi.UnsignedInt)>(symbol: 'mnn_tensor_create_device')
 external mnn_tensor_t _mnn_tensor_create_device(
   ffi.Pointer<ffi.Int> shape,
   int shape_size,
@@ -170,7 +173,11 @@ mnn_tensor_t mnn_tensor_create_device(
 /// @param dim_type Dimension type
 /// @return Tensor instance or NULL if failed
 @ffi.Native<
-    mnn_tensor_t Function(ffi.Pointer<ffi.Int>, ffi.Int, halide_type_t, ffi.Pointer<ffi.Void>,
+    mnn_tensor_t Function(
+        ffi.Pointer<ffi.Int>,
+        ffi.Int,
+        halide_type_t,
+        ffi.Pointer<ffi.Void>,
         ffi.UnsignedInt)>(symbol: 'mnn_tensor_create_with_data')
 external mnn_tensor_t _mnn_tensor_create_with_data(
   ffi.Pointer<ffi.Int> shape,
@@ -216,7 +223,8 @@ external mnn_tensor_t mnn_tensor_clone(
 /// @param tensor Target tensor
 /// @param host_tensor Source tensor
 /// @return Error code
-@ffi.Native<ffi.UnsignedInt Function(mnn_tensor_t, mnn_tensor_t)>(symbol: 'mnn_tensor_copy_from_host')
+@ffi.Native<ffi.UnsignedInt Function(mnn_tensor_t, mnn_tensor_t)>(
+    symbol: 'mnn_tensor_copy_from_host')
 external int _mnn_tensor_copy_from_host(
   mnn_tensor_t tensor,
   mnn_tensor_t host_tensor,
@@ -235,7 +243,8 @@ ErrorCode mnn_tensor_copy_from_host(
 /// @param tensor Source tensor
 /// @param host_tensor Target tensor
 /// @return Error code
-@ffi.Native<ffi.UnsignedInt Function(mnn_tensor_t, mnn_tensor_t)>(symbol: 'mnn_tensor_copy_to_host')
+@ffi.Native<ffi.UnsignedInt Function(mnn_tensor_t, mnn_tensor_t)>(
+    symbol: 'mnn_tensor_copy_to_host')
 external int _mnn_tensor_copy_to_host(
   mnn_tensor_t tensor,
   mnn_tensor_t host_tensor,
@@ -263,7 +272,9 @@ external int mnn_tensor_dimensions(
 /// @param shape Output shape array (must be pre-allocated)
 /// @param shape_size Shape array size
 /// @return Error code
-@ffi.Native<ffi.UnsignedInt Function(mnn_tensor_t, ffi.Pointer<ffi.Int>, ffi.Int)>(symbol: 'mnn_tensor_shape')
+@ffi.Native<
+        ffi.UnsignedInt Function(mnn_tensor_t, ffi.Pointer<ffi.Int>, ffi.Int)>(
+    symbol: 'mnn_tensor_shape')
 external int _mnn_tensor_shape(
   mnn_tensor_t tensor,
   ffi.Pointer<ffi.Int> shape,
@@ -398,15 +409,16 @@ external int mnn_tensor_device_id(
 /// @brief Get buffer
 /// @param tensor Tensor
 /// @return Buffer pointer
-@ffi.Native<ffi.Pointer<ffi.Void> Function(mnn_tensor_t)>()
-external ffi.Pointer<ffi.Void> mnn_tensor_buffer(
+@ffi.Native<ffi.Pointer<halide_buffer_t> Function(mnn_tensor_t)>()
+external ffi.Pointer<halide_buffer_t> mnn_tensor_buffer(
   mnn_tensor_t tensor,
 );
 
 /// @brief Get dimension type
 /// @param tensor Tensor
 /// @return Dimension type
-@ffi.Native<ffi.UnsignedInt Function(mnn_tensor_t)>(symbol: 'mnn_tensor_get_dimension_type')
+@ffi.Native<ffi.UnsignedInt Function(mnn_tensor_t)>(
+    symbol: 'mnn_tensor_get_dimension_type')
 external int _mnn_tensor_get_dimension_type(
   mnn_tensor_t tensor,
 );
@@ -421,7 +433,8 @@ DimensionType mnn_tensor_get_dimension_type(
 /// @brief Get handle data type
 /// @param tensor Tensor
 /// @return Handle data type
-@ffi.Native<ffi.UnsignedInt Function(mnn_tensor_t)>(symbol: 'mnn_tensor_get_handle_data_type')
+@ffi.Native<ffi.UnsignedInt Function(mnn_tensor_t)>(
+    symbol: 'mnn_tensor_get_handle_data_type')
 external int _mnn_tensor_get_handle_data_type(
   mnn_tensor_t tensor,
 );
@@ -455,8 +468,9 @@ external ffi.Pointer<halide_type_t> mnn_tensor_get_type(
 /// @param mtype Map type
 /// @param dtype Dimension type
 /// @return Mapped pointer or NULL
-@ffi.Native<ffi.Pointer<ffi.Void> Function(mnn_tensor_t, ffi.UnsignedInt, ffi.UnsignedInt)>(
-    symbol: 'mnn_tensor_map')
+@ffi.Native<
+    ffi.Pointer<ffi.Void> Function(mnn_tensor_t, ffi.UnsignedInt,
+        ffi.UnsignedInt)>(symbol: 'mnn_tensor_map')
 external ffi.Pointer<ffi.Void> _mnn_tensor_map(
   mnn_tensor_t tensor,
   int mtype,
@@ -479,8 +493,9 @@ ffi.Pointer<ffi.Void> mnn_tensor_map(
 /// @param mtype Map type
 /// @param dtype Dimension type
 /// @param map_ptr Mapped pointer
-@ffi.Native<ffi.Void Function(mnn_tensor_t, ffi.UnsignedInt, ffi.UnsignedInt, ffi.Pointer<ffi.Void>)>(
-    symbol: 'mnn_tensor_unmap')
+@ffi.Native<
+    ffi.Void Function(mnn_tensor_t, ffi.UnsignedInt, ffi.UnsignedInt,
+        ffi.Pointer<ffi.Void>)>(symbol: 'mnn_tensor_unmap')
 external void _mnn_tensor_unmap(
   mnn_tensor_t tensor,
   int mtype,
@@ -506,7 +521,8 @@ void mnn_tensor_unmap(
 /// @param mtype Map type
 /// @param finish Whether wait for finish
 /// @return Error code
-@ffi.Native<ffi.UnsignedInt Function(mnn_tensor_t, ffi.UnsignedInt, ffi.Bool)>(symbol: 'mnn_tensor_wait')
+@ffi.Native<ffi.UnsignedInt Function(mnn_tensor_t, ffi.UnsignedInt, ffi.Bool)>(
+    symbol: 'mnn_tensor_wait')
 external int _mnn_tensor_wait(
   mnn_tensor_t tensor,
   int mtype,
@@ -529,7 +545,8 @@ ErrorCode mnn_tensor_wait(
 /// @param device_ptr Device pointer
 /// @param memory_type Memory type
 /// @return Error code
-@ffi.Native<ffi.UnsignedInt Function(mnn_tensor_t, ffi.Pointer<ffi.Void>, ffi.Int)>(
+@ffi.Native<
+        ffi.UnsignedInt Function(mnn_tensor_t, ffi.Pointer<ffi.Void>, ffi.Int)>(
     symbol: 'mnn_tensor_set_device_ptr')
 external int _mnn_tensor_set_device_ptr(
   mnn_tensor_t tensor,
@@ -548,6 +565,16 @@ ErrorCode mnn_tensor_set_device_ptr(
       memory_type,
     ));
 
+@ffi.Native<ffi.Void Function(mnn_tensor_t)>()
+external void mnn_tensor_print(
+  mnn_tensor_t tensor,
+);
+
+@ffi.Native<ffi.Void Function(mnn_tensor_t)>()
+external void mnn_tensor_print_shape(
+  mnn_tensor_t tensor,
+);
+
 /// @brief Create interpreter from file
 /// @param file_path Path to model file
 /// @param callback Callback function to be called after creation
@@ -563,7 +590,9 @@ external mnn_interpreter_t mnn_interpreter_create_from_file(
 /// @param size Buffer size
 /// @param callback Callback function to be called after creation
 /// @return Interpreter instance or NULL if failed
-@ffi.Native<mnn_interpreter_t Function(ffi.Pointer<ffi.Void>, ffi.Size, mnn_callback_0)>()
+@ffi.Native<
+    mnn_interpreter_t Function(
+        ffi.Pointer<ffi.Void>, ffi.Size, mnn_callback_0)>()
 external mnn_interpreter_t mnn_interpreter_create_from_buffer(
   ffi.Pointer<ffi.Void> buffer,
   int size,
@@ -581,7 +610,8 @@ external void mnn_interpreter_destroy(
 /// @param configs Schedule config array
 /// @param count Config count
 /// @return Runtime info instance
-@ffi.Native<mnn_runtime_info_t Function(ffi.Pointer<mnn_schedule_config_t>, ffi.Size)>()
+@ffi.Native<
+    mnn_runtime_info_t Function(ffi.Pointer<mnn_schedule_config_t>, ffi.Size)>()
 external mnn_runtime_info_t mnn_interpreter_create_runtime(
   ffi.Pointer<mnn_schedule_config_t> configs,
   int count,
@@ -599,7 +629,9 @@ external void mnn_runtime_info_destroy(
 /// @param config Schedule config
 /// @param callback Callback function to be called after creation
 /// @return Session instance or NULL if failed
-@ffi.Native<mnn_session_t Function(mnn_interpreter_t, ffi.Pointer<mnn_schedule_config_t>, mnn_callback_0)>()
+@ffi.Native<
+    mnn_session_t Function(mnn_interpreter_t,
+        ffi.Pointer<mnn_schedule_config_t>, mnn_callback_0)>()
 external mnn_session_t mnn_interpreter_create_session(
   mnn_interpreter_t self,
   ffi.Pointer<mnn_schedule_config_t> config,
@@ -614,7 +646,10 @@ external mnn_session_t mnn_interpreter_create_session(
 /// @return Session instance or NULL if failed
 @ffi.Native<
     mnn_session_t Function(
-        mnn_interpreter_t, ffi.Pointer<mnn_schedule_config_t>, mnn_runtime_info_t, mnn_callback_0)>()
+        mnn_interpreter_t,
+        ffi.Pointer<mnn_schedule_config_t>,
+        mnn_runtime_info_t,
+        mnn_callback_0)>()
 external mnn_session_t mnn_interpreter_create_session_with_runtime(
   mnn_interpreter_t self,
   ffi.Pointer<mnn_schedule_config_t> config,
@@ -627,8 +662,9 @@ external mnn_session_t mnn_interpreter_create_session_with_runtime(
 /// @param session Session to release
 /// @param callback Callback function to be called after release
 /// @return Error code
-@ffi.Native<ffi.UnsignedInt Function(mnn_interpreter_t, mnn_session_t, mnn_callback_0)>(
-    symbol: 'mnn_interpreter_release_session')
+@ffi.Native<
+    ffi.UnsignedInt Function(mnn_interpreter_t, mnn_session_t,
+        mnn_callback_0)>(symbol: 'mnn_interpreter_release_session')
 external int _mnn_interpreter_release_session(
   mnn_interpreter_t self,
   mnn_session_t session,
@@ -651,8 +687,9 @@ ErrorCode mnn_interpreter_release_session(
 /// @param session Session to resize
 /// @param callback Callback function to be called after resize
 /// @return Error code
-@ffi.Native<ffi.UnsignedInt Function(mnn_interpreter_t, mnn_session_t, mnn_callback_0)>(
-    symbol: 'mnn_interpreter_resize_session')
+@ffi.Native<
+    ffi.UnsignedInt Function(mnn_interpreter_t, mnn_session_t,
+        mnn_callback_0)>(symbol: 'mnn_interpreter_resize_session')
 external int _mnn_interpreter_resize_session(
   mnn_interpreter_t self,
   mnn_session_t session,
@@ -675,8 +712,9 @@ ErrorCode mnn_interpreter_resize_session(
 /// @param session Session to run
 /// @param callback Callback function to be called after run
 /// @return Error code
-@ffi.Native<ffi.UnsignedInt Function(mnn_interpreter_t, mnn_session_t, mnn_callback_0)>(
-    symbol: 'mnn_interpreter_run_session')
+@ffi.Native<
+    ffi.UnsignedInt Function(mnn_interpreter_t, mnn_session_t,
+        mnn_callback_0)>(symbol: 'mnn_interpreter_run_session')
 external int _mnn_interpreter_run_session(
   mnn_interpreter_t self,
   mnn_session_t session,
@@ -699,7 +737,9 @@ ErrorCode mnn_interpreter_run_session(
 /// @param session Session
 /// @param name Tensor name (NULL for first input)
 /// @return Tensor instance or NULL if failed
-@ffi.Native<mnn_tensor_t Function(mnn_interpreter_t, mnn_session_t, ffi.Pointer<ffi.Char>)>()
+@ffi.Native<
+    mnn_tensor_t Function(
+        mnn_interpreter_t, mnn_session_t, ffi.Pointer<ffi.Char>)>()
 external mnn_tensor_t mnn_interpreter_get_session_input(
   mnn_interpreter_t self,
   mnn_session_t session,
@@ -711,7 +751,9 @@ external mnn_tensor_t mnn_interpreter_get_session_input(
 /// @param session Session
 /// @param name Tensor name (NULL for first output)
 /// @return Tensor instance or NULL if failed
-@ffi.Native<mnn_tensor_t Function(mnn_interpreter_t, mnn_session_t, ffi.Pointer<ffi.Char>)>()
+@ffi.Native<
+    mnn_tensor_t Function(
+        mnn_interpreter_t, mnn_session_t, ffi.Pointer<ffi.Char>)>()
 external mnn_tensor_t mnn_interpreter_get_session_output(
   mnn_interpreter_t self,
   mnn_session_t session,
@@ -721,7 +763,8 @@ external mnn_tensor_t mnn_interpreter_get_session_output(
 /// @brief Set session mode
 /// @param self Interpreter instance
 /// @param mode Session mode
-@ffi.Native<ffi.Void Function(mnn_interpreter_t, ffi.UnsignedInt)>(symbol: 'mnn_interpreter_set_session_mode')
+@ffi.Native<ffi.Void Function(mnn_interpreter_t, ffi.UnsignedInt)>(
+    symbol: 'mnn_interpreter_set_session_mode')
 external void _mnn_interpreter_set_session_mode(
   mnn_interpreter_t self,
   int mode,
@@ -729,7 +772,7 @@ external void _mnn_interpreter_set_session_mode(
 
 void mnn_interpreter_set_session_mode(
   mnn_interpreter_t self,
-  mnn_session_mode_t mode,
+  SessionMode mode,
 ) =>
     _mnn_interpreter_set_session_mode(
       self,
@@ -761,7 +804,8 @@ external ffi.Pointer<ffi.Char> mnn_interpreter_uuid(
 /// @param self Interpreter instance
 /// @param cache_file Cache file path
 /// @param key_size Key size
-@ffi.Native<ffi.Void Function(mnn_interpreter_t, ffi.Pointer<ffi.Char>, ffi.Size)>()
+@ffi.Native<
+    ffi.Void Function(mnn_interpreter_t, ffi.Pointer<ffi.Char>, ffi.Size)>()
 external void mnn_interpreter_set_cache_file(
   mnn_interpreter_t self,
   ffi.Pointer<ffi.Char> cache_file,
@@ -772,7 +816,8 @@ external void mnn_interpreter_set_cache_file(
 /// @param self Interpreter instance
 /// @param file External file path
 /// @param flag Flag value
-@ffi.Native<ffi.Void Function(mnn_interpreter_t, ffi.Pointer<ffi.Char>, ffi.Size)>()
+@ffi.Native<
+    ffi.Void Function(mnn_interpreter_t, ffi.Pointer<ffi.Char>, ffi.Size)>()
 external void mnn_interpreter_set_external_file(
   mnn_interpreter_t self,
   ffi.Pointer<ffi.Char> file,
@@ -801,7 +846,8 @@ external void mnn_interpreter_release_model(
 /// @param self Interpreter instance
 /// @param buffer Output parameter to receive pointer to model data
 /// @return Size of model data in bytes, or 0 if failed
-@ffi.Native<ffi.Size Function(mnn_interpreter_t, ffi.Pointer<ffi.Pointer<ffi.Void>>)>()
+@ffi.Native<
+    ffi.Size Function(mnn_interpreter_t, ffi.Pointer<ffi.Pointer<ffi.Void>>)>()
 external int mnn_interpreter_get_model_buffer(
   mnn_interpreter_t self,
   ffi.Pointer<ffi.Pointer<ffi.Void>> buffer,
@@ -820,7 +866,8 @@ external ffi.Pointer<ffi.Char> mnn_interpreter_get_model_version(
 /// @param session Session
 /// @param flag Flag value
 /// @return Error code
-@ffi.Native<ffi.UnsignedInt Function(mnn_interpreter_t, mnn_session_t, ffi.Int)>(
+@ffi.Native<
+        ffi.UnsignedInt Function(mnn_interpreter_t, mnn_session_t, ffi.Int)>(
     symbol: 'mnn_interpreter_update_cache_file')
 external int _mnn_interpreter_update_cache_file(
   mnn_interpreter_t self,
@@ -864,22 +911,26 @@ ErrorCode mnn_interpreter_update_session_to_model(
 /// @param session Session
 /// @param info Output parameter for session info
 /// @return Error code
-@ffi.Native<ffi.UnsignedInt Function(mnn_interpreter_t, mnn_session_t, ffi.Pointer<ffi.Pointer<ffi.Void>>)>(
-    symbol: 'mnn_interpreter_get_session_info')
+@ffi.Native<
+    ffi.UnsignedInt Function(mnn_interpreter_t, mnn_session_t, ffi.Int,
+        ffi.Pointer<ffi.Void>)>(symbol: 'mnn_interpreter_get_session_info')
 external int _mnn_interpreter_get_session_info(
   mnn_interpreter_t self,
   mnn_session_t session,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> info,
+  int session_info_code,
+  ffi.Pointer<ffi.Void> info,
 );
 
 ErrorCode mnn_interpreter_get_session_info(
   mnn_interpreter_t self,
   mnn_session_t session,
-  ffi.Pointer<ffi.Pointer<ffi.Void>> info,
+  int session_info_code,
+  ffi.Pointer<ffi.Void> info,
 ) =>
     ErrorCode.fromValue(_mnn_interpreter_get_session_info(
       self,
       session,
+      session_info_code,
       info,
     ));
 
@@ -890,12 +941,13 @@ ErrorCode mnn_interpreter_get_session_info(
 /// @param count Output parameter for tensor count
 /// @return Error code
 @ffi.Native<
-    ffi.UnsignedInt Function(
-        mnn_interpreter_t,
-        mnn_session_t,
-        ffi.Pointer<ffi.Pointer<mnn_tensor_t>>,
-        ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>>,
-        ffi.Pointer<ffi.Size>)>(symbol: 'mnn_interpreter_get_session_output_all')
+        ffi.UnsignedInt Function(
+            mnn_interpreter_t,
+            mnn_session_t,
+            ffi.Pointer<ffi.Pointer<mnn_tensor_t>>,
+            ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>>,
+            ffi.Pointer<ffi.Size>)>(
+    symbol: 'mnn_interpreter_get_session_output_all')
 external int _mnn_interpreter_get_session_output_all(
   mnn_interpreter_t self,
   mnn_session_t session,
@@ -960,8 +1012,9 @@ ErrorCode mnn_interpreter_get_session_input_all(
 /// @param dims New dimensions array
 /// @param dim_count Dimension count
 /// @return Error code
-@ffi.Native<ffi.UnsignedInt Function(mnn_interpreter_t, mnn_tensor_t, ffi.Pointer<ffi.Int>, ffi.Int)>(
-    symbol: 'mnn_interpreter_resize_tensor')
+@ffi.Native<
+    ffi.UnsignedInt Function(mnn_interpreter_t, mnn_tensor_t,
+        ffi.Pointer<ffi.Int>, ffi.Int)>(symbol: 'mnn_interpreter_resize_tensor')
 external int _mnn_interpreter_resize_tensor(
   mnn_interpreter_t self,
   mnn_tensor_t tensor,
@@ -982,8 +1035,9 @@ ErrorCode mnn_interpreter_resize_tensor(
       dim_count,
     ));
 
-@ffi.Native<ffi.UnsignedInt Function(mnn_interpreter_t, mnn_tensor_t, ffi.Int, ffi.Int, ffi.Int, ffi.Int)>(
-    symbol: 'mnn_interpreter_resize_tensor_1')
+@ffi.Native<
+    ffi.UnsignedInt Function(mnn_interpreter_t, mnn_tensor_t, ffi.Int, ffi.Int,
+        ffi.Int, ffi.Int)>(symbol: 'mnn_interpreter_resize_tensor_1')
 external int _mnn_interpreter_resize_tensor_1(
   mnn_interpreter_t self,
   mnn_tensor_t tensor,
@@ -1014,7 +1068,8 @@ ErrorCode mnn_interpreter_resize_tensor_1(
 /// @param self Interpreter instance
 /// @param session Session
 /// @return Backend type
-@ffi.Native<mnn_backend_t Function(mnn_interpreter_t, mnn_session_t, mnn_tensor_t)>()
+@ffi.Native<
+    mnn_backend_t Function(mnn_interpreter_t, mnn_session_t, mnn_tensor_t)>()
 external mnn_backend_t mnn_interpreter_get_backend(
   mnn_interpreter_t self,
   mnn_session_t session,
@@ -1025,18 +1080,22 @@ const addresses = _SymbolAddresses();
 
 class _SymbolAddresses {
   const _SymbolAddresses();
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_timer_t)>> get mnn_timer_destroy =>
-      ffi.Native.addressOf(self.mnn_timer_destroy);
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_auto_time_t)>> get mnn_auto_time_destroy =>
-      ffi.Native.addressOf(self.mnn_auto_time_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_timer_t)>>
+      get mnn_timer_destroy => ffi.Native.addressOf(self.mnn_timer_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_auto_time_t)>>
+      get mnn_auto_time_destroy =>
+          ffi.Native.addressOf(self.mnn_auto_time_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<halide_type_t>)>>
-      get mnn_halide_type_destroy => ffi.Native.addressOf(self.mnn_halide_type_destroy);
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_tensor_t)>> get mnn_tensor_destroy =>
-      ffi.Native.addressOf(self.mnn_tensor_destroy);
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_interpreter_t)>> get mnn_interpreter_destroy =>
-      ffi.Native.addressOf(self.mnn_interpreter_destroy);
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_runtime_info_t)>> get mnn_runtime_info_destroy =>
-      ffi.Native.addressOf(self.mnn_runtime_info_destroy);
+      get mnn_halide_type_destroy =>
+          ffi.Native.addressOf(self.mnn_halide_type_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_tensor_t)>>
+      get mnn_tensor_destroy => ffi.Native.addressOf(self.mnn_tensor_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_interpreter_t)>>
+      get mnn_interpreter_destroy =>
+          ffi.Native.addressOf(self.mnn_interpreter_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_runtime_info_t)>>
+      get mnn_runtime_info_destroy =>
+          ffi.Native.addressOf(self.mnn_runtime_info_destroy);
 }
 
 typedef mnn_timer_t = ffi.Pointer<ffi.Void>;
@@ -1107,27 +1166,8 @@ enum ErrorCode {
 
 typedef mnn_callback_0Function = ffi.Void Function();
 typedef Dartmnn_callback_0Function = void Function();
-
-/// typedef enum {
-/// /**
-/// * get status whether this runtime support 16-bits float point arithmetic
-/// */
-/// STATUS_SUPPORT_FP16,
-/// /**
-/// * get status whether this runtime support dot-product arithmetic
-/// */
-/// STATUS_SUPPORT_DOT_PRODUCT,
-/// /**
-/// * get status whether this runtime support power-low (means low priority for
-/// * opencl)
-/// */
-/// STATUS_SUPPORT_POWER_LOW,
-/// /**
-/// * emum total number
-/// */
-/// STATUS_COUNT
-/// } mnn_runtime_status;
-typedef mnn_callback_0 = ffi.Pointer<ffi.NativeFunction<mnn_callback_0Function>>;
+typedef mnn_callback_0
+    = ffi.Pointer<ffi.NativeFunction<mnn_callback_0Function>>;
 
 final class UnnamedUnion1 extends ffi.Union {
   external ffi.Pointer<ffi.Void> sharedContext;
@@ -1136,7 +1176,7 @@ final class UnnamedUnion1 extends ffi.Union {
   external int flags;
 }
 
-final class mnn_backend_config extends ffi.Struct {
+final class mnn_backend_config_t extends ffi.Struct {
   /// mnn_memory_mode memory;
   @ffi.Int()
   external int memory;
@@ -1171,44 +1211,54 @@ final class halide_device_interface_impl_t extends ffi.Opaque {}
 /// hidden inside the impl field.
 final class halide_device_interface_t extends ffi.Struct {
   external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Void> user_context, ffi.Pointer<halide_buffer_t> buf,
-              ffi.Pointer<halide_device_interface_t> device_interface)>> device_malloc;
-
-  external ffi.Pointer<
           ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Void> user_context, ffi.Pointer<halide_buffer_t> buf)>>
-      device_free;
-
-  external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Void> user_context, ffi.Pointer<halide_buffer_t> buf)>>
-      device_sync;
+              ffi.Int Function(
+                  ffi.Pointer<ffi.Void> user_context,
+                  ffi.Pointer<halide_buffer_t> buf,
+                  ffi.Pointer<halide_device_interface_t> device_interface)>>
+      device_malloc;
 
   external ffi.Pointer<
       ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Void> user_context,
-              ffi.Pointer<halide_device_interface_t> device_interface)>> device_release;
-
-  external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Void> user_context, ffi.Pointer<halide_buffer_t> buf)>>
-      copy_to_host;
+          ffi.Int Function(ffi.Pointer<ffi.Void> user_context,
+              ffi.Pointer<halide_buffer_t> buf)>> device_free;
 
   external ffi.Pointer<
       ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Void> user_context, ffi.Pointer<halide_buffer_t> buf,
-              ffi.Pointer<halide_device_interface_t> device_interface)>> copy_to_device;
-
-  external ffi.Pointer<
-      ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Void> user_context, ffi.Pointer<halide_buffer_t> buf,
-              ffi.Pointer<halide_device_interface_t> device_interface)>> device_and_host_malloc;
+          ffi.Int Function(ffi.Pointer<ffi.Void> user_context,
+              ffi.Pointer<halide_buffer_t> buf)>> device_sync;
 
   external ffi.Pointer<
           ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Void> user_context, ffi.Pointer<halide_buffer_t> buf)>>
-      device_and_host_free;
+              ffi.Void Function(ffi.Pointer<ffi.Void> user_context,
+                  ffi.Pointer<halide_device_interface_t> device_interface)>>
+      device_release;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Void> user_context,
+              ffi.Pointer<halide_buffer_t> buf)>> copy_to_host;
+
+  external ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int Function(
+                  ffi.Pointer<ffi.Void> user_context,
+                  ffi.Pointer<halide_buffer_t> buf,
+                  ffi.Pointer<halide_device_interface_t> device_interface)>>
+      copy_to_device;
+
+  external ffi.Pointer<
+          ffi.NativeFunction<
+              ffi.Int Function(
+                  ffi.Pointer<ffi.Void> user_context,
+                  ffi.Pointer<halide_buffer_t> buf,
+                  ffi.Pointer<halide_device_interface_t> device_interface)>>
+      device_and_host_malloc;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Void> user_context,
+              ffi.Pointer<halide_buffer_t> buf)>> device_and_host_free;
 
   external ffi.Pointer<
       ffi.NativeFunction<
@@ -1220,23 +1270,29 @@ final class halide_device_interface_t extends ffi.Struct {
 
   external ffi.Pointer<
       ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Void> user_context, ffi.Pointer<halide_buffer_t> src,
+          ffi.Int Function(
+              ffi.Pointer<ffi.Void> user_context,
+              ffi.Pointer<halide_buffer_t> src,
               ffi.Pointer<halide_buffer_t> dst)>> device_crop;
 
   external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Void> user_context,
+              ffi.Pointer<halide_buffer_t> buf)>> device_release_crop;
+
+  external ffi.Pointer<
           ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Void> user_context, ffi.Pointer<halide_buffer_t> buf)>>
-      device_release_crop;
+              ffi.Int Function(
+                  ffi.Pointer<ffi.Void> user_context,
+                  ffi.Pointer<halide_buffer_t> buf,
+                  ffi.Uint64 handle,
+                  ffi.Pointer<halide_device_interface_t> device_interface)>>
+      wrap_native;
 
   external ffi.Pointer<
       ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Void> user_context, ffi.Pointer<halide_buffer_t> buf,
-              ffi.Uint64 handle, ffi.Pointer<halide_device_interface_t> device_interface)>> wrap_native;
-
-  external ffi.Pointer<
-          ffi.NativeFunction<
-              ffi.Int Function(ffi.Pointer<ffi.Void> user_context, ffi.Pointer<halide_buffer_t> buf)>>
-      detach_native;
+          ffi.Int Function(ffi.Pointer<ffi.Void> user_context,
+              ffi.Pointer<halide_buffer_t> buf)>> detach_native;
 
   external ffi.Pointer<halide_device_interface_impl_t> impl;
 }
@@ -1356,7 +1412,8 @@ enum halide_buffer_flags {
   static halide_buffer_flags fromValue(int value) => switch (value) {
         1 => halide_buffer_flag_host_dirty,
         2 => halide_buffer_flag_device_dirty,
-        _ => throw ArgumentError('Unknown value for halide_buffer_flags: $value'),
+        _ =>
+          throw ArgumentError('Unknown value for halide_buffer_flags: $value'),
       };
 }
 
@@ -1441,7 +1498,7 @@ typedef mnn_forward_type_t = ffi.Int;
 typedef Dartmnn_forward_type_t = int;
 
 /// Session mode enum
-enum mnn_session_mode_t {
+enum SessionMode {
   MNN_SESSION_DEBUG(0),
   MNN_SESSION_RELEASE(1),
   MNN_SESSION_INPUT_INSIDE(2),
@@ -1450,16 +1507,16 @@ enum mnn_session_mode_t {
   MNN_SESSION_OUTPUT_USER(5);
 
   final int value;
-  const mnn_session_mode_t(this.value);
+  const SessionMode(this.value);
 
-  static mnn_session_mode_t fromValue(int value) => switch (value) {
+  static SessionMode fromValue(int value) => switch (value) {
         0 => MNN_SESSION_DEBUG,
         1 => MNN_SESSION_RELEASE,
         2 => MNN_SESSION_INPUT_INSIDE,
         3 => MNN_SESSION_INPUT_USER,
         4 => MNN_SESSION_OUTPUT_INSIDE,
         5 => MNN_SESSION_OUTPUT_USER,
-        _ => throw ArgumentError('Unknown value for mnn_session_mode_t: $value'),
+        _ => throw ArgumentError('Unknown value for SessionMode: $value'),
       };
 }
 
@@ -1480,5 +1537,8 @@ final class mnn_schedule_config_t extends ffi.Struct {
   /// CPU:number of threads in parallel , Or GPU: mode setting
   external UnnamedUnion2 unnamed;
 
-  external ffi.Pointer<ffi.Void> backend_config;
+  @mnn_forward_type_t()
+  external int backupType;
+
+  external ffi.Pointer<mnn_backend_config_t> backend_config;
 }

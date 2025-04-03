@@ -1,9 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:mnn/mnn.dart' as mnn;
 import 'package:test/test.dart';
 
 void main() async {
   test('Tensor create', () async {
-    final tensor = mnn.Tensor.create(4, mnn.DimensionType.MNN_CAFFE);
+    final tensor = mnn.Tensor.create(dimSize: 4);
     expect(tensor.ptr.address, isNonZero);
     expect(tensor.dimensions, 4);
     expect(tensor.batch, 0);
@@ -38,8 +40,73 @@ void main() async {
     expect(tensor.getLength(2), 7);
     expect(tensor.getLength(3), 8);
     expect(tensor.shape, [5, 6, 7, 8]);
-    expect(tensor.size, 5 * 6 * 7 * 8 * tensor.elementSize);
-    expect(tensor.elementSize, 4);
+    expect(tensor.size, 5 * 6 * 7 * 8 * 4);
+    expect(tensor.elementSize, 5 * 6 * 7 * 8);
     expect(tensor.usize, 5 * 6 * 7 * 8 * 4);
+  });
+
+  test('Tensor data', () {
+    final data = Float32List.fromList(List.generate(27, (index) => index.toDouble()));
+    final tensor = mnn.Tensor.fromData(
+      [1, 1, 3, 3],
+      mnn.HalideType.f32(),
+      data: data.buffer.asUint8List(),
+      dimType: mnn.DimensionType.MNN_CAFFE,
+    );
+    expect(tensor.dimensions, 4);
+    expect(tensor.shape, [1, 1, 3, 3]);
+    expect(tensor.size, 1 * 1 * 3 * 3 * 4); // 4 bytes per float32
+    expect(tensor.elementSize, 1 * 1 * 3 * 3);
+  });
+
+  test('Tensor clone', () {
+    final tensor = mnn.Tensor.create();
+    tensor.setLength(0, 2);
+    tensor.setLength(1, 3);
+    tensor.setLength(2, 4);
+    tensor.setLength(3, 5);
+
+    final cloned = tensor.clone(deepCopy: true);
+    expect(cloned.dimensions, tensor.dimensions);
+    expect(cloned.shape, tensor.shape);
+    expect(cloned.size, tensor.size);
+    expect(cloned.elementSize, tensor.elementSize);
+  });
+
+  test('Tensor fromTensor', () {
+    final srcTensor = mnn.Tensor.create();
+    srcTensor.setLength(0, 2);
+    srcTensor.setLength(1, 3);
+    srcTensor.setLength(2, 4);
+    srcTensor.setLength(3, 5);
+
+    final newTensor = mnn.Tensor.fromTensor(srcTensor, dimType: mnn.DimensionType.MNN_CAFFE);
+    expect(newTensor.dimensions, srcTensor.dimensions);
+    expect(newTensor.shape, srcTensor.shape);
+    expect(newTensor.dimensionType, mnn.DimensionType.MNN_CAFFE);
+  });
+
+  test('Tensor type operations', () {
+    final tensor = mnn.Tensor.create();
+    tensor.setType(mnn.DataType.DataType_DT_FLOAT);
+    expect(tensor.type, mnn.DataType.DataType_DT_FLOAT.toHalideType());
+  });
+
+  test('Tensor buffer operations', () {
+    final tensor = mnn.Tensor.create();
+    final buffer = tensor.buffer;
+    expect(buffer, isA<mnn.HalideBuffer>());
+    expect(buffer.type, mnn.HalideType.f32()); // default type is float32
+    expect(buffer.dimensions, 4);
+    expect(buffer.dimensions, tensor.dimensions);
+  });
+
+  test('Tensor data type conversions', () {
+    final tensor = mnn.Tensor.create();
+    tensor.setType(mnn.DataType.DataType_DT_INT32);
+    expect(tensor.type, mnn.DataType.DataType_DT_INT32.toHalideType());
+
+    tensor.setType(mnn.DataType.DataType_DT_UINT8);
+    expect(tensor.type, mnn.DataType.DataType_DT_UINT8.toHalideType());
   });
 }

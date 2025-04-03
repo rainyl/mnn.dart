@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:mnn/mnn.dart' as mnn;
 
 void main() async {
-  print('MNN version: ${mnn.version()}');
+  print('MNN version: ${mnn.getVersion()}');
   final timer = mnn.Timer.create();
   final start = timer.current();
   print('start: $start');

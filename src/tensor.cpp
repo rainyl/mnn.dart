@@ -235,9 +235,10 @@ uint64_t mnn_tensor_device_id(mnn_tensor_t tensor) {
   return ((MNN::Tensor *)tensor)->deviceId();
 }
 
-void *mnn_tensor_buffer(mnn_tensor_t tensor) {
+struct halide_buffer_t *mnn_tensor_buffer(mnn_tensor_t tensor) {
   if (!tensor) return nullptr;
-  return ((MNN::Tensor *)tensor)->buffer().host;
+  auto buf = ((MNN::Tensor *)tensor)->buffer();
+  return new halide_buffer_t(buf);
 }
 
 // Type information
@@ -292,4 +293,13 @@ mnn_tensor_set_device_ptr(mnn_tensor_t tensor, const void *device_ptr, int memor
     ((MNN::Tensor *)tensor)->setDevicePtr(device_ptr, memory_type);
     return NO_ERROR;
   } catch (...) { return UNKNOWN_ERROR; }
+}
+
+void mnn_tensor_print(mnn_tensor_t tensor) {
+  if (!tensor) return;
+  ((MNN::Tensor *)tensor)->print();
+}
+void mnn_tensor_print_shape(mnn_tensor_t tensor) {
+  if (!tensor) return;
+  ((MNN::Tensor *)tensor)->printShape();
 }

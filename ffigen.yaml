@@ -43,6 +43,12 @@ enums:
     'mnn_error_code_t': 'ErrorCode'
     'mnn_map_type_t': 'MapType'
     'mnn_handle_data_type_t': 'HandleDataType'
+    'mnn_session_mode_t': 'SessionMode'
+    'mnn_gpu_mode': 'GpuMode'
+    'mnn_memory_mode': 'MemoryMode'
+    'mnn_power_mode': 'PowerMode'
+    'mnn_precision_mode': 'PrecisionMode'
+    'mnn_runtime_status': 'RuntimeStatus'
 
 preamble: |
   // Copyright (c) 2025, rainyl.  Please see the AUTHORS file

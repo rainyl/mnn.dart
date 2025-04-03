@@ -48,14 +48,15 @@ typedef enum {
 } mnn_session_mode_t;
 
 /** Schedule config structure */
-typedef struct {
+typedef struct mnn_schedule_config_t {
   mnn_forward_type_t type;
   /** CPU:number of threads in parallel , Or GPU: mode setting*/
   union {
     int num_thread;
     int mode;
   };
-  void *backend_config;
+  mnn_forward_type_t backupType;
+  mnn_backend_config_t *backend_config;
 } mnn_schedule_config_t;
 
 /**
@@ -268,10 +269,6 @@ mnn_interpreter_update_cache_file(mnn_interpreter_t self, mnn_session_t session,
 mnn_error_code_t
 mnn_interpreter_update_session_to_model(mnn_interpreter_t self, mnn_session_t session);
 
-#ifdef __cplusplus
-}
-#endif
-
 /**
  * @brief Get session info
  * @param self Interpreter instance
@@ -279,8 +276,9 @@ mnn_interpreter_update_session_to_model(mnn_interpreter_t self, mnn_session_t se
  * @param info Output parameter for session info
  * @return Error code
  */
-mnn_error_code_t
-mnn_interpreter_get_session_info(mnn_interpreter_t self, mnn_session_t session, void **info);
+mnn_error_code_t mnn_interpreter_get_session_info(
+    mnn_interpreter_t self, mnn_session_t session, int session_info_code, void *info
+);
 
 /**
  * @brief Get all output tensors from session
@@ -365,5 +363,9 @@ mnn_interpreter_get_backend(mnn_interpreter_t self, mnn_session_t session, mnn_t
 // ErrorCode runSessionWithCallBackInfo(const Session* session, const TensorCallBackWithInfo&
 // before,
 //           const TensorCallBackWithInfo& end, bool sync = false) const;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // MNN_INTERPRETER_H

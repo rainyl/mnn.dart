@@ -1,0 +1,26 @@
+import 'dart:ffi' as ffi;
+
+import 'base.dart';
+import 'g/mnn.g.dart' as c;
+
+class RuntimeInfo extends NativeObject {
+  static final ffi.NativeFinalizer _finalizer = ffi.NativeFinalizer(c.addresses.mnn_runtime_info_destroy);
+
+  RuntimeInfo.fromPointer(super.ptr, {super.attach, super.externalSize});
+
+  @override
+  ffi.NativeFinalizer get finalizer => _finalizer;
+
+  @override
+  void release() {
+    c.mnn_runtime_info_destroy(ptr);
+  }
+
+  @override
+  List<Object?> get props => [ptr.address];
+
+  @override
+  String toString() {
+    return 'RuntimeInfo(address=0x${ptr.address.toRadixString(16)})';
+  }
+}

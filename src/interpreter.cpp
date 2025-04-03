@@ -11,6 +11,7 @@
 #include "MNN/MNNForwardType.h"
 #include "error_code.h"
 #include "tensor.h"
+#include <_string.h>
 #include <cstddef>
 #include <cstring>
 
@@ -39,7 +40,7 @@ mnn_interpreter_create_from_buffer(const void *buffer, size_t size, mnn_callback
 }
 
 void mnn_interpreter_destroy(mnn_interpreter_t self) {
-  if (self) { delete (MNN::Interpreter *)self; }
+  if (self) { MNN::Interpreter::destroy((MNN::Interpreter *)self); }
 }
 
 const char *mnn_interpreter_biz_code(mnn_interpreter_t self) {
@@ -157,8 +158,24 @@ mnn_session_t mnn_interpreter_create_session(
     MNN::ScheduleConfig scheduleConfig;
     scheduleConfig.type = (MNNForwardType)config->type;
     scheduleConfig.numThread = config->num_thread;
-    scheduleConfig.backendConfig = (MNN::BackendConfig *)config->backend_config;
+    scheduleConfig.mode = config->mode;
+
+    auto backendConfig = new MNN::BackendConfig();
+    if (config->backend_config != nullptr) {
+      backendConfig->memory = (MNN::BackendConfig::MemoryMode)config->backend_config->memory;
+      backendConfig->power = (MNN::BackendConfig::PowerMode)config->backend_config->power;
+      backendConfig->precision =
+          (MNN::BackendConfig::PrecisionMode)config->backend_config->precision;
+      backendConfig->sharedContext = config->backend_config->sharedContext;
+      backendConfig->flags = config->backend_config->flags;
+
+      scheduleConfig.backendConfig = backendConfig;
+    }
+
     auto r = (mnn_session_t)((MNN::Interpreter *)self)->createSession(scheduleConfig);
+
+    delete backendConfig;
+
     if (callback) callback();
     return r;
   } catch (...) {
@@ -277,14 +294,14 @@ const char *mnn_get_version() { return MNN::getVersion(); }
 
 // Session info and tensor operations
 mnn_error_code_t mnn_interpreter_get_session_info(
-    mnn_interpreter_t self, mnn_session_t session, int session_info_code, void **info
+    mnn_interpreter_t self, mnn_session_t session, int session_info_code, void *info
 ) {
   if (!self || !session || !info) return MNN_INVALID_PTR;
   try {
     bool success =
         ((MNN::Interpreter *)self)
             ->getSessionInfo(
-                (MNN::Session *)session, (MNN::Interpreter::SessionInfoCode)session_info_code, *info
+                (MNN::Session *)session, (MNN::Interpreter::SessionInfoCode)session_info_code, info
             );
     return success ? NO_ERROR : UNKNOWN_ERROR;
   } catch (...) { return UNKNOWN_ERROR; }
@@ -306,7 +323,7 @@ mnn_error_code_t mnn_interpreter_get_session_output_all(
     size_t i = 0;
     for (const auto &pair : outputs) {
       (*tensors)[i] = (mnn_tensor_t)pair.second;
-      (*names)[i] = pair.first.c_str();
+      (*names)[i] = strdup(pair.first.c_str());
       i++;
     }
     return NO_ERROR;
@@ -329,7 +346,7 @@ mnn_error_code_t mnn_interpreter_get_session_input_all(
     size_t i = 0;
     for (const auto &pair : inputs) {
       (*tensors)[i] = (mnn_tensor_t)pair.second;
-      (*names)[i] = pair.first.c_str();
+      (*names)[i] = strdup(pair.first.c_str());
       i++;
     }
     return NO_ERROR;

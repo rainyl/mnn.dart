@@ -3,6 +3,8 @@
 
 // ignore_for_file: avoid_print
 
+import 'dart:io';
+
 import 'package:logging/logging.dart';
 import 'package:native_assets_cli/native_assets_cli.dart';
 import 'package:native_toolchain_cmake/native_toolchain_cmake.dart';
@@ -16,15 +18,16 @@ void main(List<String> args) async {
 Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
   final packageName = input.packageName;
   final packagePath = await getPackagePath(packageName);
+  final outDir = Uri.directory(packagePath).resolve('build/');
   final cbuilder = CMakeBuilder.create(
     name: packageName,
     sourceDir: Uri.directory(packagePath).resolve('src/'),
+    outDir: outDir,
     targets: [
       // '',
     ],
     defines: {
-      'CMAKE_INSTALL_PREFIX':
-          input.outputDirectory.resolve('install').toFilePath(),
+      'CMAKE_INSTALL_PREFIX': input.outputDirectory.resolve('install').toFilePath(),
     },
   );
 
@@ -33,8 +36,9 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
     output: output,
     logger: Logger("")
       ..level = Level.ALL
-      ..onRecord.listen((record) => print(record.message)),
+      ..onRecord.listen((record) => stderr.writeln(record.message)),
+    // ..onRecord.listen((record) => print(record.message)),
   );
 
-  await output.findAndAddCodeAssets(input, names: {"mnn_c_api": "mnn.dart"});
+  await output.findAndAddCodeAssets(input, outDir: outDir, names: {"mnn_c_api": "mnn.dart"});
 }

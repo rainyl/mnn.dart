@@ -29,4 +29,12 @@ class Timer extends NativeObject {
 
   @override
   ffi.NativeFinalizer get finalizer => _finalizer;
+
+  @override
+  List<Object?> get props => [ptr.address];
+
+  @override
+  String toString() {
+    return 'Timer(address=0x${ptr.address})';
+  }
 }

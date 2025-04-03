@@ -241,7 +241,7 @@ uint64_t mnn_tensor_device_id(mnn_tensor_t tensor);
  * @param tensor Tensor
  * @return Buffer pointer
  */
-void *mnn_tensor_buffer(mnn_tensor_t tensor);
+ struct halide_buffer_t *mnn_tensor_buffer(mnn_tensor_t tensor);
 
 /**
  * @brief Get dimension type
@@ -309,6 +309,9 @@ mnn_error_code_t mnn_tensor_wait(mnn_tensor_t tensor, mnn_map_type_t mtype, bool
  */
 mnn_error_code_t
 mnn_tensor_set_device_ptr(mnn_tensor_t tensor, const void *device_ptr, int memory_type);
+
+void mnn_tensor_print(mnn_tensor_t tensor);
+void mnn_tensor_print_shape(mnn_tensor_t tensor);
 
 #ifdef __cplusplus
 }
