@@ -32,7 +32,7 @@ FetchContent_MakeAvailable(MNN)
 
 set(MNNC_LINK_LIBS MNN)
 if (ANDROID)
-    set(MNNC_LINK_LIBS ${MNNC_LINK_LIBS} camera2ndk mediandk -landroid)
+    set(MNNC_LINK_LIBS ${MNNC_LINK_LIBS} mediandk -landroid)
 elseif (APPLE AND IOS)
     # https://github.com/opencv/opencv/blob/450e741f8d53ff12b4e194c7762adaefb952555a/platforms/ios/build_framework.py#L386
     set(MNNC_LINK_LIBS ${MNNC_LINK_LIBS}
