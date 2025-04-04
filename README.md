@@ -9,20 +9,33 @@ A Dart wapper for [MNN](https://github.com/alibaba/MNN).
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+```
+dart --enable-experiment=native-assets run example/image_recognition.dart
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
 ```dart
-const like = 'sample';
+import 'package:mnn/mnn.dart' as mnn;
+
+void main() {
+  final net = mnn.Interpreter.fromFile("example.mnn");
+  final session = net.createSession();
+  final input = session.getInput();
+  final output = session.getOutput();
+  // fill input
+  session.run();
+  // process output
+  final outputUser = mnn.Tensor.fromTensor(output, dimType: dimType);
+  output.copyToHost(outputUser);
+  outputUser.printShape();
+}
 ```
 
-## Additional information
+## Authors
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+- [rainyl](https://github.com/rainyl)
+
+## License
+
+[Apache-2.0](LICENSE)

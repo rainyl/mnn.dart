@@ -18,15 +18,15 @@ void main(List<String> args) async {
 
   const topK = 3;
 
-  final interpreter = mnn.Interpreter.fromFile(args[0]);
-  interpreter.setCacheFile('.cachefile');
-  interpreter.setSessionMode(mnn.SessionMode.Session_Backend_Auto);
-  interpreter.setSessionHint(mnn.HintMode.MAX_TUNING_NUMBER, 5);
+  final net = mnn.Interpreter.fromFile(args[0]);
+  net.setCacheFile('.cachefile');
+  net.setSessionMode(mnn.SessionMode.Session_Backend_Auto);
+  net.setSessionHint(mnn.HintMode.MAX_TUNING_NUMBER, 5);
 
   final config = mnn.ScheduleConfig.create(type: mnn.ForwardType.MNN_FORWARD_AUTO);
-  final session = interpreter.createSession(config: config);
+  final session = net.createSession(config: config);
 
-  final input = interpreter.getSessionInput(session);
+  final input = net.getSessionInput(session);
   if (input == null || input.isEmpty) {
     print("Can't get input tensor");
     return;
@@ -35,9 +35,9 @@ void main(List<String> args) async {
   final shape = input.shape;
   assert(shape.length == 4);
   shape[0] = args.length - 1;
-  interpreter.resizeTensor(input, shape);
-  interpreter.resizeSession(session);
-  final output = interpreter.getSessionOutput(session);
+  net.resizeTensor(input, shape);
+  net.resizeSession(session);
+  final output = net.getSessionOutput(session);
   final (B, C, H, W) = (shape[0], shape[1], shape[2], shape[3]);
 
   if (output.isEmpty || output.elementSize == 0) {
@@ -95,7 +95,7 @@ void main(List<String> args) async {
   host.cast<mnn.f32>().asTypedList(pixData.length).setAll(0, pixData);
   input.unmap(mnn.MapType.MNN_MAP_TENSOR_WRITE, input.dimensionType, host);
 
-  interpreter.runSession(session);
+  net.runSession(session);
   final dimType = output.type.code == mnn.HalideTypeCode.halide_type_float
       ? output.dimensionType
       : mnn.DimensionType.MNN_CAFFE;
@@ -133,5 +133,5 @@ void main(List<String> args) async {
     }
   }
 
-  interpreter.updateCacheFile(session);
+  net.updateCacheFile(session);
 }
