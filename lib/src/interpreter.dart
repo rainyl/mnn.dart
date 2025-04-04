@@ -125,8 +125,8 @@ class Interpreter extends NativeObject {
     return rval;
   }
 
-  void setSessionMode(c.SessionMode mode) {
-    c.mnn_interpreter_set_session_mode(ptr, mode);
+  void setSessionMode(SessionMode mode) {
+    c.mnn_interpreter_set_session_mode(ptr, mode.value);
   }
 
   c.ErrorCode runSession(Session session) {
@@ -188,6 +188,19 @@ class Interpreter extends NativeObject {
 
   c.ErrorCode updateSessionToModel(Session session) {
     return c.mnn_interpreter_update_session_to_model(ptr, session.ptr);
+  }
+
+  void resizeTensor(Tensor tensor, List<int> dims) {
+    final pDims = calloc<ffi.Int>(dims.length);
+    pDims.cast<i32>().asTypedList(dims.length).setAll(0, dims);
+    try {
+      final code = c.mnn_interpreter_resize_tensor(ptr, tensor.ptr, pDims, dims.length);
+      if (code != c.ErrorCode.NO_ERROR) {
+        throw Exception('resizeTensor failed, code=$code');
+      }
+    } finally {
+      calloc.free(pDims);
+    }
   }
 
   @override

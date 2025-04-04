@@ -214,6 +214,11 @@ class Tensor extends NativeObject {
 
   @override
   List<Object?> get props => [ptr.address];
+
+  @override
+  String toString() {
+    return 'Tensor(address=0x${ptr.address.toRadixString(16)}, shape=$shape, type=$type, dimType=$dimensionType)';
+  }
 }
 
 enum DataType {

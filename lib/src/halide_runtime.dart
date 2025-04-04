@@ -43,6 +43,9 @@ class HalideType extends NativeObject {
   int get lanes => ptr.cast<c.halide_type_t>().ref.lanes;
   c.HalideTypeCode get code => ptr.cast<c.halide_type_t>().ref.code;
 
+  /// Size in bytes for a single element, even if width is not 1, of this type.
+  int get bytes => (bits + 7) ~/ 8;
+
   c.halide_type_t get ref => ptr.cast<c.halide_type_t>().ref;
 
   @override
@@ -82,7 +85,8 @@ class HalideBuffer extends NativeObject {
         (index) => HalideDimension.fromPointer(ref.dim + index, attach: false),
       );
 
-  ffi.Pointer<ffi.Void> get padding => ref.padding;
+  // Not used
+  // ffi.Pointer<ffi.Void> get padding => ref.padding;
 
   c.halide_buffer_t get ref => ptr.cast<c.halide_buffer_t>().ref;
 

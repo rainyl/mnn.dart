@@ -37,16 +37,6 @@ typedef void *mnn_backend_t;
 // typedef mnn_forward_type mnn_forward_type_t;
 typedef int mnn_forward_type_t;
 
-/** Session mode enum */
-typedef enum {
-  MNN_SESSION_DEBUG = 0,
-  MNN_SESSION_RELEASE = 1,
-  MNN_SESSION_INPUT_INSIDE = 2,
-  MNN_SESSION_INPUT_USER = 3,
-  MNN_SESSION_OUTPUT_INSIDE = 4,
-  MNN_SESSION_OUTPUT_USER = 5
-} mnn_session_mode_t;
-
 /** Schedule config structure */
 typedef struct mnn_schedule_config_t {
   mnn_forward_type_t type;
@@ -181,7 +171,7 @@ mnn_interpreter_get_session_output(mnn_interpreter_t self, mnn_session_t session
  * @param self Interpreter instance
  * @param mode Session mode
  */
-void mnn_interpreter_set_session_mode(mnn_interpreter_t self, mnn_session_mode_t mode);
+void mnn_interpreter_set_session_mode(mnn_interpreter_t self, int mode);
 
 /**
  * @brief Get MNN version

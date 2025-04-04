@@ -3,6 +3,7 @@
 
 .dart_tool/
 pubspec.lock
+*.mnn
 
 .ccls-cache
 

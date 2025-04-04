@@ -280,7 +280,7 @@ mnn_tensor_t mnn_interpreter_get_session_output(
 }
 
 // Session configuration
-void mnn_interpreter_set_session_mode(mnn_interpreter_t self, mnn_session_mode_t mode) {
+void mnn_interpreter_set_session_mode(mnn_interpreter_t self, int mode) {
   if (!self) return;
   try {
     ((MNN::Interpreter *)self)->setSessionMode((MNN::Interpreter::SessionMode)mode);

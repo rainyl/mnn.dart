@@ -763,21 +763,11 @@ external mnn_tensor_t mnn_interpreter_get_session_output(
 /// @brief Set session mode
 /// @param self Interpreter instance
 /// @param mode Session mode
-@ffi.Native<ffi.Void Function(mnn_interpreter_t, ffi.UnsignedInt)>(
-    symbol: 'mnn_interpreter_set_session_mode')
-external void _mnn_interpreter_set_session_mode(
+@ffi.Native<ffi.Void Function(mnn_interpreter_t, ffi.Int)>()
+external void mnn_interpreter_set_session_mode(
   mnn_interpreter_t self,
   int mode,
 );
-
-void mnn_interpreter_set_session_mode(
-  mnn_interpreter_t self,
-  SessionMode mode,
-) =>
-    _mnn_interpreter_set_session_mode(
-      self,
-      mode.value,
-    );
 
 /// @brief Get MNN version
 /// @return Version string
@@ -1496,29 +1486,6 @@ typedef mnn_backend_t = ffi.Pointer<ffi.Void>;
 /// // typedef mnn_forward_type mnn_forward_type_t;
 typedef mnn_forward_type_t = ffi.Int;
 typedef Dartmnn_forward_type_t = int;
-
-/// Session mode enum
-enum SessionMode {
-  MNN_SESSION_DEBUG(0),
-  MNN_SESSION_RELEASE(1),
-  MNN_SESSION_INPUT_INSIDE(2),
-  MNN_SESSION_INPUT_USER(3),
-  MNN_SESSION_OUTPUT_INSIDE(4),
-  MNN_SESSION_OUTPUT_USER(5);
-
-  final int value;
-  const SessionMode(this.value);
-
-  static SessionMode fromValue(int value) => switch (value) {
-        0 => MNN_SESSION_DEBUG,
-        1 => MNN_SESSION_RELEASE,
-        2 => MNN_SESSION_INPUT_INSIDE,
-        3 => MNN_SESSION_INPUT_USER,
-        4 => MNN_SESSION_OUTPUT_INSIDE,
-        5 => MNN_SESSION_OUTPUT_USER,
-        _ => throw ArgumentError('Unknown value for SessionMode: $value'),
-      };
-}
 
 /// CPU:number of threads in parallel , Or GPU: mode setting
 final class UnnamedUnion2 extends ffi.Union {
