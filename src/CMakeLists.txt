@@ -31,9 +31,37 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(MNN)
 
 set(MNNC_LINK_LIBS MNN)
-if(APPLE)
-  set(MNNC_LINK_LIBS ${MNNC_LINK_LIBS} "-framework Foundation" "-framework Metal" "-framework Cocoa")
-endif(APPLE)
+if (ANDROID)
+    set(MNNC_LINK_LIBS ${MNNC_LINK_LIBS} camera2ndk mediandk -landroid)
+elseif (APPLE AND IOS)
+    # https://github.com/opencv/opencv/blob/450e741f8d53ff12b4e194c7762adaefb952555a/platforms/ios/build_framework.py#L386
+    set(MNNC_LINK_LIBS ${MNNC_LINK_LIBS}
+            "-framework UIKit"
+            "-framework AVFoundation"
+            "-framework CoreVideo"
+            "-framework CoreGraphics"
+            "-framework CoreMedia"
+            "-framework CoreImage"
+            "-framework QuartzCore"
+            "-framework Accelerate"
+            "-framework Metal"
+            "-framework Foundation"
+    )
+elseif (APPLE AND NOT IOS)
+    set(MNNC_LINK_LIBS ${MNNC_LINK_LIBS}
+            "-framework Cocoa"
+            "-framework AVFoundation"
+            "-framework OpenGL"
+            "-framework CoreVideo"
+            "-framework CoreGraphics"
+            "-framework CoreMedia"
+            "-framework CoreImage"
+            "-framework QuartzCore"
+            "-framework Accelerate"
+            "-framework Metal"
+            "-framework Foundation"
+    )
+endif ()
 
 set(SOURCES
     autotime.cpp

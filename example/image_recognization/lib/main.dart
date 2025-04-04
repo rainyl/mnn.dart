@@ -118,6 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    debugPrint('pickedFile: ${pickedFile?.path}');
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
@@ -236,7 +237,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              if (_selectedImage != null) 
+              if (_selectedImage != null)
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Image.file(_selectedImage!, height: 300),

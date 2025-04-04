@@ -29,6 +29,7 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
       'CMAKE_INSTALL_PREFIX': input.outputDirectory.resolve('install').toFilePath(),
       // 'MNN_DEBUG': 'ON',
     },
+    buildLocal: true,
   );
 
   await cbuilder.run(
