@@ -1,19 +1,21 @@
-//
-// interpreter.cpp
-// MNN C API for Interpreter implementation
-//
-// This file implements the C-style API for MNN's Interpreter functionality
-// All functions use snake_case naming convention
-//
+/*
+ * interpreter.cpp
+ * MNN C API for Interpreter
+ *
+ * This file provides C-style API for MNN's Interpreter functionality
+ *
+ * Author: Rainyl
+ * License: Apache License 2.0
+ */
 
 #include "interpreter.h"
 #include "MNN/Interpreter.hpp"
 #include "MNN/MNNForwardType.h"
 #include "error_code.h"
 #include "tensor.h"
-#include <_string.h>
 #include <cstddef>
 #include <cstring>
+#include <string.h>
 
 // Interpreter creation/destruction
 mnn_interpreter_t mnn_interpreter_create_from_file(const char *file_path, mnn_callback_0 callback) {

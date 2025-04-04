@@ -1088,6 +1088,34 @@ class _SymbolAddresses {
           ffi.Native.addressOf(self.mnn_runtime_info_destroy);
 }
 
+typedef mnn_callback_0Function = ffi.Void Function();
+typedef Dartmnn_callback_0Function = void Function();
+typedef mnn_callback_0
+    = ffi.Pointer<ffi.NativeFunction<mnn_callback_0Function>>;
+
+final class UnnamedUnion1 extends ffi.Union {
+  external ffi.Pointer<ffi.Void> sharedContext;
+
+  @ffi.Size()
+  external int flags;
+}
+
+final class mnn_backend_config_t extends ffi.Struct {
+  /// mnn_memory_mode memory;
+  @ffi.Int()
+  external int memory;
+
+  /// mnn_power_mode power;
+  @ffi.Int()
+  external int power;
+
+  /// mnn_precision_mode precision;
+  @ffi.Int()
+  external int precision;
+
+  external UnnamedUnion1 unnamed;
+}
+
 typedef mnn_timer_t = ffi.Pointer<ffi.Void>;
 typedef mnn_auto_time_t = ffi.Pointer<ffi.Void>;
 
@@ -1152,34 +1180,6 @@ enum ErrorCode {
         103 => MNN_INVALID_PTR,
         _ => throw ArgumentError('Unknown value for ErrorCode: $value'),
       };
-}
-
-typedef mnn_callback_0Function = ffi.Void Function();
-typedef Dartmnn_callback_0Function = void Function();
-typedef mnn_callback_0
-    = ffi.Pointer<ffi.NativeFunction<mnn_callback_0Function>>;
-
-final class UnnamedUnion1 extends ffi.Union {
-  external ffi.Pointer<ffi.Void> sharedContext;
-
-  @ffi.Size()
-  external int flags;
-}
-
-final class mnn_backend_config_t extends ffi.Struct {
-  /// mnn_memory_mode memory;
-  @ffi.Int()
-  external int memory;
-
-  /// mnn_power_mode power;
-  @ffi.Int()
-  external int power;
-
-  /// mnn_precision_mode precision;
-  @ffi.Int()
-  external int precision;
-
-  external UnnamedUnion1 unnamed;
 }
 
 /// An opaque struct containing per-GPU API implementations of the
@@ -1287,39 +1287,6 @@ final class halide_device_interface_t extends ffi.Struct {
   external ffi.Pointer<halide_device_interface_impl_t> impl;
 }
 
-/// Types in the halide type system. They can be ints, unsigned ints,
-/// or floats (of various bit-widths), or a handle (which is always 64-bits).
-/// Note that the int/uint/float values do not imply a specific bit width
-/// (the bit width is expected to be encoded in a separate value).
-enum HalideTypeCode {
-  /// !< signed integers
-  halide_type_int(0),
-
-  /// !< unsigned integers
-  halide_type_uint(1),
-
-  /// !< IEEE floating point numbers
-  halide_type_float(2),
-
-  /// !< opaque pointer type (void *)
-  halide_type_handle(3),
-
-  /// !< floating point numbers in the bfloat format
-  halide_type_bfloat(4);
-
-  final int value;
-  const HalideTypeCode(this.value);
-
-  static HalideTypeCode fromValue(int value) => switch (value) {
-        0 => halide_type_int,
-        1 => halide_type_uint,
-        2 => halide_type_float,
-        3 => halide_type_handle,
-        4 => halide_type_bfloat,
-        _ => throw ArgumentError('Unknown value for HalideTypeCode: $value'),
-      };
-}
-
 /// A runtime tag for a type in the halide type system. Can be ints,
 /// unsigned ints, or floats of various bit-widths (the 'bits'
 /// field). Can also be vectors of the same (by setting the 'lanes'
@@ -1327,10 +1294,8 @@ enum HalideTypeCode {
 /// exactly 32-bits in size.
 final class halide_type_t extends ffi.Struct {
   /// halide_type_code_t
-  @ffi.UnsignedInt()
-  external int codeAsInt;
-
-  HalideTypeCode get code => HalideTypeCode.fromValue(codeAsInt);
+  @ffi.Uint8()
+  external int code;
 
   /// The number of bits of precision of a single scalar value of this type.
   @ffi.Uint8()
@@ -1390,6 +1355,39 @@ final class halide_buffer_t extends ffi.Struct {
 
   /// Pads the buffer up to a multiple of 8 bytes
   external ffi.Pointer<ffi.Void> padding;
+}
+
+/// Types in the halide type system. They can be ints, unsigned ints,
+/// or floats (of various bit-widths), or a handle (which is always 64-bits).
+/// Note that the int/uint/float values do not imply a specific bit width
+/// (the bit width is expected to be encoded in a separate value).
+enum HalideTypeCode {
+  /// !< signed integers
+  halide_type_int(0),
+
+  /// !< unsigned integers
+  halide_type_uint(1),
+
+  /// !< IEEE floating point numbers
+  halide_type_float(2),
+
+  /// !< opaque pointer type (void *)
+  halide_type_handle(3),
+
+  /// !< floating point numbers in the bfloat format
+  halide_type_bfloat(4);
+
+  final int value;
+  const HalideTypeCode(this.value);
+
+  static HalideTypeCode fromValue(int value) => switch (value) {
+        0 => halide_type_int,
+        1 => halide_type_uint,
+        2 => halide_type_float,
+        3 => halide_type_handle,
+        4 => halide_type_bfloat,
+        _ => throw ArgumentError('Unknown value for HalideTypeCode: $value'),
+      };
 }
 
 enum halide_buffer_flags {

@@ -1,10 +1,12 @@
-//
-// tensor.cpp
-// MNN C API for Tensor implementation
-//
-// This file implements the C-style API for MNN's Tensor functionality
-// All functions use snake_case naming convention
-//
+/*
+ * tensor.cpp
+ * MNN C API for Tensor implementation
+ *
+ * This file implements the C-style API for MNN's Tensor functionality
+ *
+ * Author: Rainyl
+ * License: Apache License 2.0
+ */
 
 #include "tensor.h"
 #include "MNN/HalideRuntime.h"
@@ -123,7 +125,7 @@ mnn_tensor_t mnn_tensor_create_with_data(
 
 // MNN::Tensor destruction
 void mnn_tensor_destroy(mnn_tensor_t tensor) {
-  if (tensor) { delete (MNN::Tensor *)tensor; }
+  if (tensor) { MNN::Tensor::destroy((MNN::Tensor *)tensor); }
 }
 
 // MNN::Tensor operations
@@ -259,7 +261,11 @@ void mnn_tensor_set_type(mnn_tensor_t tensor, int type) {
 struct halide_type_t *mnn_tensor_get_type(mnn_tensor_t tensor) {
   if (!tensor) return new halide_type_t();
   auto _type = ((MNN::Tensor *)tensor)->getType();
-  return new halide_type_t(_type.code, _type.bits, _type.lanes);
+  halide_type_t *type = (halide_type_t *)malloc(sizeof(halide_type_t));
+  type->code = _type.code;
+  type->bits = _type.bits;
+  type->lanes = _type.lanes;
+  return type;
 }
 
 // Memory mapping

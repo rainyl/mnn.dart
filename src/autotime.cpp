@@ -1,3 +1,13 @@
+/*
+ * autotime.cpp
+ * MNN C API for AutoTime
+ *
+ * This file provides C-style API for MNN's AutoTime functionality
+ *
+ * Author: Rainyl
+ * License: Apache License 2.0
+ */
+
 #include "autotime.h"
 #include "MNN/AutoTime.hpp"
 

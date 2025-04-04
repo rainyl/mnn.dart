@@ -23,11 +23,11 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
     name: packageName,
     sourceDir: Uri.directory(packagePath).resolve('src/'),
     outDir: outDir,
-    targets: [
-      // '',
-    ],
+    generator: Generator.ninja,
+    targets: ['install'],
     defines: {
       'CMAKE_INSTALL_PREFIX': input.outputDirectory.resolve('install').toFilePath(),
+      // 'MNN_DEBUG': 'ON',
     },
   );
 

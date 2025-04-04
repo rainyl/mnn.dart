@@ -4,6 +4,12 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifdef _WIN32
+#define MNN_C_API __declspec(dllexport)
+#else
+#define MNN_C_API
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -39,9 +39,9 @@ class HalideType extends NativeObject {
   factory HalideType.i32() => HalideType.create(code: c.HalideTypeCode.halide_type_int, bits: 32);
   factory HalideType.i64() => HalideType.create(code: c.HalideTypeCode.halide_type_int, bits: 64);
 
-  int get bits => ptr.cast<c.halide_type_t>().ref.bits;
-  int get lanes => ptr.cast<c.halide_type_t>().ref.lanes;
-  c.HalideTypeCode get code => ptr.cast<c.halide_type_t>().ref.code;
+  int get bits => ref.bits;
+  int get lanes => ref.lanes;
+  int get code => ref.code;
 
   /// Size in bytes for a single element, even if width is not 1, of this type.
   int get bytes => (bits + 7) ~/ 8;
@@ -61,7 +61,7 @@ class HalideType extends NativeObject {
 
   @override
   String toString() {
-    return 'HalideType(bits=$bits, lanes=$lanes, code=$code)';
+    return 'HalideType(code=$code, bits=$bits, lanes=$lanes)';
   }
 }
 

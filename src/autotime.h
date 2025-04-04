@@ -1,14 +1,17 @@
-//
-// autotime.h
-// MNN C API for AutoTime
-//
-// This file provides C-style API for MNN's AutoTime functionality
-// All functions use snake_case naming convention
-//
+/*
+ * autotime.h
+ * MNN C API for AutoTime
+ *
+ * This file provides C-style API for MNN's AutoTime functionality
+ *
+ * Author: Rainyl
+ * License: Apache License 2.0
+ */
 
 #ifndef MNN_AUTOTIME_H
 #define MNN_AUTOTIME_H
 
+#include "mnn_type.h"
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -31,33 +34,33 @@ typedef void *mnn_auto_time_t;
  * @brief Creates a new timer instance
  * @return Pointer to the newly created timer
  */
-mnn_timer_t mnn_timer_create();
+MNN_C_API mnn_timer_t mnn_timer_create();
 
 /**
  * @brief Destroys a timer instance
  * @param timer Timer instance to destroy
  */
-void mnn_timer_destroy(mnn_timer_t timer);
+MNN_C_API void mnn_timer_destroy(mnn_timer_t timer);
 
 /**
  * @brief Resets the timer to current time
  * @param timer Timer instance to reset
  */
-void mnn_timer_reset(mnn_timer_t timer);
+MNN_C_API void mnn_timer_reset(mnn_timer_t timer);
 
 /**
  * @brief Gets the duration in microseconds since last reset
  * @param timer Timer instance to query
  * @return Duration in microseconds
  */
-uint64_t mnn_timer_duration_us(mnn_timer_t timer);
+MNN_C_API uint64_t mnn_timer_duration_us(mnn_timer_t timer);
 
 /**
  * @brief Gets the current time value from timer
  * @param timer Timer instance to query
  * @return Current time value
  */
-uint64_t mnn_timer_current(mnn_timer_t timer);
+MNN_C_API uint64_t mnn_timer_current(mnn_timer_t timer);
 
 /**
  * @brief Creates a new auto timer instance
@@ -65,13 +68,13 @@ uint64_t mnn_timer_current(mnn_timer_t timer);
  * @param func Function name (for debugging)
  * @return Pointer to the newly created auto timer
  */
-mnn_auto_time_t mnn_auto_time_create(int line, const char *func);
+MNN_C_API mnn_auto_time_t mnn_auto_time_create(int line, const char *func);
 
 /**
  * @brief Destroys an auto timer instance
  * @param auto_time Auto timer instance to destroy
  */
-void mnn_auto_time_destroy(mnn_auto_time_t auto_time);
+MNN_C_API void mnn_auto_time_destroy(mnn_auto_time_t auto_time);
 
 #ifdef __cplusplus
 }

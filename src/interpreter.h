@@ -1,16 +1,18 @@
-//
-// interpreter.h
-// MNN C API for Interpreter
-//
-// This file provides C-style API for MNN's Interpreter functionality
-// All functions use snake_case naming convention
-//
+/*
+ * interpreter.h
+ * MNN C API for Interpreter
+ *
+ * This file provides C-style API for MNN's Interpreter functionality
+ *
+ * Author: Rainyl
+ * License: Apache License 2.0
+ */
 
 #ifndef MNN_INTERPRETER_H
 #define MNN_INTERPRETER_H
 
 #include "error_code.h"
-#include "mnn_forward_type.h"
+#include "mnn_type.h"
 #include "tensor.h"
 #include <stddef.h>
 #include <stdint.h>
@@ -55,7 +57,8 @@ typedef struct mnn_schedule_config_t {
  * @param callback Callback function to be called after creation
  * @return Interpreter instance or NULL if failed
  */
-mnn_interpreter_t mnn_interpreter_create_from_file(const char *file_path, mnn_callback_0 callback);
+MNN_C_API mnn_interpreter_t
+mnn_interpreter_create_from_file(const char *file_path, mnn_callback_0 callback);
 
 /**
  * @brief Create interpreter from buffer
@@ -64,14 +67,14 @@ mnn_interpreter_t mnn_interpreter_create_from_file(const char *file_path, mnn_ca
  * @param callback Callback function to be called after creation
  * @return Interpreter instance or NULL if failed
  */
-mnn_interpreter_t
+MNN_C_API mnn_interpreter_t
 mnn_interpreter_create_from_buffer(const void *buffer, size_t size, mnn_callback_0 callback);
 
 /**
  * @brief Destroy interpreter instance
  * @param self Interpreter to destroy
  */
-void mnn_interpreter_destroy(mnn_interpreter_t self);
+MNN_C_API void mnn_interpreter_destroy(mnn_interpreter_t self);
 
 /**
  * @brief Create runtime info
@@ -79,14 +82,14 @@ void mnn_interpreter_destroy(mnn_interpreter_t self);
  * @param count Config count
  * @return Runtime info instance
  */
-mnn_runtime_info_t
+MNN_C_API mnn_runtime_info_t
 mnn_interpreter_create_runtime(const mnn_schedule_config_t *configs, size_t count);
 
 /**
  * @brief Destroy runtime info
  * @param runtime Runtime info to destroy
  */
-void mnn_runtime_info_destroy(mnn_runtime_info_t runtime);
+MNN_C_API void mnn_runtime_info_destroy(mnn_runtime_info_t runtime);
 
 /**
  * @brief Create session with config
@@ -95,7 +98,7 @@ void mnn_runtime_info_destroy(mnn_runtime_info_t runtime);
  * @param callback Callback function to be called after creation
  * @return Session instance or NULL if failed
  */
-mnn_session_t mnn_interpreter_create_session(
+MNN_C_API mnn_session_t mnn_interpreter_create_session(
     mnn_interpreter_t self, const mnn_schedule_config_t *config, mnn_callback_0 callback
 );
 
@@ -107,7 +110,7 @@ mnn_session_t mnn_interpreter_create_session(
  * @param callback Callback function to be called after creation
  * @return Session instance or NULL if failed
  */
-mnn_session_t mnn_interpreter_create_session_with_runtime(
+MNN_C_API mnn_session_t mnn_interpreter_create_session_with_runtime(
     mnn_interpreter_t self,
     const mnn_schedule_config_t *config,
     mnn_runtime_info_t runtime,
@@ -121,7 +124,7 @@ mnn_session_t mnn_interpreter_create_session_with_runtime(
  * @param callback Callback function to be called after release
  * @return Error code
  */
-mnn_error_code_t mnn_interpreter_release_session(
+MNN_C_API mnn_error_code_t mnn_interpreter_release_session(
     mnn_interpreter_t self, mnn_session_t session, mnn_callback_0 callback
 );
 
@@ -132,7 +135,7 @@ mnn_error_code_t mnn_interpreter_release_session(
  * @param callback Callback function to be called after resize
  * @return Error code
  */
-mnn_error_code_t mnn_interpreter_resize_session(
+MNN_C_API mnn_error_code_t mnn_interpreter_resize_session(
     mnn_interpreter_t self, mnn_session_t session, mnn_callback_0 callback
 );
 
@@ -143,7 +146,7 @@ mnn_error_code_t mnn_interpreter_resize_session(
  * @param callback Callback function to be called after run
  * @return Error code
  */
-mnn_error_code_t
+MNN_C_API mnn_error_code_t
 mnn_interpreter_run_session(mnn_interpreter_t self, mnn_session_t session, mnn_callback_0 callback);
 
 /**
@@ -153,7 +156,7 @@ mnn_interpreter_run_session(mnn_interpreter_t self, mnn_session_t session, mnn_c
  * @param name Tensor name (NULL for first input)
  * @return Tensor instance or NULL if failed
  */
-mnn_tensor_t
+MNN_C_API mnn_tensor_t
 mnn_interpreter_get_session_input(mnn_interpreter_t self, mnn_session_t session, const char *name);
 
 /**
@@ -163,7 +166,7 @@ mnn_interpreter_get_session_input(mnn_interpreter_t self, mnn_session_t session,
  * @param name Tensor name (NULL for first output)
  * @return Tensor instance or NULL if failed
  */
-mnn_tensor_t
+MNN_C_API mnn_tensor_t
 mnn_interpreter_get_session_output(mnn_interpreter_t self, mnn_session_t session, const char *name);
 
 /**
@@ -171,27 +174,27 @@ mnn_interpreter_get_session_output(mnn_interpreter_t self, mnn_session_t session
  * @param self Interpreter instance
  * @param mode Session mode
  */
-void mnn_interpreter_set_session_mode(mnn_interpreter_t self, int mode);
+MNN_C_API void mnn_interpreter_set_session_mode(mnn_interpreter_t self, int mode);
 
 /**
  * @brief Get MNN version
  * @return Version string
  */
-const char *mnn_get_version();
+MNN_C_API const char *mnn_get_version();
 
 /**
  * @brief Get biz code from interpreter
  * @param self Interpreter instance
  * @return Biz code string or NULL if failed
  */
-const char *mnn_interpreter_biz_code(mnn_interpreter_t self);
+MNN_C_API const char *mnn_interpreter_biz_code(mnn_interpreter_t self);
 
 /**
  * @brief Get uuid from interpreter
  * @param self Interpreter instance
  * @return Uuid string or NULL if failed
  */
-const char *mnn_interpreter_uuid(mnn_interpreter_t self);
+MNN_C_API const char *mnn_interpreter_uuid(mnn_interpreter_t self);
 
 /**
  * @brief Set cache file for interpreter
@@ -199,9 +202,8 @@ const char *mnn_interpreter_uuid(mnn_interpreter_t self);
  * @param cache_file Cache file path
  * @param key_size Key size
  */
-void mnn_interpreter_set_cache_file(
-    mnn_interpreter_t self, const char *cache_file, size_t key_size
-);
+MNN_C_API void
+mnn_interpreter_set_cache_file(mnn_interpreter_t self, const char *cache_file, size_t key_size);
 
 /**
  * @brief Set external file for interpreter
@@ -209,7 +211,8 @@ void mnn_interpreter_set_cache_file(
  * @param file External file path
  * @param flag Flag value
  */
-void mnn_interpreter_set_external_file(mnn_interpreter_t self, const char *file, size_t flag);
+MNN_C_API void
+mnn_interpreter_set_external_file(mnn_interpreter_t self, const char *file, size_t flag);
 
 /**
  * @brief Set session hint
@@ -217,13 +220,13 @@ void mnn_interpreter_set_external_file(mnn_interpreter_t self, const char *file,
  * @param mode Hint mode
  * @param value Hint value
  */
-void mnn_interpreter_set_session_hint(mnn_interpreter_t self, int mode, int value);
+MNN_C_API void mnn_interpreter_set_session_hint(mnn_interpreter_t self, int mode, int value);
 
 /**
  * @brief Release model
  * @param self Interpreter instance
  */
-void mnn_interpreter_release_model(mnn_interpreter_t self);
+MNN_C_API void mnn_interpreter_release_model(mnn_interpreter_t self);
 
 /**
  * @brief Get model buffer
@@ -231,14 +234,14 @@ void mnn_interpreter_release_model(mnn_interpreter_t self);
  * @param buffer Output parameter to receive pointer to model data
  * @return Size of model data in bytes, or 0 if failed
  */
-size_t mnn_interpreter_get_model_buffer(mnn_interpreter_t self, const void **buffer);
+MNN_C_API size_t mnn_interpreter_get_model_buffer(mnn_interpreter_t self, const void **buffer);
 
 /**
  * @brief Get model version
  * @param self Interpreter instance
  * @return Version string or NULL if failed
  */
-const char *mnn_interpreter_get_model_version(mnn_interpreter_t self);
+MNN_C_API const char *mnn_interpreter_get_model_version(mnn_interpreter_t self);
 
 /**
  * @brief Update cache file
@@ -247,7 +250,7 @@ const char *mnn_interpreter_get_model_version(mnn_interpreter_t self);
  * @param flag Flag value
  * @return Error code
  */
-mnn_error_code_t
+MNN_C_API mnn_error_code_t
 mnn_interpreter_update_cache_file(mnn_interpreter_t self, mnn_session_t session, int flag);
 
 /**
@@ -256,7 +259,7 @@ mnn_interpreter_update_cache_file(mnn_interpreter_t self, mnn_session_t session,
  * @param session Session
  * @return Error code
  */
-mnn_error_code_t
+MNN_C_API mnn_error_code_t
 mnn_interpreter_update_session_to_model(mnn_interpreter_t self, mnn_session_t session);
 
 /**
@@ -266,7 +269,7 @@ mnn_interpreter_update_session_to_model(mnn_interpreter_t self, mnn_session_t se
  * @param info Output parameter for session info
  * @return Error code
  */
-mnn_error_code_t mnn_interpreter_get_session_info(
+MNN_C_API mnn_error_code_t mnn_interpreter_get_session_info(
     mnn_interpreter_t self, mnn_session_t session, int session_info_code, void *info
 );
 
@@ -278,7 +281,7 @@ mnn_error_code_t mnn_interpreter_get_session_info(
  * @param count Output parameter for tensor count
  * @return Error code
  */
-mnn_error_code_t mnn_interpreter_get_session_output_all(
+MNN_C_API mnn_error_code_t mnn_interpreter_get_session_output_all(
     mnn_interpreter_t self,
     mnn_session_t session,
     mnn_tensor_t **tensors,
@@ -294,7 +297,7 @@ mnn_error_code_t mnn_interpreter_get_session_output_all(
  * @param count Output parameter for tensor count
  * @return Error code
  */
-mnn_error_code_t mnn_interpreter_get_session_input_all(
+MNN_C_API mnn_error_code_t mnn_interpreter_get_session_input_all(
     mnn_interpreter_t self,
     mnn_session_t session,
     mnn_tensor_t **tensors,
@@ -309,11 +312,11 @@ mnn_error_code_t mnn_interpreter_get_session_input_all(
  * @param dim_count Dimension count
  * @return Error code
  */
-mnn_error_code_t mnn_interpreter_resize_tensor(
+MNN_C_API mnn_error_code_t mnn_interpreter_resize_tensor(
     mnn_interpreter_t self, mnn_tensor_t tensor, const int *dims, int dim_count
 );
 
-mnn_error_code_t mnn_interpreter_resize_tensor_1(
+MNN_C_API mnn_error_code_t mnn_interpreter_resize_tensor_1(
     mnn_interpreter_t self, mnn_tensor_t tensor, int batch, int channel, int height, int width
 );
 
@@ -323,7 +326,7 @@ mnn_error_code_t mnn_interpreter_resize_tensor_1(
  * @param session Session
  * @return Backend type
  */
-mnn_backend_t
+MNN_C_API mnn_backend_t
 mnn_interpreter_get_backend(mnn_interpreter_t self, mnn_session_t session, mnn_tensor_t tensor);
 
 // /*

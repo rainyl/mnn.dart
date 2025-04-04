@@ -7,6 +7,10 @@ description: |
 output: "lib/src/g/mnn.g.dart"
 ffi-native:
   asset-id: "package:mnn/mnn.dart"
+compiler-opts:
+  - "-Isrc -Isrc/MNN -Wno-nullability-completeness"
+  - "-U_MSC_VER -D_MSC_VER" # HALIDE_ATTRIBUTE_ALIGN(1) uint8_t code; // halide_type_code_t
+  - "-fdeclspec"
 sort: false
 silence-enum-warning: true
 include-unused-typedefs: false
@@ -15,18 +19,16 @@ headers:
     - "src/autotime.h"
     - "src/error_code.h"
     - "src/interpreter.h"
-    - "src/mnn_forward_type.h"
+    - "src/mnn_type.h"
     - "src/tensor.h"
     - "src/MNN/HalideRuntime.h"
   include-directives:
     - "src/autotime.h"
     - "src/error_code.h"
     - "src/interpreter.h"
-    - "src/mnn_forward_type.h"
+    - "src/mnn_type.h"
     - "src/tensor.h"
     - "src/MNN/HalideRuntime.h"
-compiler-opts:
-  - "-Isrc -Isrc/MNN -Wno-nullability-completeness"
 functions:
   # leaf:
   #   include:
