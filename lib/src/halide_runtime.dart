@@ -16,13 +16,15 @@ class HalideType extends NativeObject {
     int bits = 0,
     int lanes = 1,
   }) {
-    final p = c.mnn_halide_type_create_1(code, bits, lanes);
-    return HalideType.fromPointer(p.cast());
+    final p = malloc<c.halide_type_t>()
+      ..ref.codeAsInt = code.value
+      ..ref.bits = bits
+      ..ref.lanes = lanes;
+    return HalideType.fromPointer(p);
   }
 
   factory HalideType.fromNative(c.halide_type_t type) {
-    final p = calloc<c.halide_type_t>();
-    p.cast<c.halide_type_t>().ref = type;
+    final p = calloc<c.halide_type_t>()..ref = type;
     return HalideType.fromPointer(p.cast());
   }
 
@@ -39,9 +41,9 @@ class HalideType extends NativeObject {
   factory HalideType.i32() => HalideType.create(code: c.HalideTypeCode.halide_type_int, bits: 32);
   factory HalideType.i64() => HalideType.create(code: c.HalideTypeCode.halide_type_int, bits: 64);
 
+  c.HalideTypeCode get code => ref.code;
   int get bits => ref.bits;
   int get lanes => ref.lanes;
-  int get code => ref.code;
 
   /// Size in bytes for a single element, even if width is not 1, of this type.
   int get bytes => (bits + 7) ~/ 8;
@@ -53,7 +55,7 @@ class HalideType extends NativeObject {
 
   @override
   void release() {
-    c.mnn_halide_type_destroy(ptr.cast());
+    malloc.free(ptr);
   }
 
   @override
@@ -77,7 +79,11 @@ class HalideBuffer extends NativeObject {
 
   ffi.Pointer<ffi.Uint8> get host => ref.host;
   int get flags => ref.flags;
-  HalideType get type => HalideType.fromNative(ref.type);
+  HalideType get type {
+    print("type: ${ref.type.code}, ${ref.type.bits}, ${ref.type.lanes}");
+    return HalideType.fromNative(ref.type);
+  }
+
   int get dimensions => ref.dimensions;
 
   List<HalideDimension> get dim => List<HalideDimension>.generate(

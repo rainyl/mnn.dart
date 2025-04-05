@@ -48,15 +48,16 @@ void main() async {
   test('Tensor data', () {
     final data = Float32List.fromList(List.generate(27, (index) => index.toDouble()));
     final tensor = mnn.Tensor.fromData(
-      [1, 1, 3, 3],
+      [1, 3, 3, 3],
       mnn.HalideType.f32(),
       data: data.buffer.asUint8List(),
       dimType: mnn.DimensionType.MNN_CAFFE,
     );
+    expect(tensor.isEmpty, false);
     expect(tensor.dimensions, 4);
-    expect(tensor.shape, [1, 1, 3, 3]);
-    expect(tensor.size, 1 * 1 * 3 * 3 * 4); // 4 bytes per float32
-    expect(tensor.elementSize, 1 * 1 * 3 * 3);
+    expect(tensor.shape, [1, 3, 3, 3]);
+    expect(tensor.size, 1 * 3 * 3 * 3 * 4); // 4 bytes per float32
+    expect(tensor.elementSize, 1 * 3 * 3 * 3);
   });
 
   test('Tensor clone', () {

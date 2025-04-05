@@ -2,6 +2,8 @@
 
 mnn.dart inference example.
 
+![example](images/example.png)
+
 ## Getting Started
 
-![example](images/example.png)
+Flutter with main/master channel is required.

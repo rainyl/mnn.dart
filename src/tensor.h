@@ -46,11 +46,6 @@ typedef enum {
   MNN_T_D_TYPE_QI16_I16 = 6,
 } mnn_tensor_dtype;
 
-MNN_C_API struct halide_type_t *mnn_halide_type_create();
-MNN_C_API struct halide_type_t *
-mnn_halide_type_create_1(halide_type_code_t code, uint8_t bits, uint16_t lanes);
-MNN_C_API void mnn_halide_type_destroy(struct halide_type_t *self);
-
 /**
  * @brief Create tensor with dimension size and type
  * @param dim_size Dimension size
@@ -61,13 +56,13 @@ MNN_C_API mnn_tensor_t mnn_tensor_create(int dim_size, mnn_dimension_type_t type
 
 /**
  * @brief Create tensor with same shape as given tensor
- * @param tensor Shape provider
+ * @param self Shape provider
  * @param type Dimension type
  * @param alloc_memory Whether allocate memory
  * @return Tensor instance or NULL if failed
  */
 MNN_C_API mnn_tensor_t
-mnn_tensor_create_from_tensor(mnn_tensor_t tensor, mnn_dimension_type_t type, bool alloc_memory);
+mnn_tensor_create_from_tensor(mnn_tensor_t self, mnn_dimension_type_t type, bool alloc_memory);
 
 /**
  * @brief Create device tensor
@@ -114,208 +109,207 @@ MNN_C_API mnn_tensor_t mnn_tensor_clone(mnn_tensor_t src, bool deep_copy);
 
 /**
  * @brief Copy data from host tensor
- * @param tensor Target tensor
+ * @param self Target tensor
  * @param host_tensor Source tensor
  * @return Error code
  */
-MNN_C_API mnn_error_code_t mnn_tensor_copy_from_host(mnn_tensor_t tensor, mnn_tensor_t host_tensor);
+MNN_C_API mnn_error_code_t mnn_tensor_copy_from_host(mnn_tensor_t self, mnn_tensor_t host_tensor);
 
 /**
  * @brief Copy data to host tensor
- * @param tensor Source tensor
+ * @param self Source tensor
  * @param host_tensor Target tensor
  * @return Error code
  */
-MNN_C_API mnn_error_code_t mnn_tensor_copy_to_host(mnn_tensor_t tensor, mnn_tensor_t host_tensor);
+MNN_C_API mnn_error_code_t mnn_tensor_copy_to_host(mnn_tensor_t self, mnn_tensor_t host_tensor);
 
 /**
  * @brief Get tensor dimensions
- * @param tensor Tensor
+ * @param self Tensor
  * @return Dimension count
  */
-MNN_C_API int mnn_tensor_dimensions(mnn_tensor_t tensor);
+MNN_C_API int mnn_tensor_dimensions(mnn_tensor_t self);
 
 /**
  * @brief Get tensor shape
- * @param tensor Tensor
+ * @param self Tensor
  * @param shape Output shape array (must be pre-allocated)
  * @param shape_size Shape array size
  * @return Error code
  */
-MNN_C_API mnn_error_code_t mnn_tensor_shape(mnn_tensor_t tensor, int *shape, int shape_size);
+MNN_C_API mnn_error_code_t mnn_tensor_shape(mnn_tensor_t self, int *shape, int shape_size);
 
 /**
  * @brief Get tensor data size in bytes
- * @param tensor Tensor
+ * @param self Tensor
  * @return Size in bytes
  */
-MNN_C_API int mnn_tensor_size(mnn_tensor_t tensor);
+MNN_C_API int mnn_tensor_size(mnn_tensor_t self);
 
 /**
  * @brief Get tensor element count
- * @param tensor Tensor
+ * @param self Tensor
  * @return Element count
  */
-MNN_C_API int mnn_tensor_element_size(mnn_tensor_t tensor);
+MNN_C_API int mnn_tensor_element_size(mnn_tensor_t self);
 
 /**
  * @brief Get tensor shape in bytes (unsigned)
- * @param tensor Tensor
+ * @param self Tensor
  * @return Size in bytes
  */
-MNN_C_API size_t mnn_tensor_usize(mnn_tensor_t tensor);
+MNN_C_API size_t mnn_tensor_usize(mnn_tensor_t self);
 
 /**
  * @brief Get tensor width
- * @param tensor Tensor
+ * @param self Tensor
  * @return Width
  */
-MNN_C_API int mnn_tensor_width(mnn_tensor_t tensor);
+MNN_C_API int mnn_tensor_width(mnn_tensor_t self);
 
 /**
  * @brief Get tensor height
- * @param tensor Tensor
+ * @param self Tensor
  * @return Height
  */
-MNN_C_API int mnn_tensor_height(mnn_tensor_t tensor);
+MNN_C_API int mnn_tensor_height(mnn_tensor_t self);
 
 /**
  * @brief Get tensor channel
- * @param tensor Tensor
+ * @param self Tensor
  * @return Channel
  */
-MNN_C_API int mnn_tensor_channel(mnn_tensor_t tensor);
+MNN_C_API int mnn_tensor_channel(mnn_tensor_t self);
 
 /**
  * @brief Get tensor batch
- * @param tensor Tensor
+ * @param self Tensor
  * @return Batch
  */
-MNN_C_API int mnn_tensor_batch(mnn_tensor_t tensor);
+MNN_C_API int mnn_tensor_batch(mnn_tensor_t self);
 
 /**
  * @brief Get tensor stride
- * @param tensor Tensor
+ * @param self Tensor
  * @param index Dimension index
  * @return Stride
  */
-MNN_C_API int mnn_tensor_stride(mnn_tensor_t tensor, int index);
+MNN_C_API int mnn_tensor_stride(mnn_tensor_t self, int index);
 
 /**
  * @brief Get tensor length
- * @param tensor Tensor
+ * @param self Tensor
  * @param index Dimension index
  * @return Length
  */
-MNN_C_API int mnn_tensor_length(mnn_tensor_t tensor, int index);
+MNN_C_API int mnn_tensor_length(mnn_tensor_t self, int index);
 
 /**
  * @brief Set tensor stride
- * @param tensor Tensor
+ * @param self Tensor
  * @param index Dimension index
  * @param stride Stride value
  */
-MNN_C_API void mnn_tensor_set_stride(mnn_tensor_t tensor, int index, int stride);
+MNN_C_API void mnn_tensor_set_stride(mnn_tensor_t self, int index, int stride);
 
 /**
  * @brief Set tensor length
- * @param tensor Tensor
+ * @param self Tensor
  * @param index Dimension index
  * @param length Length value
  */
-MNN_C_API void mnn_tensor_set_length(mnn_tensor_t tensor, int index, int length);
+MNN_C_API void mnn_tensor_set_length(mnn_tensor_t self, int index, int length);
 
 /**
  * @brief Get host data pointer
- * @param tensor Tensor
+ * @param self Tensor
  * @return Data pointer or NULL
  */
-MNN_C_API void *mnn_tensor_host(mnn_tensor_t tensor);
+MNN_C_API void *mnn_tensor_host(mnn_tensor_t self);
 
 /**
  * @brief Get device ID
- * @param tensor Tensor
+ * @param self Tensor
  * @return Device ID
  */
-MNN_C_API uint64_t mnn_tensor_device_id(mnn_tensor_t tensor);
+MNN_C_API uint64_t mnn_tensor_device_id(mnn_tensor_t self);
 
 /**
  * @brief Get buffer
- * @param tensor Tensor
+ * @param self Tensor
  * @return Buffer pointer
  */
-MNN_C_API struct halide_buffer_t *mnn_tensor_buffer(mnn_tensor_t tensor);
+MNN_C_API struct halide_buffer_t *mnn_tensor_buffer(mnn_tensor_t self);
 
 /**
  * @brief Get dimension type
- * @param tensor Tensor
+ * @param self Tensor
  * @return Dimension type
  */
-MNN_C_API mnn_dimension_type_t mnn_tensor_get_dimension_type(mnn_tensor_t tensor);
+MNN_C_API mnn_dimension_type_t mnn_tensor_get_dimension_type(mnn_tensor_t self);
 
 /**
  * @brief Get handle data type
- * @param tensor Tensor
+ * @param self Tensor
  * @return Handle data type
  */
-MNN_C_API mnn_handle_data_type_t mnn_tensor_get_handle_data_type(mnn_tensor_t tensor);
+MNN_C_API mnn_handle_data_type_t mnn_tensor_get_handle_data_type(mnn_tensor_t self);
 
 /**
  * @brief Set data type
- * @param tensor Tensor
+ * @param self Tensor
  * @param type Data type
  */
-MNN_C_API void mnn_tensor_set_type(mnn_tensor_t tensor, int type);
+MNN_C_API void mnn_tensor_set_type(mnn_tensor_t self, int type);
 
 /**
  * @brief Get data type
- * @param tensor Tensor
+ * @param self Tensor
  * @return Data type
  */
-MNN_C_API struct halide_type_t *mnn_tensor_get_type(mnn_tensor_t tensor);
+MNN_C_API struct halide_type_t *mnn_tensor_get_type(mnn_tensor_t self);
 
 /**
  * @brief Map tensor for access
- * @param tensor Tensor
+ * @param self Tensor
  * @param mtype Map type
  * @param dtype Dimension type
  * @return Mapped pointer or NULL
  */
-MNN_C_API void *
-mnn_tensor_map(mnn_tensor_t tensor, mnn_map_type_t mtype, mnn_dimension_type_t dtype);
+MNN_C_API void *mnn_tensor_map(mnn_tensor_t self, mnn_map_type_t mtype, mnn_dimension_type_t dtype);
 
 /**
  * @brief Unmap tensor
- * @param tensor Tensor
+ * @param self Tensor
  * @param mtype Map type
  * @param dtype Dimension type
  * @param map_ptr Mapped pointer
  */
 MNN_C_API void mnn_tensor_unmap(
-    mnn_tensor_t tensor, mnn_map_type_t mtype, mnn_dimension_type_t dtype, void *map_ptr
+    mnn_tensor_t self, mnn_map_type_t mtype, mnn_dimension_type_t dtype, void *map_ptr
 );
 
 /**
  * @brief Wait for tensor ready
- * @param tensor Tensor
+ * @param self Tensor
  * @param mtype Map type
  * @param finish Whether wait for finish
  * @return Error code
  */
-MNN_C_API mnn_error_code_t mnn_tensor_wait(mnn_tensor_t tensor, mnn_map_type_t mtype, bool finish);
+MNN_C_API mnn_error_code_t mnn_tensor_wait(mnn_tensor_t self, mnn_map_type_t mtype, bool finish);
 
 /**
  * @brief Set device pointer
- * @param tensor Tensor
+ * @param self Tensor
  * @param device_ptr Device pointer
  * @param memory_type Memory type
  * @return Error code
  */
 MNN_C_API mnn_error_code_t
-mnn_tensor_set_device_ptr(mnn_tensor_t tensor, const void *device_ptr, int memory_type);
+mnn_tensor_set_device_ptr(mnn_tensor_t self, const void *device_ptr, int memory_type);
 
-MNN_C_API void mnn_tensor_print(mnn_tensor_t tensor);
-MNN_C_API void mnn_tensor_print_shape(mnn_tensor_t tensor);
+MNN_C_API void mnn_tensor_print(mnn_tensor_t self);
+MNN_C_API void mnn_tensor_print_shape(mnn_tensor_t self);
 
 #ifdef __cplusplus
 }

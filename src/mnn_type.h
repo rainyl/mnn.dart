@@ -14,6 +14,12 @@
 extern "C" {
 #endif
 
+// typedef struct {
+//   uint8_t code;
+//   uint8_t bits;
+//   uint16_t lanes;
+// } halide_type_c_t;
+
 typedef void (*mnn_callback_0)();
 
 typedef struct {

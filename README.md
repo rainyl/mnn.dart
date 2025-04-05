@@ -10,7 +10,7 @@ A Dart wapper for [MNN](https://github.com/alibaba/MNN).
 ## Getting started
 
 ```
-dart --enable-experiment=native-assets run example/image_recognition.dart
+dart --enable-experiment=native-assets run example/main.dart
 ```
 
 ## Usage
@@ -31,6 +31,12 @@ void main() {
   outputUser.printShape();
 }
 ```
+
+## TODO
+
+- [ ] async
+- [ ] support custom build configuration in pubspec.yaml
+- [ ] support more backends
 
 ## Authors
 

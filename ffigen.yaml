@@ -9,9 +9,9 @@ ffi-native:
   asset-id: "package:mnn/mnn.dart"
 compiler-opts:
   - "-Isrc -Isrc/MNN -Wno-nullability-completeness"
-  - "-U_MSC_VER -D_MSC_VER" # HALIDE_ATTRIBUTE_ALIGN(1) uint8_t code; // halide_type_code_t
+  - "-U_MSC_VER" # HALIDE_ATTRIBUTE_ALIGN(1) uint8_t code; // halide_type_code_t
   - "-fdeclspec"
-sort: false
+sort: true
 silence-enum-warning: true
 include-unused-typedefs: false
 headers:
@@ -29,12 +29,23 @@ headers:
     - "src/mnn_type.h"
     - "src/tensor.h"
     - "src/MNN/HalideRuntime.h"
+structs:
+  exclude:
+    - 'halide_type_t'
 functions:
-  # leaf:
-  #   include:
-  #     - 'llama_apply_adapter_cvec'
-  # exclude:
-  #   - 'llama_load_model_from_file'
+  leaf:
+    include:
+      - 'mnn_halide_type_.*'
+      - 'mnn_tensor_.*'
+      - 'mnn_interpreter_biz_code'
+      - 'mnn_interpreter_uuid'
+      - 'mnn_interpreter_get_model_version'
+    exclude:
+      - 'mnn_tensor_create.*'
+      - 'mnn_tensor_clone'
+      - 'mnn_tensor_copy_.*'
+      - 'mnn_tensor_wait'
+      - 'mnn_tensor_print.*'
   symbol-address:
     include:
       - '.*destroy.*'

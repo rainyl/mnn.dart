@@ -1,12 +1,11 @@
 name: mnn
 description: A package for running MNN models on Dart and Flutter.
-version: 0.0.1
+version: 0.0.2
 repository: https://github.com/rainyl/mnn.dart
 
 environment:
   sdk: ^3.6.0
 
-# Add regular dependencies here.
 dependencies:
   ffi: ^2.1.4
   logging: ^1.3.0
