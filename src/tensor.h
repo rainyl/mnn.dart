@@ -73,7 +73,7 @@ mnn_tensor_create_from_tensor(mnn_tensor_t self, mnn_dimension_type_t type, bool
  * @return Tensor instance or NULL if failed
  */
 MNN_C_API mnn_tensor_t mnn_tensor_create_device(
-    const int *shape, int shape_size, struct halide_type_t type, mnn_dimension_type_t dim_type
+    const int *shape, int shape_size, halide_type_c_t type, mnn_dimension_type_t dim_type
 );
 
 /**
@@ -88,7 +88,7 @@ MNN_C_API mnn_tensor_t mnn_tensor_create_device(
 MNN_C_API mnn_tensor_t mnn_tensor_create_with_data(
     const int *shape,
     int shape_size,
-    struct halide_type_t type,
+    halide_type_c_t type,
     void *data,
     mnn_dimension_type_t dim_type
 );
@@ -239,7 +239,7 @@ MNN_C_API uint64_t mnn_tensor_device_id(mnn_tensor_t self);
  * @param self Tensor
  * @return Buffer pointer
  */
-MNN_C_API struct halide_buffer_t *mnn_tensor_buffer(mnn_tensor_t self);
+MNN_C_API halide_buffer_c_t *mnn_tensor_buffer(mnn_tensor_t self);
 
 /**
  * @brief Get dimension type
@@ -267,7 +267,7 @@ MNN_C_API void mnn_tensor_set_type(mnn_tensor_t self, int type);
  * @param self Tensor
  * @return Data type
  */
-MNN_C_API struct halide_type_t *mnn_tensor_get_type(mnn_tensor_t self);
+MNN_C_API halide_type_c_t *mnn_tensor_get_type(mnn_tensor_t self);
 
 /**
  * @brief Map tensor for access

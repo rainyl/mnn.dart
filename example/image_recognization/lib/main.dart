@@ -180,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final tempValues = <(int, double)>[];
       final type = outputUser.type;
 
-      if (type.code == mnn.HalideTypeCode.halide_type_float.value) {
+      if (type.code == mnn.HalideTypeCode.halide_type_float) {
         final values = outputUser.host.cast<mnn.f32>();
         for (var i = 0; i < size; i++) {
           tempValues.add((i, values[i]));

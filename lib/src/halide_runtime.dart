@@ -8,7 +8,7 @@ import 'g/mnn.g.dart' as c;
 class HalideType extends NativeObject {
   static final _finalizer = ffi.NativeFinalizer(calloc.nativeFree);
 
-  HalideType.fromPointer(ffi.Pointer<c.halide_type_t> ptr, {super.attach, super.externalSize})
+  HalideType.fromPointer(ffi.Pointer<c.halide_type_c_t> ptr, {super.attach, super.externalSize})
       : super(ptr.cast());
 
   factory HalideType.create({
@@ -16,15 +16,15 @@ class HalideType extends NativeObject {
     int bits = 0,
     int lanes = 1,
   }) {
-    final p = malloc<c.halide_type_t>()
-      ..ref.codeAsInt = code.value
+    final p = malloc<c.halide_type_c_t>()
+      ..ref.code = code.value
       ..ref.bits = bits
       ..ref.lanes = lanes;
     return HalideType.fromPointer(p);
   }
 
-  factory HalideType.fromNative(c.halide_type_t type) {
-    final p = calloc<c.halide_type_t>()..ref = type;
+  factory HalideType.fromNative(c.halide_type_c_t type) {
+    final p = calloc<c.halide_type_c_t>()..ref = type;
     return HalideType.fromPointer(p.cast());
   }
 
@@ -41,14 +41,14 @@ class HalideType extends NativeObject {
   factory HalideType.i32() => HalideType.create(code: c.HalideTypeCode.halide_type_int, bits: 32);
   factory HalideType.i64() => HalideType.create(code: c.HalideTypeCode.halide_type_int, bits: 64);
 
-  c.HalideTypeCode get code => ref.code;
+  c.HalideTypeCode get code => c.HalideTypeCode.fromValue(ref.code);
   int get bits => ref.bits;
   int get lanes => ref.lanes;
 
   /// Size in bytes for a single element, even if width is not 1, of this type.
   int get bytes => (bits + 7) ~/ 8;
 
-  c.halide_type_t get ref => ptr.cast<c.halide_type_t>().ref;
+  c.halide_type_c_t get ref => ptr.cast<c.halide_type_c_t>().ref;
 
   @override
   ffi.NativeFinalizer get finalizer => _finalizer;
@@ -69,18 +69,18 @@ class HalideType extends NativeObject {
 
 class HalideBuffer extends NativeObject {
   static final _finalizer = ffi.NativeFinalizer(calloc.nativeFree);
-  HalideBuffer.fromPointer(ffi.Pointer<c.halide_buffer_t> ptr, {super.attach, super.externalSize})
+  HalideBuffer.fromPointer(ffi.Pointer<c.halide_buffer_c_t> ptr, {super.attach, super.externalSize})
       : super(ptr.cast());
 
   int get devide => ref.device;
 
-  /// The interface used to interpret the above handle.
-  // TODO: external ffi.Pointer<halide_device_interface_t> device_interface;
+  // The interface used to interpret the above handle.
+  // Not used
+  // external ffi.Pointer<halide_device_interface_t> device_interface;
 
   ffi.Pointer<ffi.Uint8> get host => ref.host;
   int get flags => ref.flags;
   HalideType get type {
-    print("type: ${ref.type.code}, ${ref.type.bits}, ${ref.type.lanes}");
     return HalideType.fromNative(ref.type);
   }
 
@@ -94,7 +94,7 @@ class HalideBuffer extends NativeObject {
   // Not used
   // ffi.Pointer<ffi.Void> get padding => ref.padding;
 
-  c.halide_buffer_t get ref => ptr.cast<c.halide_buffer_t>().ref;
+  c.halide_buffer_c_t get ref => ptr.cast<c.halide_buffer_c_t>().ref;
 
   @override
   ffi.NativeFinalizer get finalizer => _finalizer;

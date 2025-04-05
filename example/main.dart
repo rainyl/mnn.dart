@@ -107,17 +107,17 @@ void main(List<String> args) async {
     print('For Image: ${args[batch + 1]}');
     final size = outputUser.getStride(0);
     final tempValues = <(int, double)>[];
-    if (type.code == mnn.HalideTypeCode.halide_type_float.value) {
+    if (type.code == mnn.HalideTypeCode.halide_type_float) {
       final values = outputUser.host.cast<mnn.f32>() + batch * size;
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i]));
       }
-    } else if (type.code == mnn.HalideTypeCode.halide_type_uint.value && type.bytes == 1) {
+    } else if (type.code == mnn.HalideTypeCode.halide_type_uint && type.bytes == 1) {
       final values = outputUser.host.cast<mnn.u8>() + batch * size;
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i].toDouble()));
       }
-    } else if (type.code == mnn.HalideTypeCode.halide_type_int.value && type.bytes == 1) {
+    } else if (type.code == mnn.HalideTypeCode.halide_type_int && type.bytes == 1) {
       final values = outputUser.host.cast<mnn.i8>() + batch * size;
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i].toDouble()));

@@ -3,6 +3,9 @@
 
 // ignore_for_file: avoid_print
 
+// ignore: unused_import
+import 'dart:io';
+
 import 'package:logging/logging.dart';
 import 'package:native_assets_cli/native_assets_cli.dart';
 import 'package:native_toolchain_cmake/native_toolchain_cmake.dart';
@@ -18,7 +21,12 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
   final packagePath = await getPackagePath(packageName);
   final sourceDir = Uri.directory(packagePath).resolve('src/');
   // final outDir = Uri.directory(packagePath).resolve('build/');
-  final cbuilder = CMakeBuilder.create(
+  final logger = Logger("")
+    ..level = Level.ALL
+    // ..onRecord.listen((record) => stderr.writeln(record.message));
+    ..onRecord.listen((record) => print(record.message));
+
+  final builder = CMakeBuilder.create(
     name: packageName,
     sourceDir: sourceDir,
     // outDir: outDir,
@@ -31,14 +39,7 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
     buildLocal: true,
   );
 
-  await cbuilder.run(
-    input: input,
-    output: output,
-    logger: Logger("")
-      ..level = Level.ALL
-      // ..onRecord.listen((record) => stderr.writeln(record.message)),
-      ..onRecord.listen((record) => print(record.message)),
-  );
+  await builder.run(input: input, output: output, logger: logger);
 
   await output.findAndAddCodeAssets(
     input,

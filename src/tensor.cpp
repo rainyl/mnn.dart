@@ -12,6 +12,8 @@
 #include "MNN/HalideRuntime.h"
 #include "MNN/Tensor.hpp"
 #include "error_code.h"
+#include "mnn_type.h"
+#include <cstdint>
 #include <cstring>
 
 enum DataType {
@@ -85,7 +87,7 @@ mnn_tensor_create_from_tensor(mnn_tensor_t self, mnn_dimension_type_t type, bool
 }
 
 mnn_tensor_t mnn_tensor_create_device(
-    const int *shape, int shape_size, struct halide_type_t type, mnn_dimension_type_t dim_type
+    const int *shape, int shape_size, halide_type_c_t type, mnn_dimension_type_t dim_type
 ) {
   if (!shape || shape_size <= 0) return nullptr;
   try {
@@ -100,7 +102,7 @@ mnn_tensor_t mnn_tensor_create_device(
 mnn_tensor_t mnn_tensor_create_with_data(
     const int *shape,
     int shape_size,
-    struct halide_type_t type,
+    halide_type_c_t type,
     void *data,
     mnn_dimension_type_t dim_type
 ) {
@@ -228,10 +230,19 @@ uint64_t mnn_tensor_device_id(mnn_tensor_t self) {
   return ((MNN::Tensor *)self)->deviceId();
 }
 
-struct halide_buffer_t *mnn_tensor_buffer(mnn_tensor_t self) {
+halide_buffer_c_t *mnn_tensor_buffer(mnn_tensor_t self) {
   if (!self) return nullptr;
-  auto buf = ((MNN::Tensor *)self)->buffer();
-  return new halide_buffer_t(buf);
+  auto _buf = ((MNN::Tensor *)self)->buffer();
+  halide_buffer_c_t *buf = (halide_buffer_c_t *)malloc(sizeof(halide_buffer_c_t));
+  buf->device = _buf.device;
+  buf->device_interface = _buf.device_interface;
+  buf->host = _buf.host;
+  buf->flags = _buf.flags;
+  buf->type = {(uint8_t)_buf.type.code, _buf.type.bits, _buf.type.lanes};
+  buf->dimensions = _buf.dimensions;
+  buf->dim = _buf.dim;
+  buf->padding = _buf.padding;
+  return buf;
 }
 
 // Type information
@@ -249,15 +260,14 @@ void mnn_tensor_set_type(mnn_tensor_t self, int type) {
   if (self) { ((MNN::Tensor *)self)->setType(type); }
 }
 
-struct halide_type_t *mnn_tensor_get_type(mnn_tensor_t self) {
+halide_type_c_t *mnn_tensor_get_type(mnn_tensor_t self) {
   if (!self) return nullptr;
   auto _type = ((MNN::Tensor *)self)->getType();
-  // halide_type_c_t *type = (halide_type_c_t *)malloc(sizeof(halide_type_c_t));
-  // type->code = (uint8_t)_type.code;
-  // type->bits = _type.bits;
-  // type->lanes = _type.lanes;
-  // return type;
-  return new halide_type_t(_type.code, _type.bits, _type.lanes);
+  halide_type_c_t *type = (halide_type_c_t *)malloc(sizeof(halide_type_c_t));
+  type->code = (uint8_t)_type.code;
+  type->bits = _type.bits;
+  type->lanes = _type.lanes;
+  return type;
 }
 
 // Memory mapping

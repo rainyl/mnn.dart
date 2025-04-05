@@ -531,8 +531,8 @@ external int mnn_tensor_batch(
 /// @brief Get buffer
 /// @param self Tensor
 /// @return Buffer pointer
-@ffi.Native<ffi.Pointer<halide_buffer_t> Function(mnn_tensor_t)>(isLeaf: true)
-external ffi.Pointer<halide_buffer_t> mnn_tensor_buffer(
+@ffi.Native<ffi.Pointer<halide_buffer_c_t> Function(mnn_tensor_t)>(isLeaf: true)
+external ffi.Pointer<halide_buffer_c_t> mnn_tensor_buffer(
   mnn_tensor_t self,
 );
 
@@ -621,19 +621,19 @@ mnn_tensor_t mnn_tensor_create(
 /// @param dim_type Dimension type
 /// @return Tensor instance or NULL if failed
 @ffi.Native<
-    mnn_tensor_t Function(ffi.Pointer<ffi.Int>, ffi.Int, halide_type_t,
+    mnn_tensor_t Function(ffi.Pointer<ffi.Int>, ffi.Int, halide_type_c_t,
         ffi.UnsignedInt)>(symbol: 'mnn_tensor_create_device')
 external mnn_tensor_t _mnn_tensor_create_device(
   ffi.Pointer<ffi.Int> shape,
   int shape_size,
-  halide_type_t type,
+  halide_type_c_t type,
   int dim_type,
 );
 
 mnn_tensor_t mnn_tensor_create_device(
   ffi.Pointer<ffi.Int> shape,
   int shape_size,
-  halide_type_t type,
+  halide_type_c_t type,
   DimensionType dim_type,
 ) =>
     _mnn_tensor_create_device(
@@ -678,13 +678,13 @@ mnn_tensor_t mnn_tensor_create_from_tensor(
     mnn_tensor_t Function(
         ffi.Pointer<ffi.Int>,
         ffi.Int,
-        halide_type_t,
+        halide_type_c_t,
         ffi.Pointer<ffi.Void>,
         ffi.UnsignedInt)>(symbol: 'mnn_tensor_create_with_data')
 external mnn_tensor_t _mnn_tensor_create_with_data(
   ffi.Pointer<ffi.Int> shape,
   int shape_size,
-  halide_type_t type,
+  halide_type_c_t type,
   ffi.Pointer<ffi.Void> data,
   int dim_type,
 );
@@ -692,7 +692,7 @@ external mnn_tensor_t _mnn_tensor_create_with_data(
 mnn_tensor_t mnn_tensor_create_with_data(
   ffi.Pointer<ffi.Int> shape,
   int shape_size,
-  halide_type_t type,
+  halide_type_c_t type,
   ffi.Pointer<ffi.Void> data,
   DimensionType dim_type,
 ) =>
@@ -770,8 +770,8 @@ HandleDataType mnn_tensor_get_handle_data_type(
 /// @brief Get data type
 /// @param self Tensor
 /// @return Data type
-@ffi.Native<ffi.Pointer<halide_type_t> Function(mnn_tensor_t)>(isLeaf: true)
-external ffi.Pointer<halide_type_t> mnn_tensor_get_type(
+@ffi.Native<ffi.Pointer<halide_type_c_t> Function(mnn_tensor_t)>(isLeaf: true)
+external ffi.Pointer<halide_type_c_t> mnn_tensor_get_type(
   mnn_tensor_t self,
 );
 
@@ -1213,6 +1213,42 @@ final class UnnamedUnion2 extends ffi.Union {
   external int mode;
 }
 
+/// The raw representation of an image passed around by generated
+/// Halide code. It includes some stuff to track whether the image is
+/// not actually in main memory, but instead on a device (like a
+/// GPU). For a more convenient C++ wrapper, use Halide::Buffer<T>.
+final class halide_buffer_c_t extends ffi.Struct {
+  /// A device-handle for e.g. GPU memory used to back this buffer.
+  @ffi.Uint64()
+  external int device;
+
+  /// The interface used to interpret the above handle.
+  external ffi.Pointer<halide_device_interface_t> device_interface;
+
+  /// A pointer to the start of the data in main memory. In terms of
+  /// the Halide coordinate system, this is the address of the min
+  /// coordinates (defined below).
+  external ffi.Pointer<ffi.Uint8> host;
+
+  /// flags with various meanings.
+  @ffi.Uint64()
+  external int flags;
+
+  /// The type of each buffer element.
+  external halide_type_c_t type;
+
+  /// The dimensionality of the buffer.
+  @ffi.Int32()
+  external int dimensions;
+
+  /// The shape of the buffer. Halide does not own this array - you
+  /// must manage the memory for it yourself.
+  external ffi.Pointer<halide_dimension_t> dim;
+
+  /// Pads the buffer up to a multiple of 8 bytes
+  external ffi.Pointer<ffi.Void> padding;
+}
+
 enum halide_buffer_flags {
   halide_buffer_flag_host_dirty(1),
   halide_buffer_flag_device_dirty(2);
@@ -1384,6 +1420,17 @@ final class halide_dimension_t extends ffi.Struct {
   external int flags;
 }
 
+final class halide_type_c_t extends ffi.Struct {
+  @ffi.Uint8()
+  external int code;
+
+  @ffi.Uint8()
+  external int bits;
+
+  @ffi.Uint16()
+  external int lanes;
+}
+
 /// A runtime tag for a type in the halide type system. Can be ints,
 /// unsigned ints, or floats of various bit-widths (the 'bits'
 /// field). Can also be vectors of the same (by setting the 'lanes'
@@ -1424,12 +1471,6 @@ final class mnn_backend_config_t extends ffi.Struct {
 }
 
 typedef mnn_backend_t = ffi.Pointer<ffi.Void>;
-
-/// typedef struct {
-/// uint8_t code;
-/// uint8_t bits;
-/// uint16_t lanes;
-/// } halide_type_c_t;
 typedef mnn_callback_0
     = ffi.Pointer<ffi.NativeFunction<mnn_callback_0Function>>;
 typedef mnn_callback_0Function = ffi.Void Function();
