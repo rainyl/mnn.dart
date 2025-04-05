@@ -15,6 +15,7 @@
 #include "mnn_type.h"
 #include <cstdint>
 #include <cstring>
+#include <cstdlib>
 
 enum DataType {
   DataType_DT_INVALID = 0,
