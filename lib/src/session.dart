@@ -78,8 +78,18 @@ class Session with ComparableMixin {
     }
   }
 
-  c.ErrorCode run() {
-    return c.mnn_interpreter_run_session(interpreterPtr, ptr, ffi.nullptr);
+  void run() {
+    final code = c.mnn_interpreter_run_session(interpreterPtr, ptr, ffi.nullptr);
+    if (code != c.ErrorCode.NO_ERROR) {
+      throw Exception("runSession failed: $code");
+    }
+  }
+
+  Future<void> runAsync() async {
+    return mnnRunAsync0(
+      (callback) => c.mnn_interpreter_run_session(interpreterPtr, ptr, callback),
+      (c) => c.complete(),
+    );
   }
 
   void setHint(HintMode mode, int value) {

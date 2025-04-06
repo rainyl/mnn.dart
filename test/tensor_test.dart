@@ -87,9 +87,20 @@ void main() async {
     expect(newTensor.dimensionType, mnn.DimensionType.MNN_CAFFE);
   });
 
+  test('Tensor.createDevice', () {
+    final tensor =
+        mnn.Tensor.createDevice([2, 3, 4, 5], mnn.HalideType.f32(), dimType: mnn.DimensionType.MNN_CAFFE);
+    expect(tensor.dimensions, 4);
+    expect(tensor.elementSize, tensor.count);
+    expect(tensor.shape, [2, 3, 4, 5]);
+    expect(tensor.type, mnn.HalideType.f32());
+    expect(tensor.dimensionType, mnn.DimensionType.MNN_CAFFE);
+    expect(tensor.deviceId, isA<int>());
+  });
+
   test('Tensor type operations', () {
     final tensor = mnn.Tensor.create();
-    tensor.setType(mnn.DataType.DataType_DT_FLOAT);
+    tensor.setDataType(mnn.DataType.DataType_DT_FLOAT);
     expect(tensor.type, mnn.DataType.DataType_DT_FLOAT.toHalideType());
   });
 
@@ -104,10 +115,10 @@ void main() async {
 
   test('Tensor data type conversions', () {
     final tensor = mnn.Tensor.create();
-    tensor.setType(mnn.DataType.DataType_DT_INT32);
+    tensor.setDataType(mnn.DataType.DataType_DT_INT32);
     expect(tensor.type, mnn.DataType.DataType_DT_INT32.toHalideType());
 
-    tensor.setType(mnn.DataType.DataType_DT_UINT8);
+    tensor.setDataType(mnn.DataType.DataType_DT_UINT8);
     expect(tensor.type, mnn.DataType.DataType_DT_UINT8.toHalideType());
   });
 }

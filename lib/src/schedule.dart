@@ -9,7 +9,8 @@ import 'g/mnn.g.dart' as c;
 class ScheduleConfig extends NativeObject {
   static final ffi.NativeFinalizer _finalizer = ffi.NativeFinalizer(calloc.nativeFree);
 
-  ScheduleConfig.fromPointer(super.ptr, {super.attach, super.externalSize});
+  ScheduleConfig.fromPointer(ffi.Pointer<c.mnn_schedule_config_t> ptr, {super.attach, super.externalSize})
+      : super(ptr.cast());
 
   factory ScheduleConfig.create({
     ForwardType type = ForwardType.MNN_FORWARD_CPU,
@@ -22,7 +23,7 @@ class ScheduleConfig extends NativeObject {
       ..ref.unnamed.num_thread = numThread
       ..ref.unnamed.mode = mode
       ..ref.backend_config = backendConfig == null ? ffi.nullptr : backendConfig.ptr.cast();
-    return ScheduleConfig.fromPointer(p.cast());
+    return ScheduleConfig.fromPointer(p);
   }
 
   c.mnn_schedule_config_t get ref => ptr.cast<c.mnn_schedule_config_t>().ref;

@@ -40,7 +40,7 @@ void main(List<String> args) async {
   final output = net.getSessionOutput(session);
   final (B, C, H, W) = (shape[0], shape[1], shape[2], shape[3]);
 
-  if (output.isEmpty || output.elementSize == 0) {
+  if (output == null || output.isEmpty || output.elementSize == 0) {
     throw Exception("Resize error, the model can't run batch: $B");
   }
 

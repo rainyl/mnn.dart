@@ -13,4 +13,3 @@ void main() async {
     expect(duration, greaterThan(0));
   });
 }
-

@@ -24,11 +24,9 @@ class Interpreter extends NativeObject {
 
   factory Interpreter.fromBuffer(Uint8List buffer) {
     final p = calloc<ffi.Uint8>(buffer.length);
-    for (var i = 0; i < buffer.length; i++) {
-      p[i] = buffer[i];
-    }
+    p.asTypedList(buffer.length).setAll(0, buffer);
     final interpreter = c.mnn_interpreter_create_from_buffer(p.cast(), buffer.length, ffi.nullptr);
-    calloc.free(p);
+    calloc.free(p); // MNN::Interpreter::createFromBuffer will copy buffer, so we can free it here
     return Interpreter.fromPointer(interpreter);
   }
 
@@ -45,6 +43,8 @@ class Interpreter extends NativeObject {
     for (var i = 0; i < configs.length; i++) {
       p[i] = configs[i].ref;
     }
+    // pRuntime is not managed by interpreter, so we should free it manually
+    // here, attach it to RuntimeInfo
     final pRuntime = c.mnn_interpreter_create_runtime(p, configs.length);
     return RuntimeInfo.fromPointer(pRuntime);
   }
@@ -60,78 +60,42 @@ class Interpreter extends NativeObject {
     return Session.fromPointer(p, ptr.cast());
   }
 
-  c.ErrorCode releaseSession(Session session) {
-    return c.mnn_interpreter_release_session(ptr, session.ptr, ffi.nullptr);
+  /// @brief release session.
+  ///
+  /// @param session   given session.
+  ///
+  /// @return true if given session is held by net and is freed.
+  bool releaseSession(Session session) {
+    final code = c.mnn_interpreter_release_session(ptr, session.ptr, ffi.nullptr);
+    return switch (code) {
+      c.ErrorCode.BOOL_TRUE => true,
+      c.ErrorCode.BOOL_FALSE => false,
+      _ => throw Exception('releaseSession failed: $code'),
+    };
   }
 
   c.ErrorCode resizeSession(Session session) {
     return c.mnn_interpreter_resize_session(ptr, session.ptr, ffi.nullptr);
   }
 
-  Tensor? getSessionInput(Session session, {String? name}) {
-    final p = name != null ? name.toNativeUtf8().cast<ffi.Char>() : ffi.nullptr;
-    final tensor = c.mnn_interpreter_get_session_input(ptr, session.ptr, p);
-    if (p != ffi.nullptr) calloc.free(p);
-    return tensor == ffi.nullptr ? null : Tensor.fromPointer(tensor, attach: false);
-  }
+  Tensor? getSessionInput(Session session, {String? name}) => session.getInput(name: name);
 
   /// @brief Get all input tensors from session
   ///
   /// @param session Session
-  Map<String, Tensor> getSessionInputAll(Session session) {
-    final pCount = calloc<ffi.Size>();
-    final pNames = calloc<ffi.Pointer<ffi.Pointer<ffi.Char>>>();
-    final pTensors = calloc<ffi.Pointer<c.mnn_tensor_t>>();
-    final res = c.mnn_interpreter_get_session_input_all(ptr, session.ptr, pTensors, pNames, pCount);
-    final rval = <String, Tensor>{};
-    if (res == c.ErrorCode.NO_ERROR) {
-      final count = pCount.value;
-      for (var i = 0; i < count; i++) {
-        final name = pNames.value[i].cast<Utf8>().toDartString();
-        final tensor = pTensors.value[i];
-        rval[name] = Tensor.fromPointer(tensor, attach: false);
-      }
-    }
-    calloc.free(pCount);
-    calloc.free(pNames);
-    calloc.free(pTensors);
-    return rval;
-  }
+  Map<String, Tensor> getSessionInputAll(Session session) => session.getInputAll();
 
-  Tensor getSessionOutput(Session session, {String? name}) {
-    final p = name != null ? name.toNativeUtf8().cast<ffi.Char>() : ffi.nullptr;
-    final tensor = c.mnn_interpreter_get_session_output(ptr, session.ptr, p);
-    if (p != ffi.nullptr) calloc.free(p);
-    return Tensor.fromPointer(tensor, attach: false);
-  }
+  Tensor? getSessionOutput(Session session, {String? name}) => session.getOutput(name: name);
 
-  Map<String, Tensor> getSessionOutputAll(Session session) {
-    final pCount = calloc<ffi.Size>();
-    final pNames = calloc<ffi.Pointer<ffi.Pointer<ffi.Char>>>();
-    final pTensors = calloc<ffi.Pointer<c.mnn_tensor_t>>();
-    final res = c.mnn_interpreter_get_session_output_all(ptr, session.ptr, pTensors, pNames, pCount);
-    final rval = <String, Tensor>{};
-    if (res == c.ErrorCode.NO_ERROR) {
-      final count = pCount.value;
-      for (var i = 0; i < count; i++) {
-        final name = pNames.value[i].cast<Utf8>().toDartString();
-        final tensor = pTensors.value[i];
-        rval[name] = Tensor.fromPointer(tensor, attach: false);
-      }
-    }
-    calloc.free(pCount);
-    calloc.free(pNames);
-    calloc.free(pTensors);
-    return rval;
-  }
+  Map<String, Tensor> getSessionOutputAll(Session session) => session.getOutputAll();
 
   void setSessionMode(SessionMode mode) {
     c.mnn_interpreter_set_session_mode(ptr, mode.value);
   }
 
-  c.ErrorCode runSession(Session session) {
-    return c.mnn_interpreter_run_session(ptr, session.ptr, ffi.nullptr);
-  }
+  void runSession(Session session) => session.run();
+
+  Future<void> runSessionAsync(Session session) async => session.runAsync();
 
   String get bizCode => c.mnn_interpreter_biz_code(ptr).cast<Utf8>().toDartString();
 

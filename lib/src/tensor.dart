@@ -17,6 +17,17 @@ class Tensor extends NativeObject {
     return Tensor.fromPointer(p);
   }
 
+  factory Tensor.createDevice(
+    List<int> shape,
+    HalideType type, {
+    c.DimensionType dimType = c.DimensionType.MNN_TENSORFLOW,
+  }) {
+    final pShape = calloc<ffi.Int>(shape.length);
+    pShape.cast<ffi.Int32>().asTypedList(shape.length).setAll(0, shape);
+    final p = c.mnn_tensor_create_device(pShape, shape.length, type.ref, dimType);
+    return Tensor.fromPointer(p);
+  }
+
   factory Tensor.fromTensor(
     Tensor tensor, {
     c.DimensionType dimType = c.DimensionType.MNN_CAFFE,
@@ -55,12 +66,32 @@ class Tensor extends NativeObject {
     return Tensor.fromPointer(p);
   }
 
-  c.ErrorCode copyFromHost(Tensor hostTensor) {
-    return c.mnn_tensor_copy_from_host(ptr, hostTensor.ptr);
+  /// @brief for DEVICE tensor, copy data from given host tensor.
+  ///
+  /// @param hostTensor    host tensor, the data provider.
+  ///
+  /// @return true for DEVICE tensor, and false for HOST tensor.
+  bool copyFromHost(Tensor hostTensor) {
+    final code = c.mnn_tensor_copy_from_host(ptr, hostTensor.ptr);
+    return switch (code) {
+      c.ErrorCode.BOOL_TRUE => true,
+      c.ErrorCode.BOOL_FALSE => false,
+      _ => throw Exception('copyFromHost failed: $code'),
+    };
   }
 
-  c.ErrorCode copyToHost(Tensor hostTensor) {
-    return c.mnn_tensor_copy_to_host(ptr, hostTensor.ptr);
+  /// @brief for DEVICE tensor, copy data to given host tensor.
+  ///
+  /// @param hostTensor    host tensor, the data consumer.
+  ///
+  /// @return true for DEVICE tensor, and false for HOST tensor.
+  bool copyToHost(Tensor hostTensor) {
+    final code = c.mnn_tensor_copy_to_host(ptr, hostTensor.ptr);
+    return switch (code) {
+      c.ErrorCode.BOOL_TRUE => true,
+      c.ErrorCode.BOOL_FALSE => false,
+      _ => throw Exception('copyToHost failed: $code'),
+    };
   }
 
   int get dimensions => c.mnn_tensor_dimensions(ptr);
@@ -163,7 +194,7 @@ class Tensor extends NativeObject {
   /// @brief Set data type
   ///
   /// @param type Data type
-  void setType(DataType type) => c.mnn_tensor_set_type(ptr, type.value);
+  void setDataType(DataType type) => c.mnn_tensor_set_type(ptr, type.value);
 
   /// @brief Get data type
   ///

@@ -1,7 +1,10 @@
 // ignore_for_file: camel_case_types
 
+import 'dart:async';
 import 'dart:ffi' as ffi;
 import 'package:meta/meta.dart';
+
+import 'g/mnn.g.dart' as c;
 
 mixin ComparableMixin {
   List<Object?> get props;
@@ -55,6 +58,32 @@ abstract class NativeObject with ComparableMixin implements ffi.Finalizable {
       release();
     }
   }
+}
+
+void mnnRun(c.ErrorCode Function() func) {
+  final code = func();
+  if (code != c.ErrorCode.NO_ERROR) {
+    throw Exception("MNN_ERROR: $code");
+  }
+}
+
+Future<T> mnnRunAsync0<T>(
+  c.ErrorCode Function(c.mnn_callback_0 callback) func,
+  void Function(Completer<T> completer) onComplete,
+) async {
+  final completer = Completer<T>();
+  late final ffi.NativeCallable<c.mnn_callback_0Function> ccallback;
+  void onResponse() {
+    onComplete(completer);
+    ccallback.close();
+  }
+
+  ccallback = ffi.NativeCallable.listener(onResponse);
+  final code = func(ccallback.nativeFunction);
+  if (code != c.ErrorCode.NO_ERROR) {
+    throw Exception("MNN_ERROR: $code");
+  }
+  return completer.future;
 }
 
 typedef u8 = ffi.Uint8;

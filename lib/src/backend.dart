@@ -21,7 +21,7 @@ class BackendConfig extends NativeObject {
       ..ref.memory = memory
       ..ref.power = power
       ..ref.precision = precision;
-    return BackendConfig.fromPointer(p.cast());
+    return BackendConfig.fromPointer(p);
   }
 
   c.mnn_backend_config_t get ref => ptr.cast<c.mnn_backend_config_t>().ref;

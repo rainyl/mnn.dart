@@ -173,6 +173,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
       _net!.runSession(_session!);
       final output = _net!.getSessionOutput(_session!);
+      if (output == null) {
+        debugPrint('output is null');
+        return;
+      }
       final outputUser = mnn.Tensor.fromTensor(output, dimType: output.dimensionType);
       output.copyToHost(outputUser);
 
@@ -205,11 +209,12 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       await showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Text('识别错误'),
-          content: Text('图像识别过程中发生错误: $e'),
-          actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('确定'))],
-        ),
+        builder:
+            (context) => AlertDialog(
+              title: Text('识别错误'),
+              content: Text('图像识别过程中发生错误: $e'),
+              actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('确定'))],
+            ),
       );
     }
   }
@@ -238,10 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               if (_selectedImage != null)
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Image.file(_selectedImage!, height: 300),
-                ),
+                Padding(padding: const EdgeInsets.all(16.0), child: Image.file(_selectedImage!, height: 300)),
               if (_recognitionResult.isNotEmpty)
                 SizedBox(
                   height: 500,
@@ -249,10 +251,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     itemCount: _recognitionResult.length,
                     itemBuilder: (context, index) {
                       return Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
+                        decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(8.0)),
                         margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
                         child: Column(
                           children: [
@@ -260,9 +259,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               padding: const EdgeInsets.all(12.0),
                               child: Text(
                                 '${_recognitionResult[index].$1} (${(_recognitionResult[index].$2 * 100).toStringAsFixed(2)}%)',
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: Colors.black87,
-                                ),
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black87),
                               ),
                             ),
                           ],

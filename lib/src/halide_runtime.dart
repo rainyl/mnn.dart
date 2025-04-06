@@ -25,7 +25,7 @@ class HalideType extends NativeObject {
 
   factory HalideType.fromNative(c.halide_type_c_t type) {
     final p = calloc<c.halide_type_c_t>()..ref = type;
-    return HalideType.fromPointer(p.cast());
+    return HalideType.fromPointer(p);
   }
 
   factory HalideType.bf16() => HalideType.create(code: c.HalideTypeCode.halide_type_bfloat, bits: 16);
