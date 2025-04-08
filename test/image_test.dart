@@ -49,8 +49,43 @@ void main() {
     test('operator +', () {
       final image = mnn.Image.load(path, desiredChannel: mnn.StbiChannel.rgb);
       var resized = image.resize(28, 28, dtype: mnn.StbirDataType.STBIR_TYPE_FLOAT);
+      expect(resized.row(0), List.filled(28, 0.0));
       resized += [1.0];
       expect(resized.row(0), List.filled(28, 1.0));
+    });
+
+    test('operator -', () {
+      final image = mnn.Image.load(path, desiredChannel: mnn.StbiChannel.rgb);
+      var resized = image.resize(28, 28, dtype: mnn.StbirDataType.STBIR_TYPE_FLOAT);
+      expect(resized.row(0), List.filled(28, 0.0));
+      resized -= [1.0];
+      expect(resized.row(0), List.filled(28, -1.0));
+    });
+
+    test('operator *', () {
+      final image = mnn.Image.load(path, desiredChannel: mnn.StbiChannel.rgb);
+      var resized = image.resize(28, 28, dtype: mnn.StbirDataType.STBIR_TYPE_FLOAT);
+      expect(resized.row(0), List.filled(28, 0.0));
+      resized += [1.0];
+      resized += [2.0];
+      expect(resized.row(0), List.filled(28, 2.0));
+    });
+
+    test('operator /', () {
+      final image = mnn.Image.load(path, desiredChannel: mnn.StbiChannel.rgb);
+      var resized = image.resize(28, 28, dtype: mnn.StbirDataType.STBIR_TYPE_FLOAT);
+      expect(resized.row(0), List.filled(28, 0.0));
+      resized += [1.0];
+      resized /= [2.0];
+      expect(resized.row(0), List.filled(28, 0.5));
+    });
+
+    test('normalize', () {
+      var image = mnn.Image.load("test/data/lenna.png", desiredChannel: mnn.StbiChannel.rgb);
+      image = image.resize(224, 224, dtype: mnn.StbirDataType.STBIR_TYPE_FLOAT);
+      image = image / [255.0, 255.0, 255.0];
+      final normalized = image.normalize(mean: [0.485, 0.456, 0.406], std: [0.229, 0.224, 0.225]);
+      expect(normalized.pixel(25, 41), [1, 2, 3]);
     });
 
     test('misc', () {

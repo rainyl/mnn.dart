@@ -1,3 +1,9 @@
+#include <cstring>
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
+#define STBI_FAILURE_USERMSG
+#define STB_IMAGE_EXPORTS
+
 #include "mnn_stb_image.h"
 
 int mnn_stbi_rgb_flatten_uint8(stbi_uc *data, int width, int height, int channels) {
@@ -16,29 +22,43 @@ int mnn_stbi_rgb_flatten_uint8(stbi_uc *data, int width, int height, int channel
   return 1;
 }
 
-int mnn_stbi_add_f32(stbi_uc *data, int width, int height, int channels, float *value) {
+int mnn_stbi_add_f32(float *data, int width, int height, int channels, float *value, float *dst) {
   if (!data || !value)
     return stbi__err("null pointer", "mnn_stbi_subtract_f32: data or value is null");
-  auto ptr = reinterpret_cast<float *>(data);
-
+  dst = (float *)malloc(sizeof(float) * width * height * channels);
   for (int i = 0; i < width * height; ++i) {
-    for (int c = 0; c < channels; ++c) { ptr[i * channels + c] += value[c]; }
+    for (int c = 0; c < channels; ++c) {
+      dst[i * channels + c] = data[i * channels + c] + value[c];
+    }
   }
   return 1;
 }
 
-int mnn_stbi_sub_f32(stbi_uc *data, int width, int height, int channels, float *value) {
+int mnn_stbi_sub_f32(float *data, int width, int height, int channels, float *value, float *dst) {
   if (!data || !value)
     return stbi__err("null pointer", "mnn_stbi_subtract_f32: data or value is null");
-  auto ptr = reinterpret_cast<float *>(data);
-
+  dst = (float *)malloc(sizeof(float) * width * height * channels);
   for (int i = 0; i < width * height; ++i) {
-    for (int c = 0; c < channels; ++c) { ptr[i * channels + c] -= value[c]; }
+    for (int c = 0; c < channels; ++c) {
+      dst[i * channels + c] = data[i * channels + c] - value[c];
+    }
   }
   return 1;
 }
 
-int mnn_stbi_div_f32(stbi_uc *data, int width, int height, int channels, float *value) {
+int mnn_stbi_mul_f32(float *data, int width, int height, int channels, float *value, float *dst) {
+  if (!data || !value)
+    return stbi__err("null pointer", "mnn_stbi_multiply_f32: data or value is null");
+  dst = (float *)malloc(sizeof(float) * width * height * channels);
+  for (int i = 0; i < width * height; ++i) {
+    for (int c = 0; c < channels; ++c) {
+      dst[i * channels + c] = data[i * channels + c] * value[c];
+    }
+  }
+  return 1;
+}
+
+int mnn_stbi_div_f32(float *data, int width, int height, int channels, float *value, float *dst) {
   if (!data || !value)
     return stbi__err("null pointer", "mnn_stbi_divide_f32: data or value is null");
   for (int i = 0; i < channels; i++) {
@@ -46,20 +66,11 @@ int mnn_stbi_div_f32(stbi_uc *data, int width, int height, int channels, float *
       return stbi__err("divide by zero", "mnn_stbi_divide_f32: divide by zero");
     }
   }
-  auto ptr = reinterpret_cast<float *>(data);
-
+  dst = (float *)malloc(sizeof(float) * width * height * channels);
   for (int i = 0; i < width * height; ++i) {
-    for (int c = 0; c < channels; ++c) { ptr[i * channels + c] /= value[c]; }
-  }
-  return 1;
-}
-
-int mnn_stbi_mul_f32(stbi_uc *data, int width, int height, int channels, float *value) {
-  if (!data || !value)
-    return stbi__err("null pointer", "mnn_stbi_multiply_f32: data or value is null");
-  auto ptr = reinterpret_cast<float *>(data);
-  for (int i = 0; i < width * height; ++i) {
-    for (int c = 0; c < channels; ++c) { ptr[i * channels + c] *= value[c]; }
+    for (int c = 0; c < channels; ++c) {
+      dst[i * channels + c] = data[i * channels + c] / value[c];
+    }
   }
   return 1;
 }
