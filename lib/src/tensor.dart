@@ -2,6 +2,8 @@ import 'dart:ffi' as ffi;
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
+import 'package:mnn/src/stb_image/enum.dart';
+import 'package:mnn/src/stb_image/image.dart';
 
 import 'base.dart';
 import 'g/mnn.g.dart' as c;
@@ -51,6 +53,28 @@ class Tensor extends NativeObject {
     }
     final p = c.mnn_tensor_create_with_data(pShape, shape.length, type.ref, pData.cast(), dimType);
     return Tensor.fromPointer(p);
+  }
+
+  factory Tensor.fromImage(
+    Image image, {
+    c.DimensionType dimType = c.DimensionType.MNN_CAFFE,
+  }) {
+    final imLength = image.width * image.height * image.channels;
+    final pShape = calloc<ffi.Int>(4);
+    pShape.cast<ffi.Int32>().asTypedList(4).setAll(0, [1, image.channels, image.width, image.height]);
+    if (image.dtype == StbiDType.f32) {
+      final p = c.mnn_tensor_create_with_data(pShape, 4, HalideType.f32().ref, image.ptr, dimType);
+      return Tensor.fromPointer(p, attach: false);
+    } else if (image.dtype == StbiDType.u8 || image.dtype == StbiDType.u16) {
+      final pData = malloc<ffi.Float>(imLength);
+      for (var i = 0; i < imLength; i++) {
+        pData[i] = image.values[i].toDouble();
+      }
+      final p = c.mnn_tensor_create_with_data(pShape, 4, HalideType.f32().ref, pData.cast(), dimType);
+      return Tensor.fromPointer(p, attach: true);
+    } else {
+      throw Exception('Unsupported image dtype: ${image.dtype}');
+    }
   }
 
   @override

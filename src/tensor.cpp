@@ -14,8 +14,8 @@
 #include "error_code.h"
 #include "mnn_type.h"
 #include <cstdint>
-#include <cstring>
 #include <cstdlib>
+#include <cstring>
 
 enum DataType {
   DataType_DT_INVALID = 0,
@@ -66,6 +66,37 @@ halide_type_t mnn_halide_type_from_tensor_data_type(int type) {
     MNN_ASSERT(false);
     return halide_type_of<float>(); // Return a default type for error handling
     break;
+  }
+}
+
+int mnn_tensor_data_type_from_halide_type(halide_type_c_t type) {
+  switch (type.code) {
+  case halide_type_code_t::halide_type_uint:
+    switch (type.bits) {
+    case 8: return DataType_DT_UINT8; break;
+    case 16: return DataType_DT_UINT16; break;
+    default: return DataType_DT_INVALID; break;
+    }
+  case halide_type_code_t::halide_type_int:
+    switch (type.bits) {
+    case 8: return DataType_DT_INT8; break;
+    case 16: return DataType_DT_INT16; break;
+    case 32: return DataType_DT_INT32; break;
+    case 64: return DataType_DT_INT64; break;
+    default: return DataType_DT_INVALID; break;
+    }
+  case halide_type_code_t::halide_type_float:
+    switch (type.bits) {
+    case 32: return DataType_DT_FLOAT; break;
+    case 64: return DataType_DT_DOUBLE; break;
+    default: return DataType_DT_INVALID; break;
+    }
+  case halide_type_code_t::halide_type_bfloat:
+    switch (type.bits) {
+    case 16: return DataType_DT_BFLOAT16; break;
+    default: return DataType_DT_INVALID; break;
+    }
+  default: return DataType_DT_INVALID; break;
   }
 }
 

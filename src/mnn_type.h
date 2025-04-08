@@ -1,9 +1,9 @@
 #ifndef MNN_FORWARD_TYPE_H
 #define MNN_FORWARD_TYPE_H
 
+#include "MNN/HalideRuntime.h"
 #include <stddef.h>
 #include <stdint.h>
-#include "MNN/HalideRuntime.h"
 
 #ifdef _WIN32
 #define MNN_C_API __declspec(dllexport)
@@ -26,7 +26,7 @@ typedef struct {
  * Halide code. It includes some stuff to track whether the image is
  * not actually in main memory, but instead on a device (like a
  * GPU). For a more convenient C++ wrapper, use Halide::Buffer<T>. */
- typedef struct {
+typedef struct {
   /** A device-handle for e.g. GPU memory used to back this buffer. */
   uint64_t device;
 
@@ -36,7 +36,7 @@ typedef struct {
   /** A pointer to the start of the data in main memory. In terms of
    * the Halide coordinate system, this is the address of the min
    * coordinates (defined below). */
-  uint8_t* host;
+  uint8_t *host;
 
   /** flags with various meanings. */
   uint64_t flags;

@@ -78,9 +78,11 @@ add_library(mnn_c_api SHARED ${SOURCES})
 
 target_link_libraries(mnn_c_api PUBLIC ${MNNC_LINK_LIBS})
 
+add_library(mnn_stb_image SHARED mnn_stb_image.cpp)
+
 if(MNNC_BUILD_TEST)
   add_executable(test_a test/test_interpreter.cpp)
   target_link_libraries(test_a mnn_c_api)
 endif(MNNC_BUILD_TEST)
 
-install(TARGETS mnn_c_api DESTINATION lib)
+install(TARGETS mnn_c_api mnn_stb_image DESTINATION lib)
