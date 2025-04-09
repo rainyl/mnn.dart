@@ -44,9 +44,6 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
   await output.findAndAddCodeAssets(
     input,
     outDir: input.outputDirectory.resolve('install'),
-    names: {
-      "mnn_c_api": "mnn.dart",
-      "mnn_stb_image": "stbi.dart",
-    },
+    names: {"mnn_c_api": "mnn.dart"},
   );
 }

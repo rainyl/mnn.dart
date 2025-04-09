@@ -1,3 +1,7 @@
+/// Copyright (c) 2025, rainyl. All rights reserved.
+/// Use of this source code is governed by a
+/// Apache 2.0 license that can be found in the LICENSE file.
+
 // For the OpenCL backend, all five of the following options are valid. The
 // user is allowed to enable any one of them.
 // For the Vulkan backend, only options MNN_GPU_TUNING_NONE,

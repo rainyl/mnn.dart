@@ -98,17 +98,6 @@ void main() async {
     expect(tensor.deviceId, isA<int>());
   });
 
-  test('Tensor.fromImage', () {
-    final image = mnn.Image.load("test/data/mnist_0.png");
-    expect(image.dtype, mnn.StbiDType.u8);
-    final tensor = mnn.Tensor.fromImage(image);
-    expect(tensor.dimensions, 4);
-    expect(tensor.shape, [1, 1, 28, 28]);
-    expect(tensor.type, mnn.HalideType.f32());
-    expect(tensor.dimensionType, mnn.DimensionType.MNN_CAFFE);
-    // tensor.print();
-  });
-
   test('Tensor type operations', () {
     final tensor = mnn.Tensor.create();
     tensor.setDataType(mnn.DataType.DataType_DT_FLOAT);
