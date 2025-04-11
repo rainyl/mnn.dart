@@ -8,6 +8,7 @@ import 'dart:async';
 import 'dart:ffi' as ffi;
 import 'package:meta/meta.dart';
 
+import 'exception.dart';
 import 'g/mnn.g.dart' as c;
 
 mixin ComparableMixin {
@@ -38,7 +39,7 @@ abstract class NativeObject with ComparableMixin implements ffi.Finalizable {
   /// @param attach Whether to automatically release the C++ object when Dart object is destroyed
   NativeObject(this._ptr, {this.attach = true, int? externalSize}) {
     if (_ptr == ffi.nullptr) {
-      throw Exception("ptr is null");
+      throw MNNException("ptr is null");
     }
     if (attach) {
       finalizer.attach(this, _ptr, detach: this, externalSize: externalSize);
@@ -67,7 +68,7 @@ abstract class NativeObject with ComparableMixin implements ffi.Finalizable {
 void mnnRun(c.ErrorCode Function() func) {
   final code = func();
   if (code != c.ErrorCode.NO_ERROR) {
-    throw Exception("MNN_ERROR: $code");
+    throw MNNException("MNN_ERROR: $code");
   }
 }
 
@@ -85,7 +86,7 @@ Future<T> mnnRunAsync0<T>(
   ccallback = ffi.NativeCallable.listener(onResponse);
   final code = func(ccallback.nativeFunction);
   if (code != c.ErrorCode.NO_ERROR) {
-    throw Exception("MNN_ERROR: $code");
+    throw MNNException("MNN_ERROR: $code");
   }
   return completer.future;
 }

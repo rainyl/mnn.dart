@@ -31,9 +31,11 @@ void main(List<String> args) async {
     print("Can't get input tensor");
     return;
   }
-  print(input);
   final shape = input.shape;
   assert(shape.length == 4);
+  if (shape[1] == -1) shape[1] = 3;
+  if (shape[2] == -1) shape[2] = 224;
+  if (shape[3] == -1) shape[3] = 224;
   shape[0] = args.length - 1;
   net.resizeTensor(input, shape);
   net.resizeSession(session);
@@ -53,9 +55,9 @@ void main(List<String> args) async {
       '  backendType is $backendType,'
       '  batch size = ${args.length - 1}');
 
+  final nchwTensor = mnn.Tensor.fromTensor(input, dimType: mnn.DimensionType.MNN_CAFFE);
   const mean = [0.485, 0.456, 0.406];
   const std = [0.229, 0.224, 0.225];
-  final pixData = <double>[]; // RRRGGGBBB...
   for (var i = 1; i < args.length; i++) {
     final imagePath = args[i];
     final imageFile = File(imagePath);
@@ -63,37 +65,19 @@ void main(List<String> args) async {
       print("Can't open $imagePath");
       continue;
     }
-    final im = await (img.Command()
-          ..decodeImage(imageFile.readAsBytesSync())
-          ..copyResize(height: H, width: W, interpolation: img.Interpolation.linear))
-        .executeThread();
-    assert(im.outputImage != null);
-    assert(im.outputImage!.length == input.count);
-
-    final pixR = <double>[];
-    final pixG = <double>[];
-    final pixB = <double>[];
-    for (final pix in im.outputImage!) {
-      // print("${pix.y}, ${pix.x}, ${pix.r}, ${pix.g}, ${pix.b}");
-      // final _pix = [
-      //   (pix.r / 255.0 - mean[0]) / std[0],
-      //   (pix.g / 255.0 - mean[1]) / std[1],
-      //   (pix.b / 255.0 - mean[2]) / std[2],
-      // ];
-      // pixData.addAll(_pix);
-      pixR.add((pix.r / 255.0 - mean[0]) / std[0]);
-      pixG.add((pix.g / 255.0 - mean[1]) / std[1]);
-      pixB.add((pix.b / 255.0 - mean[2]) / std[2]);
+    final im = mnn.Image.fromMemory(await imageFile.readAsBytes());
+    if (im.isEmpty) {
+      throw Exception("Can't decode $imagePath");
     }
-    pixData.addAll(pixR);
-    pixData.addAll(pixG);
-    pixData.addAll(pixB);
+    print("image: ${im.values.sublist(0, 7)}");
+    final im1 = im.normalize(scale: 255.0, mean: mean, std: std).toPlanar();
+    print("image: ${im1.values.sublist(0, 7)}");
+
+    nchwTensor.setImage(i - 1, im1);
+    print(nchwTensor.cast<mnn.f32>().asTypedList(7));
   }
-  print(pixData.sublist(0, 6));
-  final host = input.map(mnn.MapType.MNN_MAP_TENSOR_WRITE, input.dimensionType);
-  assert(host.address != 0);
-  host.cast<mnn.f32>().asTypedList(pixData.length).setAll(0, pixData);
-  input.unmap(mnn.MapType.MNN_MAP_TENSOR_WRITE, input.dimensionType, host);
+  input.copyFromHost(nchwTensor);
+  nchwTensor.dispose();
 
   net.runSession(session);
   final dimType = output.type.code == mnn.HalideTypeCode.halide_type_float

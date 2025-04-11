@@ -7,15 +7,17 @@ import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart';
 
 import 'base.dart';
+import 'exception.dart';
 import 'g/mnn.g.dart' as c;
+import 'interpreter.dart';
 import 'tensor.dart';
 
 class Session with ComparableMixin {
   // Managed by Interpreter
   final c.mnn_session_t ptr;
-  final c.mnn_interpreter_t interpreterPtr;
+  final Interpreter interpreter;
 
-  Session.fromPointer(this.ptr, this.interpreterPtr);
+  Session.fromPointer(this.ptr, this.interpreter);
 
   /// @brief Get input tensor by name
   ///
@@ -24,14 +26,14 @@ class Session with ComparableMixin {
   /// @return Tensor instance or NULL if failed
   Tensor? getInput({String? name}) {
     final p = name != null ? name.toNativeUtf8().cast<ffi.Char>() : ffi.nullptr;
-    final tensor = c.mnn_interpreter_get_session_input(interpreterPtr, ptr, p);
+    final tensor = c.mnn_interpreter_get_session_input(interpreter.ptr, ptr, p);
     if (p != ffi.nullptr) calloc.free(p);
     return tensor == ffi.nullptr ? null : Tensor.fromPointer(tensor, attach: false);
   }
 
   Tensor? getOutput({String? name}) {
     final p = name != null ? name.toNativeUtf8().cast<ffi.Char>() : ffi.nullptr;
-    final tensor = c.mnn_interpreter_get_session_output(interpreterPtr, ptr, p);
+    final tensor = c.mnn_interpreter_get_session_output(interpreter.ptr, ptr, p);
     if (p != ffi.nullptr) calloc.free(p);
     return tensor == ffi.nullptr ? null : Tensor.fromPointer(tensor, attach: false);
   }
@@ -41,7 +43,7 @@ class Session with ComparableMixin {
     final pNames = calloc<ffi.Pointer<ffi.Pointer<ffi.Char>>>();
     final pTensors = calloc<ffi.Pointer<c.mnn_tensor_t>>();
     try {
-      final res = c.mnn_interpreter_get_session_input_all(interpreterPtr, ptr, pTensors, pNames, pCount);
+      final res = c.mnn_interpreter_get_session_input_all(interpreter.ptr, ptr, pTensors, pNames, pCount);
       final rval = <String, Tensor>{};
       if (res == c.ErrorCode.NO_ERROR) {
         final count = pCount.value;
@@ -64,7 +66,7 @@ class Session with ComparableMixin {
     final pNames = calloc<ffi.Pointer<ffi.Pointer<ffi.Char>>>();
     final pTensors = calloc<ffi.Pointer<c.mnn_tensor_t>>();
     try {
-      final res = c.mnn_interpreter_get_session_output_all(interpreterPtr, ptr, pTensors, pNames, pCount);
+      final res = c.mnn_interpreter_get_session_output_all(interpreter.ptr, ptr, pTensors, pNames, pCount);
       final rval = <String, Tensor>{};
       if (res == c.ErrorCode.NO_ERROR) {
         final count = pCount.value;
@@ -83,17 +85,24 @@ class Session with ComparableMixin {
   }
 
   void run() {
-    final code = c.mnn_interpreter_run_session(interpreterPtr, ptr, ffi.nullptr);
+    final code = c.mnn_interpreter_run_session(interpreter.ptr, ptr, ffi.nullptr);
     if (code != c.ErrorCode.NO_ERROR) {
-      throw Exception("runSession failed: $code");
+      throw MNNException("runSession failed: $code");
     }
   }
 
   Future<void> runAsync() async {
     return mnnRunAsync0(
-      (callback) => c.mnn_interpreter_run_session(interpreterPtr, ptr, callback),
+      (callback) => c.mnn_interpreter_run_session(interpreter.ptr, ptr, callback),
       (c) => c.complete(),
     );
+  }
+
+  void resize() {
+    final code = c.mnn_interpreter_resize_session(interpreter.ptr, ptr, ffi.nullptr);
+    if (code != c.ErrorCode.NO_ERROR) {
+      throw MNNException("resizeSession failed: $code");
+    }
   }
 
   void setHint(HintMode mode, int value) {
@@ -101,14 +110,14 @@ class Session with ComparableMixin {
   }
 
   c.ErrorCode updateSessionToModel() {
-    return c.mnn_interpreter_update_session_to_model(interpreterPtr, ptr);
+    return c.mnn_interpreter_update_session_to_model(interpreter.ptr, ptr);
   }
 
   double get memoryInfo {
     final p = calloc<f32>();
     try {
       final code =
-          c.mnn_interpreter_get_session_info(interpreterPtr, ptr, SessionInfoCode.MEMORY.value, p.cast());
+          c.mnn_interpreter_get_session_info(interpreter.ptr, ptr, SessionInfoCode.MEMORY.value, p.cast());
       final rval = code == c.ErrorCode.NO_ERROR ? p.value : -1.0;
       return rval;
     } finally {
@@ -120,7 +129,7 @@ class Session with ComparableMixin {
     final p = calloc<f32>();
     try {
       final code =
-          c.mnn_interpreter_get_session_info(interpreterPtr, ptr, SessionInfoCode.FLOPS.value, p.cast());
+          c.mnn_interpreter_get_session_info(interpreter.ptr, ptr, SessionInfoCode.FLOPS.value, p.cast());
       final rval = code == c.ErrorCode.NO_ERROR ? p.value : -1.0;
       return rval;
     } finally {
@@ -132,7 +141,7 @@ class Session with ComparableMixin {
     final p = calloc<i32>(2);
     try {
       final code =
-          c.mnn_interpreter_get_session_info(interpreterPtr, ptr, SessionInfoCode.BACKENDS.value, p.cast());
+          c.mnn_interpreter_get_session_info(interpreter.ptr, ptr, SessionInfoCode.BACKENDS.value, p.cast());
       final rval = code == c.ErrorCode.NO_ERROR ? [p[0], p[1]] : <int>[];
       return rval;
     } finally {

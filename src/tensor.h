@@ -311,6 +311,10 @@ mnn_tensor_set_device_ptr(mnn_tensor_t self, const void *device_ptr, int memory_
 MNN_C_API void mnn_tensor_print(mnn_tensor_t self);
 MNN_C_API void mnn_tensor_print_shape(mnn_tensor_t self);
 
+MNN_C_API mnn_error_code_t mnn_tensor_set_image_f32(
+    mnn_tensor_t self, int index, float *data, int width, int height, int channel
+);
+
 #ifdef __cplusplus
 }
 #endif

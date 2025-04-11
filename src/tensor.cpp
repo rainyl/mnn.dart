@@ -343,3 +343,14 @@ void mnn_tensor_print_shape(mnn_tensor_t self) {
   if (!self) return;
   ((MNN::Tensor *)self)->printShape();
 }
+
+MNN_C_API mnn_error_code_t mnn_tensor_set_image_f32(
+    mnn_tensor_t self, int index, float *data, int width, int height, int channel
+) {
+  if (!self || !data) return MNN_INVALID_PTR;
+  if (self->width() != width || self->height() != height || self->channel() != channel)
+    return INVALID_VALUE;
+  auto host = self->host<float>() + index * width * height * channel;
+  memcpy(host, data, width * height * channel * sizeof(float));
+  return NO_ERROR;
+}

@@ -1,0 +1,39 @@
+name: recognize
+description: A sample command-line application with basic argument parsing.
+version: 0.0.1
+# repository: https://github.com/my_org/my_repo
+publish_to: none
+
+environment:
+  sdk: ^3.8.0-265.0.dev
+
+# Add regular dependencies here.
+dependencies:
+  args: ^2.5.0
+  mnn:
+    path: ../..
+  dartcv4:
+    git:
+      url: https://github.com/rainyl/opencv_dart.git
+      path: packages/dartcv
+      ref: 0c1d670
+
+dev_dependencies:
+  lints: ^5.0.0
+  test: ^1.24.0
+
+hooks:
+  user_defines:
+    dartcv4:
+      exclude_modules:
+        - contrib
+        - calib3d
+        - features2d
+        # - dnn
+        - highgui
+        - flann
+        - objdetect
+        - photo
+        - stitching
+        - video
+        - videoio

@@ -22,6 +22,9 @@ headers:
     - "src/mnn_type.h"
     - "src/tensor.h"
     - "src/MNN/HalideRuntime.h"
+    - "src/mnn_stb_image.h"
+    - "src/stb_image.h"
+    - "src/image_process.h"
   include-directives:
     - "src/autotime.h"
     - "src/error_code.h"
@@ -29,6 +32,9 @@ headers:
     - "src/mnn_type.h"
     - "src/tensor.h"
     - "src/MNN/HalideRuntime.h"
+    - "src/mnn_stb_image.h"
+    - "src/stb_image.h"
+    - "src/image_process.h"
 structs:
   exclude:
     - 'halide_type_t'
@@ -49,6 +55,7 @@ functions:
   symbol-address:
     include:
       - '.*destroy.*'
+      - '.*free.*'
 enums:
   rename:
     'halide_type_code_t': 'HalideTypeCode'

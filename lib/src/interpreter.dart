@@ -8,6 +8,7 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 
 import 'base.dart';
+import 'exception.dart';
 import 'g/mnn.g.dart' as c;
 import 'runtime_info.dart';
 import 'schedule.dart';
@@ -56,12 +57,12 @@ class Interpreter extends NativeObject {
   Session createSession({ScheduleConfig? config}) {
     config ??= ScheduleConfig.create();
     final p = c.mnn_interpreter_create_session(ptr, config.ptr.cast(), ffi.nullptr);
-    return Session.fromPointer(p, ptr.cast());
+    return Session.fromPointer(p, this);
   }
 
   Session createSessionWithRuntime(ScheduleConfig config, RuntimeInfo runtime) {
     final p = c.mnn_interpreter_create_session_with_runtime(ptr, config.ptr.cast(), runtime.ptr, ffi.nullptr);
-    return Session.fromPointer(p, ptr.cast());
+    return Session.fromPointer(p, this);
   }
 
   /// @brief release session.
@@ -74,13 +75,11 @@ class Interpreter extends NativeObject {
     return switch (code) {
       c.ErrorCode.BOOL_TRUE => true,
       c.ErrorCode.BOOL_FALSE => false,
-      _ => throw Exception('releaseSession failed: $code'),
+      _ => throw MNNException('releaseSession failed: $code'),
     };
   }
 
-  c.ErrorCode resizeSession(Session session) {
-    return c.mnn_interpreter_resize_session(ptr, session.ptr, ffi.nullptr);
-  }
+  void resizeSession(Session session) => session.resize();
 
   Tensor? getSessionInput(Session session, {String? name}) => session.getInput(name: name);
 
@@ -164,7 +163,7 @@ class Interpreter extends NativeObject {
     try {
       final code = c.mnn_interpreter_resize_tensor(ptr, tensor.ptr, pDims, dims.length);
       if (code != c.ErrorCode.NO_ERROR) {
-        throw Exception('resizeTensor failed, code=$code');
+        throw MNNException('resizeTensor failed, code=$code');
       }
     } finally {
       calloc.free(pDims);

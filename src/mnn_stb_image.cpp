@@ -1,0 +1,6 @@
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
+#define STBI_FAILURE_USERMSG
+#define STB_IMAGE_EXPORTS
+
+#include "mnn_stb_image.h"

@@ -204,7 +204,7 @@ void main() async {
       final session = model.createSession();
       for (final (imgPath, target) in imagePaths) {
         // print(imgPath); // ignore: avoid_print
-        await testInferenceMnistCopy(session, imgPath: imgPath, target: target, runAsync: runAsync);
+        await testInferenceMnistMapping(session, imgPath: imgPath, target: target, runAsync: runAsync);
       }
     });
   }

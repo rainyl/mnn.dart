@@ -29,6 +29,531 @@ external void mnn_auto_time_destroy(
   mnn_auto_time_t auto_time,
 );
 
+@ffi.Native<
+    ffi.UnsignedInt Function(
+        mnn_cv_image_process_t,
+        ffi.Pointer<ffi.Uint8>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        mnn_tensor_t)>(symbol: 'mnn_cv_image_process_convert')
+external int _mnn_cv_image_process_convert(
+  mnn_cv_image_process_t self,
+  ffi.Pointer<ffi.Uint8> src,
+  int iw,
+  int ih,
+  int stride,
+  mnn_tensor_t dest,
+);
+
+ErrorCode mnn_cv_image_process_convert(
+  mnn_cv_image_process_t self,
+  ffi.Pointer<ffi.Uint8> src,
+  int iw,
+  int ih,
+  int stride,
+  mnn_tensor_t dest,
+) =>
+    ErrorCode.fromValue(_mnn_cv_image_process_convert(
+      self,
+      src,
+      iw,
+      ih,
+      stride,
+      dest,
+    ));
+
+@ffi.Native<
+    ffi.UnsignedInt Function(
+        mnn_cv_image_process_t,
+        ffi.Pointer<ffi.Uint8>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Pointer<ffi.Void>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        halide_type_c_t)>(symbol: 'mnn_cv_image_process_convert_1')
+external int _mnn_cv_image_process_convert_1(
+  mnn_cv_image_process_t self,
+  ffi.Pointer<ffi.Uint8> src,
+  int iw,
+  int ih,
+  int stride,
+  ffi.Pointer<ffi.Void> dst,
+  int ow,
+  int oh,
+  int outputBpp,
+  int outputStride,
+  halide_type_c_t type,
+);
+
+ErrorCode mnn_cv_image_process_convert_1(
+  mnn_cv_image_process_t self,
+  ffi.Pointer<ffi.Uint8> src,
+  int iw,
+  int ih,
+  int stride,
+  ffi.Pointer<ffi.Void> dst,
+  int ow,
+  int oh,
+  int outputBpp,
+  int outputStride,
+  halide_type_c_t type,
+) =>
+    ErrorCode.fromValue(_mnn_cv_image_process_convert_1(
+      self,
+      src,
+      iw,
+      ih,
+      stride,
+      dst,
+      ow,
+      oh,
+      outputBpp,
+      outputStride,
+      type,
+    ));
+
+/// /////////////// ImageProcess //////////////////////////
+@ffi.Native<
+    mnn_cv_image_process_t Function(
+        ffi.Int,
+        ffi.Int,
+        ffi.Pointer<ffi.Float>,
+        ffi.Int,
+        ffi.Pointer<ffi.Float>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        mnn_tensor_t)>()
+external mnn_cv_image_process_t mnn_cv_image_process_create(
+  int sourceFormat,
+  int destFormat,
+  ffi.Pointer<ffi.Float> means,
+  int mean_count,
+  ffi.Pointer<ffi.Float> normals,
+  int normal_count,
+  int filterType,
+  int wrap,
+  mnn_tensor_t dst_tensor,
+);
+
+@ffi.Native<
+    mnn_tensor_t Function(
+        halide_type_c_t, ffi.Int, ffi.Int, ffi.Int, ffi.Pointer<ffi.Void>)>()
+external mnn_tensor_t mnn_cv_image_process_create_image_tensor(
+  halide_type_c_t type,
+  int width,
+  int height,
+  int bytes_per_channel,
+  ffi.Pointer<ffi.Void> p,
+);
+
+@ffi.Native<
+    mnn_cv_image_process_t Function(mnn_image_process_config_t, mnn_tensor_t)>()
+external mnn_cv_image_process_t mnn_cv_image_process_create_with_config(
+  mnn_image_process_config_t config,
+  mnn_tensor_t dst_tensor,
+);
+
+@ffi.Native<ffi.Void Function(mnn_cv_image_process_t)>()
+external void mnn_cv_image_process_destroy(
+  mnn_cv_image_process_t self,
+);
+
+@ffi.Native<
+    ffi.Void Function(
+        mnn_cv_image_process_t,
+        ffi.Pointer<ffi.Uint8>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Int,
+        ffi.Pointer<ffi.Uint8>)>()
+external void mnn_cv_image_process_draw(
+  mnn_cv_image_process_t self,
+  ffi.Pointer<ffi.Uint8> img,
+  int w,
+  int h,
+  int c,
+  ffi.Pointer<ffi.Int> regions,
+  int num,
+  ffi.Pointer<ffi.Uint8> color,
+);
+
+/// Matrix operations for ImageProcess
+@ffi.Native<mnn_cv_matrix_t Function(mnn_cv_image_process_t)>()
+external mnn_cv_matrix_t mnn_cv_image_process_get_matrix(
+  mnn_cv_image_process_t self,
+);
+
+@ffi.Native<ffi.Void Function(mnn_cv_image_process_t)>()
+external void mnn_cv_image_process_set_draw(
+  mnn_cv_image_process_t self,
+);
+
+@ffi.Native<ffi.UnsignedInt Function(mnn_cv_image_process_t, mnn_cv_matrix_t)>(
+    symbol: 'mnn_cv_image_process_set_matrix')
+external int _mnn_cv_image_process_set_matrix(
+  mnn_cv_image_process_t self,
+  mnn_cv_matrix_t matrix,
+);
+
+ErrorCode mnn_cv_image_process_set_matrix(
+  mnn_cv_image_process_t self,
+  mnn_cv_matrix_t matrix,
+) =>
+    ErrorCode.fromValue(_mnn_cv_image_process_set_matrix(
+      self,
+      matrix,
+    ));
+
+@ffi.Native<ffi.Void Function(mnn_cv_image_process_t, ffi.Uint8)>()
+external void mnn_cv_image_process_set_padding(
+  mnn_cv_image_process_t self,
+  int value,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_cv_matrix_t, mnn_cv_matrix_t)>()
+external bool mnn_cv_matrix_cheap_equal_to(
+  mnn_cv_matrix_t self,
+  mnn_cv_matrix_t other,
+);
+
+/// Matrix operations
+@ffi.Native<mnn_cv_matrix_t Function()>()
+external mnn_cv_matrix_t mnn_cv_matrix_create();
+
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t)>()
+external void mnn_cv_matrix_destroy(
+  mnn_cv_matrix_t self,
+);
+
+/// MNN_C_API float mnn_cv_matrix_get_min_scale(mnn_cv_matrix_t self);
+/// MNN_C_API float mnn_cv_matrix_get_max_scale(mnn_cv_matrix_t self);
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t)>()
+external void mnn_cv_matrix_dirty_matrix_type_cache(
+  mnn_cv_matrix_t self,
+);
+
+/// Matrix getters
+@ffi.Native<ffi.Float Function(mnn_cv_matrix_t, ffi.Int)>()
+external double mnn_cv_matrix_get(
+  mnn_cv_matrix_t self,
+  int index,
+);
+
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Pointer<ffi.Float>)>()
+external void mnn_cv_matrix_get9(
+  mnn_cv_matrix_t self,
+  ffi.Pointer<ffi.Float> m,
+);
+
+/// Matrix type masks
+@ffi.Native<ffi.Int Function(mnn_cv_matrix_t)>()
+external int mnn_cv_matrix_get_type(
+  mnn_cv_matrix_t self,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_cv_matrix_t, mnn_cv_matrix_t)>()
+external bool mnn_cv_matrix_invert(
+  mnn_cv_matrix_t self,
+  mnn_cv_matrix_t dst,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_cv_matrix_t)>()
+external bool mnn_cv_matrix_is_identity(
+  mnn_cv_matrix_t self,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_cv_matrix_t)>()
+external bool mnn_cv_matrix_is_scale_translate(
+  mnn_cv_matrix_t self,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_cv_matrix_t)>()
+external bool mnn_cv_matrix_is_translate(
+  mnn_cv_matrix_t self,
+);
+
+@ffi.Native<
+    ffi.Bool Function(mnn_cv_matrix_t, ffi.Pointer<mnn_cv_point_t>,
+        ffi.Pointer<mnn_cv_point_t>, ffi.Int)>()
+external bool mnn_cv_matrix_map_points(
+  mnn_cv_matrix_t self,
+  ffi.Pointer<mnn_cv_point_t> dst,
+  ffi.Pointer<mnn_cv_point_t> src,
+  int count,
+);
+
+@ffi.Native<
+    ffi.Void Function(mnn_cv_matrix_t, ffi.Pointer<mnn_cv_point_t>, ffi.Int)>()
+external void mnn_cv_matrix_map_points_inplace(
+  mnn_cv_matrix_t self,
+  ffi.Pointer<mnn_cv_point_t> points,
+  int count,
+);
+
+@ffi.Native<
+    ffi.Bool Function(mnn_cv_matrix_t, ffi.Pointer<mnn_cv_rect_t>,
+        ffi.Pointer<mnn_cv_rect_t>)>()
+external bool mnn_cv_matrix_map_rect(
+  mnn_cv_matrix_t self,
+  ffi.Pointer<mnn_cv_rect_t> dst,
+  ffi.Pointer<mnn_cv_rect_t> src,
+);
+
+@ffi.Native<
+    ffi.Void Function(mnn_cv_matrix_t, ffi.Pointer<mnn_cv_rect_t>,
+        ffi.Pointer<mnn_cv_rect_t>)>()
+external void mnn_cv_matrix_map_rect_scale_translate(
+  mnn_cv_matrix_t self,
+  ffi.Pointer<mnn_cv_rect_t> dst,
+  ffi.Pointer<mnn_cv_rect_t> src,
+);
+
+@ffi.Native<
+    ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float,
+        ffi.Pointer<ffi.Float>, ffi.Pointer<ffi.Float>)>()
+external void mnn_cv_matrix_map_xy(
+  mnn_cv_matrix_t self,
+  double x,
+  double y,
+  ffi.Pointer<ffi.Float> mapped_x,
+  ffi.Pointer<ffi.Float> mapped_y,
+);
+
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, mnn_cv_matrix_t)>()
+external void mnn_cv_matrix_post_concat(
+  mnn_cv_matrix_t self,
+  mnn_cv_matrix_t other,
+);
+
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Int, ffi.Int)>()
+external void mnn_cv_matrix_post_idiv(
+  mnn_cv_matrix_t self,
+  int divx,
+  int divy,
+);
+
+@ffi.Native<
+    ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_post_rotate(
+  mnn_cv_matrix_t self,
+  double degrees,
+  double px,
+  double py,
+);
+
+@ffi.Native<
+    ffi.Void Function(
+        mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_post_scale(
+  mnn_cv_matrix_t self,
+  double sx,
+  double sy,
+  double px,
+  double py,
+);
+
+@ffi.Native<
+    ffi.Void Function(
+        mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_post_skew(
+  mnn_cv_matrix_t self,
+  double kx,
+  double ky,
+  double px,
+  double py,
+);
+
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_post_translate(
+  mnn_cv_matrix_t self,
+  double dx,
+  double dy,
+);
+
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, mnn_cv_matrix_t)>()
+external void mnn_cv_matrix_pre_concat(
+  mnn_cv_matrix_t self,
+  mnn_cv_matrix_t other,
+);
+
+@ffi.Native<
+    ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_pre_rotate(
+  mnn_cv_matrix_t self,
+  double degrees,
+  double px,
+  double py,
+);
+
+@ffi.Native<
+    ffi.Void Function(
+        mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_pre_scale(
+  mnn_cv_matrix_t self,
+  double sx,
+  double sy,
+  double px,
+  double py,
+);
+
+@ffi.Native<
+    ffi.Void Function(
+        mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_pre_skew(
+  mnn_cv_matrix_t self,
+  double kx,
+  double ky,
+  double px,
+  double py,
+);
+
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_pre_translate(
+  mnn_cv_matrix_t self,
+  double dx,
+  double dy,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_cv_matrix_t)>()
+external bool mnn_cv_matrix_rect_stays_rect(
+  mnn_cv_matrix_t self,
+);
+
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t)>()
+external void mnn_cv_matrix_reset(
+  mnn_cv_matrix_t self,
+);
+
+/// Matrix setters
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Int, ffi.Float)>()
+external void mnn_cv_matrix_set(
+  mnn_cv_matrix_t self,
+  int index,
+  double value,
+);
+
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Pointer<ffi.Float>)>()
+external void mnn_cv_matrix_set9(
+  mnn_cv_matrix_t self,
+  ffi.Pointer<ffi.Float> m,
+);
+
+@ffi.Native<
+    ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float,
+        ffi.Float, ffi.Float, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_set_all(
+  mnn_cv_matrix_t self,
+  double scaleX,
+  double skewX,
+  double transX,
+  double skewY,
+  double scaleY,
+  double transY,
+  double pers0,
+  double pers1,
+  double pers2,
+);
+
+@ffi.Native<
+    ffi.Void Function(mnn_cv_matrix_t, mnn_cv_matrix_t, mnn_cv_matrix_t)>()
+external void mnn_cv_matrix_set_concat(
+  mnn_cv_matrix_t self,
+  mnn_cv_matrix_t a,
+  mnn_cv_matrix_t b,
+);
+
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t)>()
+external void mnn_cv_matrix_set_identity(
+  mnn_cv_matrix_t self,
+);
+
+@ffi.Native<
+    ffi.Bool Function(mnn_cv_matrix_t, ffi.Pointer<mnn_cv_point_t>,
+        ffi.Pointer<mnn_cv_point_t>, ffi.Int)>()
+external bool mnn_cv_matrix_set_poly_to_poly(
+  mnn_cv_matrix_t self,
+  ffi.Pointer<mnn_cv_point_t> src,
+  ffi.Pointer<mnn_cv_point_t> dst,
+  int count,
+);
+
+@ffi.Native<
+    ffi.Bool Function(mnn_cv_matrix_t, mnn_cv_rect_t, mnn_cv_rect_t, ffi.Int)>()
+external bool mnn_cv_matrix_set_rect_to_rect(
+  mnn_cv_matrix_t self,
+  mnn_cv_rect_t src,
+  mnn_cv_rect_t dst,
+  int scale_to_fit,
+);
+
+@ffi.Native<
+    ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_set_rotate(
+  mnn_cv_matrix_t self,
+  double degrees,
+  double px,
+  double py,
+);
+
+@ffi.Native<
+    ffi.Void Function(
+        mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_set_scale(
+  mnn_cv_matrix_t self,
+  double sx,
+  double sy,
+  double px,
+  double py,
+);
+
+@ffi.Native<
+    ffi.Void Function(
+        mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_set_scale_translate(
+  mnn_cv_matrix_t self,
+  double sx,
+  double sy,
+  double tx,
+  double ty,
+);
+
+@ffi.Native<
+    ffi.Void Function(
+        mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_set_sincos(
+  mnn_cv_matrix_t self,
+  double sin,
+  double cos,
+  double px,
+  double py,
+);
+
+@ffi.Native<
+    ffi.Void Function(
+        mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_set_skew(
+  mnn_cv_matrix_t self,
+  double kx,
+  double ky,
+  double px,
+  double py,
+);
+
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float)>()
+external void mnn_cv_matrix_set_translate(
+  mnn_cv_matrix_t self,
+  double dx,
+  double dy,
+);
+
 /// @brief Get MNN version
 /// @return Version string
 @ffi.Native<ffi.Pointer<ffi.Char> Function()>()
@@ -861,6 +1386,40 @@ ErrorCode mnn_tensor_set_device_ptr(
       memory_type,
     ));
 
+@ffi.Native<
+    ffi.UnsignedInt Function(
+        mnn_tensor_t,
+        ffi.Int,
+        ffi.Pointer<ffi.Float>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int)>(symbol: 'mnn_tensor_set_image_f32', isLeaf: true)
+external int _mnn_tensor_set_image_f32(
+  mnn_tensor_t self,
+  int index,
+  ffi.Pointer<ffi.Float> data,
+  int width,
+  int height,
+  int channel,
+);
+
+ErrorCode mnn_tensor_set_image_f32(
+  mnn_tensor_t self,
+  int index,
+  ffi.Pointer<ffi.Float> data,
+  int width,
+  int height,
+  int channel,
+) =>
+    ErrorCode.fromValue(_mnn_tensor_set_image_f32(
+      self,
+      index,
+      data,
+      width,
+      height,
+      channel,
+    ));
+
 /// @brief Set tensor length
 /// @param self Tensor
 /// @param index Dimension index
@@ -1038,6 +1597,421 @@ external void mnn_timer_reset(
   mnn_timer_t timer,
 );
 
+/// indicate whether we should process iphone images back to canonical format,
+/// or just pass them through "as-is"
+@ffi.Native<ffi.Void Function(ffi.Int)>()
+external void stbi_convert_iphone_png_to_rgb(
+  int flag_true_if_should_convert,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Int)>()
+external void stbi_convert_iphone_png_to_rgb_thread(
+  int flag_true_if_should_convert,
+);
+
+/// get a VERY brief reason for failure
+/// on most compilers (and ALL modern mainstream compilers) this is threadsafe
+@ffi.Native<ffi.Pointer<ffi.Char> Function()>()
+external ffi.Pointer<ffi.Char> stbi_failure_reason();
+
+@ffi.Native<ffi.Void Function(ffi.Float)>()
+external void stbi_hdr_to_ldr_gamma(
+  double gamma,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Float)>()
+external void stbi_hdr_to_ldr_scale(
+  double scale,
+);
+
+/// free the loaded image -- this is just free()
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>()
+external void stbi_image_free(
+  ffi.Pointer<ffi.Void> retval_from_stbi_load,
+);
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)>()
+external int stbi_info(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> comp,
+);
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<stbi_io_callbacks>, ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)>()
+external int stbi_info_from_callbacks(
+  ffi.Pointer<stbi_io_callbacks> clbk,
+  ffi.Pointer<ffi.Void> user,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> comp,
+);
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<FILE>, ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)>()
+external int stbi_info_from_file(
+  ffi.Pointer<FILE> f,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> comp,
+);
+
+/// get image dimensions & components without fully decoding
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<stbi_uc>, ffi.Int, ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)>()
+external int stbi_info_from_memory(
+  ffi.Pointer<stbi_uc> buffer,
+  int len,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> comp,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>()
+external int stbi_is_16_bit(
+  ffi.Pointer<ffi.Char> filename,
+);
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<stbi_io_callbacks>, ffi.Pointer<ffi.Void>)>()
+external int stbi_is_16_bit_from_callbacks(
+  ffi.Pointer<stbi_io_callbacks> clbk,
+  ffi.Pointer<ffi.Void> user,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<FILE>)>()
+external int stbi_is_16_bit_from_file(
+  ffi.Pointer<FILE> f,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<stbi_uc>, ffi.Int)>()
+external int stbi_is_16_bit_from_memory(
+  ffi.Pointer<stbi_uc> buffer,
+  int len,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<ffi.Char>)>()
+external int stbi_is_hdr(
+  ffi.Pointer<ffi.Char> filename,
+);
+
+/// stbi_is_hdr is always defined, but always returns false if STBI_NO_HDR
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<stbi_io_callbacks>, ffi.Pointer<ffi.Void>)>()
+external int stbi_is_hdr_from_callbacks(
+  ffi.Pointer<stbi_io_callbacks> clbk,
+  ffi.Pointer<ffi.Void> user,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<FILE>)>()
+external int stbi_is_hdr_from_file(
+  ffi.Pointer<FILE> f,
+);
+
+@ffi.Native<ffi.Int Function(ffi.Pointer<stbi_uc>, ffi.Int)>()
+external int stbi_is_hdr_from_memory(
+  ffi.Pointer<stbi_uc> buffer,
+  int len,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Float)>()
+external void stbi_ldr_to_hdr_gamma(
+  double gamma,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Float)>()
+external void stbi_ldr_to_hdr_scale(
+  double scale,
+);
+
+@ffi.Native<
+    ffi.Pointer<stbi_uc> Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>, ffi.Int)>()
+external ffi.Pointer<stbi_uc> stbi_load(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> channels_in_file,
+  int desired_channels,
+);
+
+@ffi.Native<
+    ffi.Pointer<stbi_us> Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>, ffi.Int)>()
+external ffi.Pointer<stbi_us> stbi_load_16(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> channels_in_file,
+  int desired_channels,
+);
+
+@ffi.Native<
+    ffi.Pointer<stbi_us> Function(
+        ffi.Pointer<stbi_io_callbacks>,
+        ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Int)>()
+external ffi.Pointer<stbi_us> stbi_load_16_from_callbacks(
+  ffi.Pointer<stbi_io_callbacks> clbk,
+  ffi.Pointer<ffi.Void> user,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> channels_in_file,
+  int desired_channels,
+);
+
+/// /////////////////////////////////
+///
+/// 16-bits-per-channel interface
+@ffi.Native<
+    ffi.Pointer<stbi_us> Function(
+        ffi.Pointer<stbi_uc>,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Int)>()
+external ffi.Pointer<stbi_us> stbi_load_16_from_memory(
+  ffi.Pointer<stbi_uc> buffer,
+  int len,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> channels_in_file,
+  int desired_channels,
+);
+
+@ffi.Native<
+    ffi.Pointer<stbi_uc> Function(
+        ffi.Pointer<stbi_io_callbacks>,
+        ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Int)>()
+external ffi.Pointer<stbi_uc> stbi_load_from_callbacks(
+  ffi.Pointer<stbi_io_callbacks> clbk,
+  ffi.Pointer<ffi.Void> user,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> channels_in_file,
+  int desired_channels,
+);
+
+@ffi.Native<
+    ffi.Pointer<stbi_uc> Function(ffi.Pointer<FILE>, ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>, ffi.Int)>()
+external ffi.Pointer<stbi_uc> stbi_load_from_file(
+  ffi.Pointer<FILE> f,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> channels_in_file,
+  int desired_channels,
+);
+
+@ffi.Native<
+    ffi.Pointer<stbi_us> Function(ffi.Pointer<FILE>, ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>, ffi.Int)>()
+external ffi.Pointer<stbi_us> stbi_load_from_file_16(
+  ffi.Pointer<FILE> f,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> channels_in_file,
+  int desired_channels,
+);
+
+/// /////////////////////////////////
+///
+/// 8-bits-per-channel interface
+@ffi.Native<
+    ffi.Pointer<stbi_uc> Function(
+        ffi.Pointer<stbi_uc>,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Int)>()
+external ffi.Pointer<stbi_uc> stbi_load_from_memory(
+  ffi.Pointer<stbi_uc> buffer,
+  int len,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> channels_in_file,
+  int desired_channels,
+);
+
+@ffi.Native<
+    ffi.Pointer<stbi_uc> Function(
+        ffi.Pointer<stbi_uc>,
+        ffi.Int,
+        ffi.Pointer<ffi.Pointer<ffi.Int>>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Int)>()
+external ffi.Pointer<stbi_uc> stbi_load_gif_from_memory(
+  ffi.Pointer<stbi_uc> buffer,
+  int len,
+  ffi.Pointer<ffi.Pointer<ffi.Int>> delays,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> z,
+  ffi.Pointer<ffi.Int> comp,
+  int req_comp,
+);
+
+@ffi.Native<
+    ffi.Pointer<ffi.Float> Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>, ffi.Int)>()
+external ffi.Pointer<ffi.Float> stbi_loadf(
+  ffi.Pointer<ffi.Char> filename,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> channels_in_file,
+  int desired_channels,
+);
+
+@ffi.Native<
+    ffi.Pointer<ffi.Float> Function(
+        ffi.Pointer<stbi_io_callbacks>,
+        ffi.Pointer<ffi.Void>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Int)>()
+external ffi.Pointer<ffi.Float> stbi_loadf_from_callbacks(
+  ffi.Pointer<stbi_io_callbacks> clbk,
+  ffi.Pointer<ffi.Void> user,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> channels_in_file,
+  int desired_channels,
+);
+
+@ffi.Native<
+    ffi.Pointer<ffi.Float> Function(ffi.Pointer<FILE>, ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>, ffi.Int)>()
+external ffi.Pointer<ffi.Float> stbi_loadf_from_file(
+  ffi.Pointer<FILE> f,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> channels_in_file,
+  int desired_channels,
+);
+
+@ffi.Native<
+    ffi.Pointer<ffi.Float> Function(
+        ffi.Pointer<stbi_uc>,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Pointer<ffi.Int>,
+        ffi.Int)>()
+external ffi.Pointer<ffi.Float> stbi_loadf_from_memory(
+  ffi.Pointer<stbi_uc> buffer,
+  int len,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+  ffi.Pointer<ffi.Int> channels_in_file,
+  int desired_channels,
+);
+
+/// flip the image vertically, so the first pixel in the output array is the bottom left
+@ffi.Native<ffi.Void Function(ffi.Int)>()
+external void stbi_set_flip_vertically_on_load(
+  int flag_true_if_should_flip,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Int)>()
+external void stbi_set_flip_vertically_on_load_thread(
+  int flag_true_if_should_flip,
+);
+
+/// for image formats that explicitly notate that they have premultiplied alpha,
+/// we just return the colors as stored in the file. set this flag to force
+/// unpremultiplication. results are undefined if the unpremultiply overflow.
+@ffi.Native<ffi.Void Function(ffi.Int)>()
+external void stbi_set_unpremultiply_on_load(
+  int flag_true_if_should_unpremultiply,
+);
+
+/// as above, but only applies to images loaded on the thread that calls the function
+/// this function is only available if your compiler supports thread-local variables;
+/// calling it will fail to link if your compiler doesn't
+@ffi.Native<ffi.Void Function(ffi.Int)>()
+external void stbi_set_unpremultiply_on_load_thread(
+  int flag_true_if_should_unpremultiply,
+);
+
+@ffi.Native<
+    ffi.Int Function(
+        ffi.Pointer<ffi.Char>, ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int)>()
+external int stbi_zlib_decode_buffer(
+  ffi.Pointer<ffi.Char> obuffer,
+  int olen,
+  ffi.Pointer<ffi.Char> ibuffer,
+  int ilen,
+);
+
+@ffi.Native<
+    ffi.Pointer<ffi.Char> Function(
+        ffi.Pointer<ffi.Char>, ffi.Int, ffi.Pointer<ffi.Int>)>()
+external ffi.Pointer<ffi.Char> stbi_zlib_decode_malloc(
+  ffi.Pointer<ffi.Char> buffer,
+  int len,
+  ffi.Pointer<ffi.Int> outlen,
+);
+
+/// ZLIB client - used by PNG, available for other purposes
+@ffi.Native<
+    ffi.Pointer<ffi.Char> Function(
+        ffi.Pointer<ffi.Char>, ffi.Int, ffi.Int, ffi.Pointer<ffi.Int>)>()
+external ffi.Pointer<ffi.Char> stbi_zlib_decode_malloc_guesssize(
+  ffi.Pointer<ffi.Char> buffer,
+  int len,
+  int initial_size,
+  ffi.Pointer<ffi.Int> outlen,
+);
+
+@ffi.Native<
+    ffi.Pointer<ffi.Char> Function(ffi.Pointer<ffi.Char>, ffi.Int, ffi.Int,
+        ffi.Pointer<ffi.Int>, ffi.Int)>()
+external ffi.Pointer<ffi.Char> stbi_zlib_decode_malloc_guesssize_headerflag(
+  ffi.Pointer<ffi.Char> buffer,
+  int len,
+  int initial_size,
+  ffi.Pointer<ffi.Int> outlen,
+  int parse_header,
+);
+
+@ffi.Native<
+    ffi.Int Function(
+        ffi.Pointer<ffi.Char>, ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int)>()
+external int stbi_zlib_decode_noheader_buffer(
+  ffi.Pointer<ffi.Char> obuffer,
+  int olen,
+  ffi.Pointer<ffi.Char> ibuffer,
+  int ilen,
+);
+
+@ffi.Native<
+    ffi.Pointer<ffi.Char> Function(
+        ffi.Pointer<ffi.Char>, ffi.Int, ffi.Pointer<ffi.Int>)>()
+external ffi.Pointer<ffi.Char> stbi_zlib_decode_noheader_malloc(
+  ffi.Pointer<ffi.Char> buffer,
+  int len,
+  ffi.Pointer<ffi.Int> outlen,
+);
+
 const addresses = _SymbolAddresses();
 
 class _SymbolAddresses {
@@ -1045,6 +2019,12 @@ class _SymbolAddresses {
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_auto_time_t)>>
       get mnn_auto_time_destroy =>
           ffi.Native.addressOf(self.mnn_auto_time_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_cv_image_process_t)>>
+      get mnn_cv_image_process_destroy =>
+          ffi.Native.addressOf(self.mnn_cv_image_process_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_cv_matrix_t)>>
+      get mnn_cv_matrix_destroy =>
+          ffi.Native.addressOf(self.mnn_cv_matrix_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_interpreter_t)>>
       get mnn_interpreter_destroy =>
           ffi.Native.addressOf(self.mnn_interpreter_destroy);
@@ -1055,6 +2035,8 @@ class _SymbolAddresses {
       get mnn_tensor_destroy => ffi.Native.addressOf(self.mnn_tensor_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_timer_t)>>
       get mnn_timer_destroy => ffi.Native.addressOf(self.mnn_timer_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
+      get stbi_image_free => ffi.Native.addressOf(self.stbi_image_free);
 }
 
 enum DimensionType {
@@ -1136,6 +2118,32 @@ enum ErrorCode {
       };
 }
 
+/// stdio state variables.
+///
+/// The following always hold:
+///
+/// if (_flags&(__SLBF|__SWR)) == (__SLBF|__SWR),
+/// _lbfsize is -_bf._size, else _lbfsize is 0
+/// if _flags&__SRD, _w is 0
+/// if _flags&__SWR, _r is 0
+///
+/// This ensures that the getc and putc macros (or inline functions) never
+/// try to write or read from a file that is in `read' or `write' mode.
+/// (Moreover, they can, and do, automatically switch from read mode to
+/// write mode, and back, on "r+" and "w+" files.)
+///
+/// _lbfsize is used only to make the inline line-buffered output stream
+/// code as compact as possible.
+///
+/// _ub, _up, and _ur are used when ungetc() pushes back more characters
+/// than fit in the current _bf, or when ungetc() pushes back a character
+/// that does not match the previous one in _bf.  When this happens,
+/// _ub._base becomes non-nil (i.e., a stream has ungetc() data iff
+/// _ub._base!=NULL) and _up and _ur save the current values of _p and _r.
+///
+/// NB: see WARNING above before changing the layout of this structure!
+typedef FILE = __sFILE;
+
 /// Types in the halide type system. They can be ints, unsigned ints,
 /// or floats (of various bit-widths), or a handle (which is always 64-bits).
 /// Note that the int/uint/float values do not imply a specific bit width
@@ -1197,6 +2205,28 @@ enum MapType {
       };
 }
 
+const int STBI_VERSION = 1;
+
+const int STBI_default = 0;
+
+const int STBI_default$1 = 0;
+
+const int STBI_grey = 1;
+
+const int STBI_grey$1 = 1;
+
+const int STBI_grey_alpha = 2;
+
+const int STBI_grey_alpha$1 = 2;
+
+const int STBI_rgb = 3;
+
+const int STBI_rgb$1 = 3;
+
+const int STBI_rgb_alpha = 4;
+
+const int STBI_rgb_alpha$1 = 4;
+
 final class UnnamedUnion1 extends ffi.Union {
   external ffi.Pointer<ffi.Void> sharedContext;
 
@@ -1212,6 +2242,125 @@ final class UnnamedUnion2 extends ffi.Union {
   @ffi.Int()
   external int mode;
 }
+
+typedef __darwin_off_t = __int64_t;
+typedef __int64_t = ffi.LongLong;
+typedef Dart__int64_t = int;
+
+/// stdio state variables.
+///
+/// The following always hold:
+///
+/// if (_flags&(__SLBF|__SWR)) == (__SLBF|__SWR),
+/// _lbfsize is -_bf._size, else _lbfsize is 0
+/// if _flags&__SRD, _w is 0
+/// if _flags&__SWR, _r is 0
+///
+/// This ensures that the getc and putc macros (or inline functions) never
+/// try to write or read from a file that is in `read' or `write' mode.
+/// (Moreover, they can, and do, automatically switch from read mode to
+/// write mode, and back, on "r+" and "w+" files.)
+///
+/// _lbfsize is used only to make the inline line-buffered output stream
+/// code as compact as possible.
+///
+/// _ub, _up, and _ur are used when ungetc() pushes back more characters
+/// than fit in the current _bf, or when ungetc() pushes back a character
+/// that does not match the previous one in _bf.  When this happens,
+/// _ub._base becomes non-nil (i.e., a stream has ungetc() data iff
+/// _ub._base!=NULL) and _up and _ur save the current values of _p and _r.
+///
+/// NB: see WARNING above before changing the layout of this structure!
+final class __sFILE extends ffi.Struct {
+  /// current position in (some) buffer
+  external ffi.Pointer<ffi.UnsignedChar> _p;
+
+  /// read space left for getc()
+  @ffi.Int()
+  external int _r;
+
+  /// write space left for putc()
+  @ffi.Int()
+  external int _w;
+
+  /// flags, below; this FILE is free if 0
+  @ffi.Short()
+  external int _flags;
+
+  /// fileno, if Unix descriptor, else -1
+  @ffi.Short()
+  external int _file;
+
+  /// the buffer (at least 1 byte, if !NULL)
+  external __sbuf _bf;
+
+  /// 0 or -_bf._size, for inline putc
+  @ffi.Int()
+  external int _lbfsize;
+
+  /// cookie passed to io functions
+  external ffi.Pointer<ffi.Void> _cookie;
+
+  external ffi
+      .Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void>)>>
+      _close;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Char>, ffi.Int)>> _read;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          fpos_t Function(ffi.Pointer<ffi.Void>, fpos_t, ffi.Int)>> _seek;
+
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Char>, ffi.Int)>> _write;
+
+  /// ungetc buffer
+  external __sbuf _ub;
+
+  /// additions to FILE to not break ABI
+  external ffi.Pointer<__sFILEX> _extra;
+
+  /// saved _r when _r is counting ungetc data
+  @ffi.Int()
+  external int _ur;
+
+  /// guarantee an ungetc() buffer
+  @ffi.Array.multi([3])
+  external ffi.Array<ffi.UnsignedChar> _ubuf;
+
+  /// guarantee a getc() buffer
+  @ffi.Array.multi([1])
+  external ffi.Array<ffi.UnsignedChar> _nbuf;
+
+  /// buffer for fgetln()
+  external __sbuf _lb;
+
+  /// stat.st_blksize (may be != _bf._size)
+  @ffi.Int()
+  external int _blksize;
+
+  /// current lseek offset (see WARNING)
+  @fpos_t()
+  external int _offset;
+}
+
+/// hold a buncha junk that would grow the ABI
+final class __sFILEX extends ffi.Opaque {}
+
+/// stdio buffers
+final class __sbuf extends ffi.Struct {
+  external ffi.Pointer<ffi.UnsignedChar> _base;
+
+  @ffi.Int()
+  external int _size;
+}
+
+typedef fpos_t = __darwin_off_t;
 
 /// The raw representation of an image passed around by generated
 /// Halide code. It includes some stuff to track whether the image is
@@ -1475,11 +2624,61 @@ typedef mnn_callback_0
     = ffi.Pointer<ffi.NativeFunction<mnn_callback_0Function>>;
 typedef mnn_callback_0Function = ffi.Void Function();
 typedef Dartmnn_callback_0Function = void Function();
+typedef mnn_cv_image_process_t = ffi.Pointer<ffi.Void>;
+typedef mnn_cv_matrix_t = ffi.Pointer<ffi.Void>;
+
+final class mnn_cv_point_t extends ffi.Struct {
+  @ffi.Float()
+  external double x;
+
+  @ffi.Float()
+  external double y;
+}
+
+final class mnn_cv_rect_t extends ffi.Struct {
+  @ffi.Float()
+  external double left;
+
+  @ffi.Float()
+  external double top;
+
+  @ffi.Float()
+  external double right;
+
+  @ffi.Float()
+  external double bottom;
+}
 
 /// Forward type enum */
 /// // typedef mnn_forward_type mnn_forward_type_t;
 typedef mnn_forward_type_t = ffi.Int;
 typedef Dartmnn_forward_type_t = int;
+
+final class mnn_image_process_config_t extends ffi.Struct {
+  /// data filter
+  @ffi.Int()
+  external int filterType;
+
+  /// format of source data
+  @ffi.Int()
+  external int sourceFormat;
+
+  /// format of destination data
+  @ffi.Int()
+  external int destFormat;
+
+  /// Only valid if the dest type is float
+  @ffi.Array.multi([4])
+  external ffi.Array<ffi.Float> mean;
+
+  @ffi.Array.multi([4])
+  external ffi.Array<ffi.Float> normal;
+
+  /// edge wrapper
+  @ffi.Int()
+  external int wrap;
+}
+
 typedef mnn_interpreter_t = ffi.Pointer<ffi.Void>;
 typedef mnn_runtime_info_t = ffi.Pointer<ffi.Void>;
 
@@ -1525,3 +2724,27 @@ enum mnn_tensor_dtype {
 
 typedef mnn_tensor_t = ffi.Pointer<ffi.Void>;
 typedef mnn_timer_t = ffi.Pointer<ffi.Void>;
+
+/// load image by filename, open file, or memory buffer
+final class stbi_io_callbacks extends ffi.Struct {
+  /// fill 'data' with 'size' bytes.  return number of bytes actually read
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Int Function(ffi.Pointer<ffi.Void> user,
+              ffi.Pointer<ffi.Char> data, ffi.Int size)>> read;
+
+  /// skip the next 'n' bytes, or 'unget' the last -n bytes if negative
+  external ffi.Pointer<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Pointer<ffi.Void> user, ffi.Int n)>> skip;
+
+  /// returns nonzero if we are at end of file/data
+  external ffi
+      .Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void> user)>>
+      eof;
+}
+
+typedef stbi_uc = ffi.UnsignedChar;
+typedef Dartstbi_uc = int;
+typedef stbi_us = ffi.UnsignedShort;
+typedef Dartstbi_us = int;

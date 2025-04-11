@@ -8,8 +8,10 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 
 import 'base.dart';
+import 'exception.dart';
 import 'g/mnn.g.dart' as c;
 import 'halide_runtime.dart';
+import 'image.dart';
 
 class Tensor extends NativeObject {
   static final ffi.NativeFinalizer _finalizer = ffi.NativeFinalizer(c.addresses.mnn_tensor_destroy);
@@ -80,7 +82,7 @@ class Tensor extends NativeObject {
     return switch (code) {
       c.ErrorCode.BOOL_TRUE => true,
       c.ErrorCode.BOOL_FALSE => false,
-      _ => throw Exception('copyFromHost failed: $code'),
+      _ => throw MNNException('copyFromHost failed: $code'),
     };
   }
 
@@ -94,7 +96,7 @@ class Tensor extends NativeObject {
     return switch (code) {
       c.ErrorCode.BOOL_TRUE => true,
       c.ErrorCode.BOOL_FALSE => false,
-      _ => throw Exception('copyToHost failed: $code'),
+      _ => throw MNNException('copyToHost failed: $code'),
     };
   }
 
@@ -105,7 +107,7 @@ class Tensor extends NativeObject {
     final shape = calloc<ffi.Int>(dims);
     final code = c.mnn_tensor_shape(ptr, shape, dims);
     if (code != c.ErrorCode.NO_ERROR) {
-      throw Exception('mnn_tensor_shape failed: $code');
+      throw MNNException('mnn_tensor_shape failed: $code');
     }
     final result = List<int>.generate(dims, (i) => shape[i]);
     calloc.free(shape);
@@ -177,10 +179,29 @@ class Tensor extends NativeObject {
   /// @param length Length value
   void setLength(int index, int length) => c.mnn_tensor_set_length(ptr, index, length);
 
+  void setImage(int index, Image image) {
+    if (image.width != width || image.height != height || image.channels != channel) {
+      throw MNNException('image.shape=${image.shape} not match tensor.shape=$shape');
+    }
+    if (index < 0 || index >= batch) {
+      throw MNNException('index=$index out of range [0, $batch)');
+    }
+    final size = image.width * image.height * image.channels;
+    final p = cast<ffi.Float>() + index * size;
+    p.asTypedList(size).setAll(0, image.bytes.buffer.asFloat32List());
+  }
+
+  void setImageBytes(int index, Uint8List bytes) {
+    final p = cast<ffi.Float>() + index * elementSize;
+    p.asTypedList(size).setAll(0, bytes.buffer.asFloat32List());
+  }
+
   /// @brief Get host data pointer
   ///
   /// @return Data pointer or NULL
   ffi.Pointer<ffi.Void> get host => c.mnn_tensor_host(ptr);
+
+  ffi.Pointer<T> cast<T extends ffi.SizedNativeType>() => host.cast<T>();
 
   /// @brief Get device ID
   ///
@@ -308,7 +329,7 @@ enum DataType {
         19 => DataType_DT_HALF,
         20 => DataType_DT_RESOURCE,
         21 => DataType_DT_VARIANT,
-        _ => throw Exception('Invalid value for DataType: $value'),
+        _ => throw MNNException('Invalid value for DataType: $value'),
       };
 }
 
@@ -343,7 +364,7 @@ extension DataTypeExt on DataType {
       case DataType.DataType_DT_INT16:
         return HalideType.i16();
       default:
-        throw Exception('Unsupported data type: $this');
+        throw MNNException('Unsupported data type: $this');
     }
   }
 }
