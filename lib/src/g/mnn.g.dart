@@ -1614,6 +1614,11 @@ external void stbi_convert_iphone_png_to_rgb_thread(
 @ffi.Native<ffi.Pointer<ffi.Char> Function()>()
 external ffi.Pointer<ffi.Char> stbi_failure_reason();
 
+@ffi.Native<ffi.Void Function(ffi.Int)>()
+external void stbi_flip_vertically_on_write(
+  int flip_boolean,
+);
+
 @ffi.Native<ffi.Void Function(ffi.Float)>()
 external void stbi_hdr_to_ldr_gamma(
   double gamma,
@@ -1953,6 +1958,134 @@ external void stbi_set_unpremultiply_on_load_thread(
 );
 
 @ffi.Native<
+    ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int, ffi.Int, ffi.Int,
+        ffi.Pointer<ffi.Void>)>()
+external int stbi_write_bmp(
+  ffi.Pointer<ffi.Char> filename,
+  int w,
+  int h,
+  int comp,
+  ffi.Pointer<ffi.Void> data,
+);
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<stbi_write_func>, ffi.Pointer<ffi.Void>,
+        ffi.Int, ffi.Int, ffi.Int, ffi.Pointer<ffi.Void>)>()
+external int stbi_write_bmp_to_func(
+  ffi.Pointer<stbi_write_func> func,
+  ffi.Pointer<ffi.Void> context,
+  int w,
+  int h,
+  int comp,
+  ffi.Pointer<ffi.Void> data,
+);
+
+@ffi.Native<ffi.Int>()
+external int stbi_write_force_png_filter;
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int, ffi.Int, ffi.Int,
+        ffi.Pointer<ffi.Float>)>()
+external int stbi_write_hdr(
+  ffi.Pointer<ffi.Char> filename,
+  int w,
+  int h,
+  int comp,
+  ffi.Pointer<ffi.Float> data,
+);
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<stbi_write_func>, ffi.Pointer<ffi.Void>,
+        ffi.Int, ffi.Int, ffi.Int, ffi.Pointer<ffi.Float>)>()
+external int stbi_write_hdr_to_func(
+  ffi.Pointer<stbi_write_func> func,
+  ffi.Pointer<ffi.Void> context,
+  int w,
+  int h,
+  int comp,
+  ffi.Pointer<ffi.Float> data,
+);
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int, ffi.Int, ffi.Int,
+        ffi.Pointer<ffi.Void>, ffi.Int)>()
+external int stbi_write_jpg(
+  ffi.Pointer<ffi.Char> filename,
+  int x,
+  int y,
+  int comp,
+  ffi.Pointer<ffi.Void> data,
+  int quality,
+);
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<stbi_write_func>, ffi.Pointer<ffi.Void>,
+        ffi.Int, ffi.Int, ffi.Int, ffi.Pointer<ffi.Void>, ffi.Int)>()
+external int stbi_write_jpg_to_func(
+  ffi.Pointer<stbi_write_func> func,
+  ffi.Pointer<ffi.Void> context,
+  int x,
+  int y,
+  int comp,
+  ffi.Pointer<ffi.Void> data,
+  int quality,
+);
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int, ffi.Int, ffi.Int,
+        ffi.Pointer<ffi.Void>, ffi.Int)>()
+external int stbi_write_png(
+  ffi.Pointer<ffi.Char> filename,
+  int w,
+  int h,
+  int comp,
+  ffi.Pointer<ffi.Void> data,
+  int stride_in_bytes,
+);
+
+@ffi.Native<ffi.Int>()
+external int stbi_write_png_compression_level;
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<stbi_write_func>, ffi.Pointer<ffi.Void>,
+        ffi.Int, ffi.Int, ffi.Int, ffi.Pointer<ffi.Void>, ffi.Int)>()
+external int stbi_write_png_to_func(
+  ffi.Pointer<stbi_write_func> func,
+  ffi.Pointer<ffi.Void> context,
+  int w,
+  int h,
+  int comp,
+  ffi.Pointer<ffi.Void> data,
+  int stride_in_bytes,
+);
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<ffi.Char>, ffi.Int, ffi.Int, ffi.Int,
+        ffi.Pointer<ffi.Void>)>()
+external int stbi_write_tga(
+  ffi.Pointer<ffi.Char> filename,
+  int w,
+  int h,
+  int comp,
+  ffi.Pointer<ffi.Void> data,
+);
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<stbi_write_func>, ffi.Pointer<ffi.Void>,
+        ffi.Int, ffi.Int, ffi.Int, ffi.Pointer<ffi.Void>)>()
+external int stbi_write_tga_to_func(
+  ffi.Pointer<stbi_write_func> func,
+  ffi.Pointer<ffi.Void> context,
+  int w,
+  int h,
+  int comp,
+  ffi.Pointer<ffi.Void> data,
+);
+
+@ffi.Native<ffi.Int>()
+external int stbi_write_tga_with_rle;
+
+@ffi.Native<
     ffi.Int Function(
         ffi.Pointer<ffi.Char>, ffi.Int, ffi.Pointer<ffi.Char>, ffi.Int)>()
 external int stbi_zlib_decode_buffer(
@@ -2012,6 +2145,476 @@ external ffi.Pointer<ffi.Char> stbi_zlib_decode_noheader_malloc(
   ffi.Pointer<ffi.Int> outlen,
 );
 
+/// This builds the samplers and does one allocation
+@ffi.Native<ffi.Int Function(ffi.Pointer<STBIR_RESIZE>)>()
+external int stbir_build_samplers(
+  ffi.Pointer<STBIR_RESIZE> resize,
+);
+
+/// This will build samplers for threading.
+/// You can pass in the number of threads you'd like to use (try_splits).
+/// It returns the number of splits (threads) that you can call it with.
+/// It might be less if the image resize can't be split up that many ways.
+@ffi.Native<ffi.Int Function(ffi.Pointer<STBIR_RESIZE>, ffi.Int)>()
+external int stbir_build_samplers_with_splits(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  int try_splits,
+);
+
+/// You MUST call this, if you call stbir_build_samplers or stbir_build_samplers_with_splits
+@ffi.Native<ffi.Void Function(ffi.Pointer<STBIR_RESIZE>)>()
+external void stbir_free_samplers(
+  ffi.Pointer<STBIR_RESIZE> resize,
+);
+
+/// medium api
+@ffi.Native<
+    ffi.Pointer<ffi.Void> Function(
+        ffi.Pointer<ffi.Void>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Pointer<ffi.Void>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.UnsignedInt,
+        ffi.UnsignedInt,
+        ffi.UnsignedInt,
+        ffi.UnsignedInt)>(symbol: 'stbir_resize')
+external ffi.Pointer<ffi.Void> _stbir_resize(
+  ffi.Pointer<ffi.Void> input_pixels,
+  int input_w,
+  int input_h,
+  int input_stride_in_bytes,
+  ffi.Pointer<ffi.Void> output_pixels,
+  int output_w,
+  int output_h,
+  int output_stride_in_bytes,
+  int pixel_layout,
+  int data_type,
+  int edge,
+  int filter,
+);
+
+ffi.Pointer<ffi.Void> stbir_resize(
+  ffi.Pointer<ffi.Void> input_pixels,
+  int input_w,
+  int input_h,
+  int input_stride_in_bytes,
+  ffi.Pointer<ffi.Void> output_pixels,
+  int output_w,
+  int output_h,
+  int output_stride_in_bytes,
+  StbirPixelLayout pixel_layout,
+  StbirDataType data_type,
+  StbirEdge edge,
+  StbirFilter filter,
+) =>
+    _stbir_resize(
+      input_pixels,
+      input_w,
+      input_h,
+      input_stride_in_bytes,
+      output_pixels,
+      output_w,
+      output_h,
+      output_stride_in_bytes,
+      pixel_layout.value,
+      data_type.value,
+      edge.value,
+      filter.value,
+    );
+
+/// And this is the main function to perform the resize synchronously on one thread.
+@ffi.Native<ffi.Int Function(ffi.Pointer<STBIR_RESIZE>)>()
+external int stbir_resize_extended(
+  ffi.Pointer<STBIR_RESIZE> resize,
+);
+
+/// Usually, you will always call stbir_resize_split with split_start as the thread_index
+/// and "1" for the split_count.
+/// But, if you have a weird situation where you MIGHT want 8 threads, but sometimes
+/// only 4 threads, you can use 0,2,4,6 for the split_start's and use "2" for the
+/// split_count each time to turn in into a 4 thread resize. (This is unusual).
+@ffi.Native<ffi.Int Function(ffi.Pointer<STBIR_RESIZE>, ffi.Int, ffi.Int)>()
+external int stbir_resize_extended_split(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  int split_start,
+  int split_count,
+);
+
+@ffi.Native<
+    ffi.Pointer<ffi.Float> Function(
+        ffi.Pointer<ffi.Float>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Pointer<ffi.Float>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.UnsignedInt)>(symbol: 'stbir_resize_float_linear')
+external ffi.Pointer<ffi.Float> _stbir_resize_float_linear(
+  ffi.Pointer<ffi.Float> input_pixels,
+  int input_w,
+  int input_h,
+  int input_stride_in_bytes,
+  ffi.Pointer<ffi.Float> output_pixels,
+  int output_w,
+  int output_h,
+  int output_stride_in_bytes,
+  int pixel_type,
+);
+
+ffi.Pointer<ffi.Float> stbir_resize_float_linear(
+  ffi.Pointer<ffi.Float> input_pixels,
+  int input_w,
+  int input_h,
+  int input_stride_in_bytes,
+  ffi.Pointer<ffi.Float> output_pixels,
+  int output_w,
+  int output_h,
+  int output_stride_in_bytes,
+  StbirPixelLayout pixel_type,
+) =>
+    _stbir_resize_float_linear(
+      input_pixels,
+      input_w,
+      input_h,
+      input_stride_in_bytes,
+      output_pixels,
+      output_w,
+      output_h,
+      output_stride_in_bytes,
+      pixel_type.value,
+    );
+
+/// First off, you must ALWAYS call stbir_resize_init on your resize structure before any of the other calls!
+@ffi.Native<
+    ffi.Void Function(
+        ffi.Pointer<STBIR_RESIZE>,
+        ffi.Pointer<ffi.Void>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Pointer<ffi.Void>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.UnsignedInt,
+        ffi.UnsignedInt)>(symbol: 'stbir_resize_init')
+external void _stbir_resize_init(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  ffi.Pointer<ffi.Void> input_pixels,
+  int input_w,
+  int input_h,
+  int input_stride_in_bytes,
+  ffi.Pointer<ffi.Void> output_pixels,
+  int output_w,
+  int output_h,
+  int output_stride_in_bytes,
+  int pixel_layout,
+  int data_type,
+);
+
+void stbir_resize_init(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  ffi.Pointer<ffi.Void> input_pixels,
+  int input_w,
+  int input_h,
+  int input_stride_in_bytes,
+  ffi.Pointer<ffi.Void> output_pixels,
+  int output_w,
+  int output_h,
+  int output_stride_in_bytes,
+  StbirPixelLayout pixel_layout,
+  StbirDataType data_type,
+) =>
+    _stbir_resize_init(
+      resize,
+      input_pixels,
+      input_w,
+      input_h,
+      input_stride_in_bytes,
+      output_pixels,
+      output_w,
+      output_h,
+      output_stride_in_bytes,
+      pixel_layout.value,
+      data_type.value,
+    );
+
+@ffi.Native<
+    ffi.Pointer<ffi.UnsignedChar> Function(
+        ffi.Pointer<ffi.UnsignedChar>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Pointer<ffi.UnsignedChar>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.UnsignedInt)>(symbol: 'stbir_resize_uint8_linear')
+external ffi.Pointer<ffi.UnsignedChar> _stbir_resize_uint8_linear(
+  ffi.Pointer<ffi.UnsignedChar> input_pixels,
+  int input_w,
+  int input_h,
+  int input_stride_in_bytes,
+  ffi.Pointer<ffi.UnsignedChar> output_pixels,
+  int output_w,
+  int output_h,
+  int output_stride_in_bytes,
+  int pixel_type,
+);
+
+ffi.Pointer<ffi.UnsignedChar> stbir_resize_uint8_linear(
+  ffi.Pointer<ffi.UnsignedChar> input_pixels,
+  int input_w,
+  int input_h,
+  int input_stride_in_bytes,
+  ffi.Pointer<ffi.UnsignedChar> output_pixels,
+  int output_w,
+  int output_h,
+  int output_stride_in_bytes,
+  StbirPixelLayout pixel_type,
+) =>
+    _stbir_resize_uint8_linear(
+      input_pixels,
+      input_w,
+      input_h,
+      input_stride_in_bytes,
+      output_pixels,
+      output_w,
+      output_h,
+      output_stride_in_bytes,
+      pixel_type.value,
+    );
+
+/// ===============================================================
+/// Simple-complexity API
+///
+/// If output_pixels is NULL (0), then we will allocate the buffer and return it to you.
+/// --------------------------------
+@ffi.Native<
+    ffi.Pointer<ffi.UnsignedChar> Function(
+        ffi.Pointer<ffi.UnsignedChar>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.Pointer<ffi.UnsignedChar>,
+        ffi.Int,
+        ffi.Int,
+        ffi.Int,
+        ffi.UnsignedInt)>(symbol: 'stbir_resize_uint8_srgb')
+external ffi.Pointer<ffi.UnsignedChar> _stbir_resize_uint8_srgb(
+  ffi.Pointer<ffi.UnsignedChar> input_pixels,
+  int input_w,
+  int input_h,
+  int input_stride_in_bytes,
+  ffi.Pointer<ffi.UnsignedChar> output_pixels,
+  int output_w,
+  int output_h,
+  int output_stride_in_bytes,
+  int pixel_type,
+);
+
+ffi.Pointer<ffi.UnsignedChar> stbir_resize_uint8_srgb(
+  ffi.Pointer<ffi.UnsignedChar> input_pixels,
+  int input_w,
+  int input_h,
+  int input_stride_in_bytes,
+  ffi.Pointer<ffi.UnsignedChar> output_pixels,
+  int output_w,
+  int output_h,
+  int output_stride_in_bytes,
+  StbirPixelLayout pixel_type,
+) =>
+    _stbir_resize_uint8_srgb(
+      input_pixels,
+      input_w,
+      input_h,
+      input_stride_in_bytes,
+      output_pixels,
+      output_w,
+      output_h,
+      output_stride_in_bytes,
+      pixel_type.value,
+    );
+
+@ffi.Native<
+    ffi.Void Function(ffi.Pointer<STBIR_RESIZE>, ffi.Pointer<ffi.Void>, ffi.Int,
+        ffi.Pointer<ffi.Void>, ffi.Int)>()
+external void stbir_set_buffer_ptrs(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  ffi.Pointer<ffi.Void> input_pixels,
+  int input_stride_in_bytes,
+  ffi.Pointer<ffi.Void> output_pixels,
+  int output_stride_in_bytes,
+);
+
+/// ===============================================================
+/// You can update these parameters any time after resize_init and there is no cost
+/// --------------------------------
+@ffi.Native<
+    ffi.Void Function(ffi.Pointer<STBIR_RESIZE>, ffi.UnsignedInt,
+        ffi.UnsignedInt)>(symbol: 'stbir_set_datatypes')
+external void _stbir_set_datatypes(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  int input_type,
+  int output_type,
+);
+
+void stbir_set_datatypes(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  StbirDataType input_type,
+  StbirDataType output_type,
+) =>
+    _stbir_set_datatypes(
+      resize,
+      input_type.value,
+      output_type.value,
+    );
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<STBIR_RESIZE>, ffi.UnsignedInt,
+        ffi.UnsignedInt)>(symbol: 'stbir_set_edgemodes')
+external int _stbir_set_edgemodes(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  int horizontal_edge,
+  int vertical_edge,
+);
+
+int stbir_set_edgemodes(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  StbirEdge horizontal_edge,
+  StbirEdge vertical_edge,
+) =>
+    _stbir_set_edgemodes(
+      resize,
+      horizontal_edge.value,
+      vertical_edge.value,
+    );
+
+@ffi.Native<
+    ffi.Int Function(
+        ffi.Pointer<STBIR_RESIZE>,
+        ffi.Pointer<stbir__kernel_callback>,
+        ffi.Pointer<stbir__support_callback>,
+        ffi.Pointer<stbir__kernel_callback>,
+        ffi.Pointer<stbir__support_callback>)>()
+external int stbir_set_filter_callbacks(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  ffi.Pointer<stbir__kernel_callback> horizontal_filter,
+  ffi.Pointer<stbir__support_callback> horizontal_support,
+  ffi.Pointer<stbir__kernel_callback> vertical_filter,
+  ffi.Pointer<stbir__support_callback> vertical_support,
+);
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<STBIR_RESIZE>, ffi.UnsignedInt,
+        ffi.UnsignedInt)>(symbol: 'stbir_set_filters')
+external int _stbir_set_filters(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  int horizontal_filter,
+  int vertical_filter,
+);
+
+int stbir_set_filters(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  StbirFilter horizontal_filter,
+  StbirFilter vertical_filter,
+) =>
+    _stbir_set_filters(
+      resize,
+      horizontal_filter.value,
+      vertical_filter.value,
+    );
+
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<STBIR_RESIZE>, ffi.Double, ffi.Double,
+        ffi.Double, ffi.Double)>()
+external int stbir_set_input_subrect(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  double s0,
+  double t0,
+  double s1,
+  double t1,
+);
+
+/// when inputting AND outputting non-premultiplied alpha pixels, we use a slower but higher quality technique
+/// that fills the zero alpha pixel's RGB values with something plausible.  If you don't care about areas of
+/// zero alpha, you can call this function to get about a 25% speed improvement for STBIR_RGBA to STBIR_RGBA
+/// types of resizes.
+@ffi.Native<ffi.Int Function(ffi.Pointer<STBIR_RESIZE>, ffi.Int)>()
+external int stbir_set_non_pm_alpha_speed_over_quality(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  int non_pma_alpha_speed_over_quality,
+);
+
+@ffi.Native<
+    ffi.Int Function(
+        ffi.Pointer<STBIR_RESIZE>, ffi.Int, ffi.Int, ffi.Int, ffi.Int)>()
+external int stbir_set_output_pixel_subrect(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  int subx,
+  int suby,
+  int subw,
+  int subh,
+);
+
+@ffi.Native<
+    ffi.Void Function(
+        ffi.Pointer<STBIR_RESIZE>,
+        ffi.Pointer<stbir_input_callback>,
+        ffi.Pointer<stbir_output_callback>)>()
+external void stbir_set_pixel_callbacks(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  ffi.Pointer<stbir_input_callback> input_cb,
+  ffi.Pointer<stbir_output_callback> output_cb,
+);
+
+/// ===============================================================
+/// If you call any of these functions, you will trigger a sampler rebuild!
+/// --------------------------------
+@ffi.Native<
+    ffi.Int Function(ffi.Pointer<STBIR_RESIZE>, ffi.UnsignedInt,
+        ffi.UnsignedInt)>(symbol: 'stbir_set_pixel_layouts')
+external int _stbir_set_pixel_layouts(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  int input_pixel_layout,
+  int output_pixel_layout,
+);
+
+int stbir_set_pixel_layouts(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  StbirPixelLayout input_pixel_layout,
+  StbirPixelLayout output_pixel_layout,
+) =>
+    _stbir_set_pixel_layouts(
+      resize,
+      input_pixel_layout.value,
+      output_pixel_layout.value,
+    );
+
+@ffi.Native<
+    ffi.Int Function(
+        ffi.Pointer<STBIR_RESIZE>, ffi.Int, ffi.Int, ffi.Int, ffi.Int)>()
+external int stbir_set_pixel_subrect(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  int subx,
+  int suby,
+  int subw,
+  int subh,
+);
+
+@ffi.Native<
+    ffi.Void Function(ffi.Pointer<STBIR_RESIZE>, ffi.Pointer<ffi.Void>)>()
+external void stbir_set_user_data(
+  ffi.Pointer<STBIR_RESIZE> resize,
+  ffi.Pointer<ffi.Void> user_data,
+);
+
 const addresses = _SymbolAddresses();
 
 class _SymbolAddresses {
@@ -2037,6 +2640,8 @@ class _SymbolAddresses {
       get mnn_timer_destroy => ffi.Native.addressOf(self.mnn_timer_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
       get stbi_image_free => ffi.Native.addressOf(self.stbi_image_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<STBIR_RESIZE>)>>
+      get stbir_free_samplers => ffi.Native.addressOf(self.stbir_free_samplers);
 }
 
 enum DimensionType {
@@ -2205,6 +2810,128 @@ enum MapType {
       };
 }
 
+final class STBIR_RESIZE extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> user_data;
+
+  external ffi.Pointer<ffi.Void> input_pixels;
+
+  @ffi.Int()
+  external int input_w;
+
+  @ffi.Int()
+  external int input_h;
+
+  @ffi.Double()
+  external double input_s0;
+
+  @ffi.Double()
+  external double input_t0;
+
+  @ffi.Double()
+  external double input_s1;
+
+  @ffi.Double()
+  external double input_t1;
+
+  external ffi.Pointer<stbir_input_callback> input_cb;
+
+  external ffi.Pointer<ffi.Void> output_pixels;
+
+  @ffi.Int()
+  external int output_w;
+
+  @ffi.Int()
+  external int output_h;
+
+  @ffi.Int()
+  external int output_subx;
+
+  @ffi.Int()
+  external int output_suby;
+
+  @ffi.Int()
+  external int output_subw;
+
+  @ffi.Int()
+  external int output_subh;
+
+  external ffi.Pointer<stbir_output_callback> output_cb;
+
+  @ffi.Int()
+  external int input_stride_in_bytes;
+
+  @ffi.Int()
+  external int output_stride_in_bytes;
+
+  @ffi.Int()
+  external int splits;
+
+  @ffi.Int()
+  external int fast_alpha;
+
+  @ffi.Int()
+  external int needs_rebuild;
+
+  @ffi.Int()
+  external int called_alloc;
+
+  @ffi.UnsignedInt()
+  external int input_pixel_layout_publicAsInt;
+
+  StbirPixelLayout get input_pixel_layout_public =>
+      StbirPixelLayout.fromValue(input_pixel_layout_publicAsInt);
+
+  @ffi.UnsignedInt()
+  external int output_pixel_layout_publicAsInt;
+
+  StbirPixelLayout get output_pixel_layout_public =>
+      StbirPixelLayout.fromValue(output_pixel_layout_publicAsInt);
+
+  @ffi.UnsignedInt()
+  external int input_data_typeAsInt;
+
+  StbirDataType get input_data_type =>
+      StbirDataType.fromValue(input_data_typeAsInt);
+
+  @ffi.UnsignedInt()
+  external int output_data_typeAsInt;
+
+  StbirDataType get output_data_type =>
+      StbirDataType.fromValue(output_data_typeAsInt);
+
+  @ffi.UnsignedInt()
+  external int horizontal_filterAsInt;
+
+  StbirFilter get horizontal_filter =>
+      StbirFilter.fromValue(horizontal_filterAsInt);
+
+  @ffi.UnsignedInt()
+  external int vertical_filterAsInt;
+
+  StbirFilter get vertical_filter =>
+      StbirFilter.fromValue(vertical_filterAsInt);
+
+  @ffi.UnsignedInt()
+  external int horizontal_edgeAsInt;
+
+  StbirEdge get horizontal_edge => StbirEdge.fromValue(horizontal_edgeAsInt);
+
+  @ffi.UnsignedInt()
+  external int vertical_edgeAsInt;
+
+  StbirEdge get vertical_edge => StbirEdge.fromValue(vertical_edgeAsInt);
+
+  external ffi.Pointer<stbir__kernel_callback> horizontal_filter_kernel;
+
+  external ffi.Pointer<stbir__support_callback> horizontal_filter_support;
+
+  external ffi.Pointer<stbir__kernel_callback> vertical_filter_kernel;
+
+  external ffi.Pointer<stbir__support_callback> vertical_filter_support;
+
+  external ffi.Pointer<stbir__info> samplers;
+}
+
 const int STBI_VERSION = 1;
 
 const int STBI_default = 0;
@@ -2226,6 +2953,188 @@ const int STBI_rgb$1 = 3;
 const int STBI_rgb_alpha = 4;
 
 const int STBI_rgb_alpha$1 = 4;
+
+enum StbirDataType {
+  STBIR_TYPE_UINT8(0),
+  STBIR_TYPE_UINT8_SRGB(1),
+
+  /// alpha channel, when present, should also be SRGB (this is very unusual)
+  STBIR_TYPE_UINT8_SRGB_ALPHA(2),
+  STBIR_TYPE_UINT16(3),
+  STBIR_TYPE_FLOAT(4),
+  STBIR_TYPE_HALF_FLOAT(5);
+
+  final int value;
+  const StbirDataType(this.value);
+
+  static StbirDataType fromValue(int value) => switch (value) {
+        0 => STBIR_TYPE_UINT8,
+        1 => STBIR_TYPE_UINT8_SRGB,
+        2 => STBIR_TYPE_UINT8_SRGB_ALPHA,
+        3 => STBIR_TYPE_UINT16,
+        4 => STBIR_TYPE_FLOAT,
+        5 => STBIR_TYPE_HALF_FLOAT,
+        _ => throw ArgumentError('Unknown value for StbirDataType: $value'),
+      };
+}
+
+/// ===============================================================
+/// Medium-complexity API
+///
+/// This extends the easy-to-use API as follows:
+///
+/// * Can specify the datatype - U8, U8_SRGB, U16, FLOAT, HALF_FLOAT
+/// * Edge wrap can selected explicitly
+/// * Filter can be selected explicitly
+/// --------------------------------
+enum StbirEdge {
+  STBIR_EDGE_CLAMP(0),
+  STBIR_EDGE_REFLECT(1),
+
+  /// this edge mode is slower and uses more memory
+  STBIR_EDGE_WRAP(2),
+  STBIR_EDGE_ZERO(3);
+
+  final int value;
+  const StbirEdge(this.value);
+
+  static StbirEdge fromValue(int value) => switch (value) {
+        0 => STBIR_EDGE_CLAMP,
+        1 => STBIR_EDGE_REFLECT,
+        2 => STBIR_EDGE_WRAP,
+        3 => STBIR_EDGE_ZERO,
+        _ => throw ArgumentError('Unknown value for StbirEdge: $value'),
+      };
+}
+
+enum StbirFilter {
+  /// use same filter type that easy-to-use API chooses
+  STBIR_FILTER_DEFAULT(0),
+
+  /// A trapezoid w/1-pixel wide ramps, same result as box for integer scale ratios
+  STBIR_FILTER_BOX(1),
+
+  /// On upsampling, produces same results as bilinear texture filtering
+  STBIR_FILTER_TRIANGLE(2),
+
+  /// The cubic b-spline (aka Mitchell-Netrevalli with B=1,C=0), gaussian-esque
+  STBIR_FILTER_CUBICBSPLINE(3),
+
+  /// An interpolating cubic spline
+  STBIR_FILTER_CATMULLROM(4),
+
+  /// Mitchell-Netrevalli filter with B=1/3, C=1/3
+  STBIR_FILTER_MITCHELL(5),
+
+  /// Simple point sampling
+  STBIR_FILTER_POINT_SAMPLE(6),
+
+  /// User callback specified
+  STBIR_FILTER_OTHER(7);
+
+  final int value;
+  const StbirFilter(this.value);
+
+  static StbirFilter fromValue(int value) => switch (value) {
+        0 => STBIR_FILTER_DEFAULT,
+        1 => STBIR_FILTER_BOX,
+        2 => STBIR_FILTER_TRIANGLE,
+        3 => STBIR_FILTER_CUBICBSPLINE,
+        4 => STBIR_FILTER_CATMULLROM,
+        5 => STBIR_FILTER_MITCHELL,
+        6 => STBIR_FILTER_POINT_SAMPLE,
+        7 => STBIR_FILTER_OTHER,
+        _ => throw ArgumentError('Unknown value for StbirFilter: $value'),
+      };
+}
+
+/// stbir_pixel_layout specifies:
+/// number of channels
+/// order of channels
+/// whether color is premultiplied by alpha
+/// for back compatibility, you can cast the old channel count to an stbir_pixel_layout
+enum StbirPixelLayout {
+  STBIR_1CHANNEL(1),
+  STBIR_2CHANNEL(2),
+
+  /// 3-chan, with order specified (for channel flipping)
+  STBIR_RGB(3),
+
+  /// 3-chan, with order specified (for channel flipping)
+  STBIR_BGR(0),
+  STBIR_4CHANNEL(5),
+
+  /// alpha formats, where alpha is NOT premultiplied into color channels
+  STBIR_RGBA(4),
+  STBIR_BGRA(6),
+  STBIR_ARGB(7),
+  STBIR_ABGR(8),
+  STBIR_RA(9),
+  STBIR_AR(10),
+
+  /// alpha formats, where alpha is premultiplied into color channels
+  STBIR_RGBA_PM(11),
+  STBIR_BGRA_PM(12),
+  STBIR_ARGB_PM(13),
+  STBIR_ABGR_PM(14),
+  STBIR_RA_PM(15),
+  STBIR_AR_PM(16);
+
+  /// alpha formats, where NO alpha weighting is applied at all!
+  static const STBIR_RGBA_NO_AW = STBIR_RGBA_PM;
+
+  /// these are just synonyms for the _PM flags (which also do
+  static const STBIR_BGRA_NO_AW = STBIR_BGRA_PM;
+
+  /// no alpha weighting). These names just make it more clear
+  static const STBIR_ARGB_NO_AW = STBIR_ARGB_PM;
+
+  /// for some folks).
+  static const STBIR_ABGR_NO_AW = STBIR_ABGR_PM;
+  static const STBIR_RA_NO_AW = STBIR_RA_PM;
+  static const STBIR_AR_NO_AW = STBIR_AR_PM;
+
+  final int value;
+  const StbirPixelLayout(this.value);
+
+  static StbirPixelLayout fromValue(int value) => switch (value) {
+        1 => STBIR_1CHANNEL,
+        2 => STBIR_2CHANNEL,
+        3 => STBIR_RGB,
+        0 => STBIR_BGR,
+        5 => STBIR_4CHANNEL,
+        4 => STBIR_RGBA,
+        6 => STBIR_BGRA,
+        7 => STBIR_ARGB,
+        8 => STBIR_ABGR,
+        9 => STBIR_RA,
+        10 => STBIR_AR,
+        11 => STBIR_RGBA_PM,
+        12 => STBIR_BGRA_PM,
+        13 => STBIR_ARGB_PM,
+        14 => STBIR_ABGR_PM,
+        15 => STBIR_RA_PM,
+        16 => STBIR_AR_PM,
+        _ => throw ArgumentError('Unknown value for StbirPixelLayout: $value'),
+      };
+
+  @override
+  String toString() {
+    if (this == STBIR_RGBA_PM)
+      return "StbirPixelLayout.STBIR_RGBA_PM, StbirPixelLayout.STBIR_RGBA_NO_AW";
+    if (this == STBIR_BGRA_PM)
+      return "StbirPixelLayout.STBIR_BGRA_PM, StbirPixelLayout.STBIR_BGRA_NO_AW";
+    if (this == STBIR_ARGB_PM)
+      return "StbirPixelLayout.STBIR_ARGB_PM, StbirPixelLayout.STBIR_ARGB_NO_AW";
+    if (this == STBIR_ABGR_PM)
+      return "StbirPixelLayout.STBIR_ABGR_PM, StbirPixelLayout.STBIR_ABGR_NO_AW";
+    if (this == STBIR_RA_PM)
+      return "StbirPixelLayout.STBIR_RA_PM, StbirPixelLayout.STBIR_RA_NO_AW";
+    if (this == STBIR_AR_PM)
+      return "StbirPixelLayout.STBIR_AR_PM, StbirPixelLayout.STBIR_AR_NO_AW";
+    return super.toString();
+  }
+}
 
 final class UnnamedUnion1 extends ffi.Union {
   external ffi.Pointer<ffi.Void> sharedContext;
@@ -2748,3 +3657,38 @@ typedef stbi_uc = ffi.UnsignedChar;
 typedef Dartstbi_uc = int;
 typedef stbi_us = ffi.UnsignedShort;
 typedef Dartstbi_us = int;
+typedef stbi_write_func = ffi.NativeFunction<
+    ffi.Void Function(ffi.Pointer<ffi.Void> context, ffi.Pointer<ffi.Void> data,
+        ffi.Int size)>;
+
+final class stbir__info extends ffi.Opaque {}
+
+/// callbacks for user installed filters
+typedef stbir__kernel_callback = ffi.NativeFunction<
+    ffi.Float Function(
+        ffi.Float x, ffi.Float scale, ffi.Pointer<ffi.Void> user_data)>;
+typedef stbir__support_callback = ffi.NativeFunction<
+    ffi.Float Function(ffi.Float scale, ffi.Pointer<ffi.Void> user_data)>;
+
+/// INPUT CALLBACK: this callback is used for input scanlines
+typedef stbir_input_callback = ffi.NativeFunction<
+    ffi.Pointer<ffi.Void> Function(
+        ffi.Pointer<ffi.Void> optional_output,
+        ffi.Pointer<ffi.Void> input_ptr,
+        ffi.Int num_pixels,
+        ffi.Int x,
+        ffi.Int y,
+        ffi.Pointer<ffi.Void> context)>;
+
+/// OUTPUT CALLBACK: this callback is used for output scanlines
+typedef stbir_output_callback = ffi.NativeFunction<
+    ffi.Void Function(ffi.Pointer<ffi.Void> output_ptr, ffi.Int num_pixels,
+        ffi.Int y, ffi.Pointer<ffi.Void> context)>;
+typedef stbir_uint16 = ffi.Uint16;
+typedef Dartstbir_uint16 = int;
+typedef stbir_uint32 = ffi.Uint32;
+typedef Dartstbir_uint32 = int;
+typedef stbir_uint64 = ffi.Uint64;
+typedef Dartstbir_uint64 = int;
+typedef stbir_uint8 = ffi.Uint8;
+typedef Dartstbir_uint8 = int;

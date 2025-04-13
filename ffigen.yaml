@@ -24,6 +24,8 @@ headers:
     - "src/MNN/HalideRuntime.h"
     - "src/mnn_stb_image.h"
     - "src/stb_image.h"
+    - "src/stb_image_resize2.h"
+    - "src/stb_image_write.h"
     - "src/image_process.h"
   include-directives:
     - "src/autotime.h"
@@ -34,6 +36,8 @@ headers:
     - "src/MNN/HalideRuntime.h"
     - "src/mnn_stb_image.h"
     - "src/stb_image.h"
+    - "src/stb_image_resize2.h"
+    - "src/stb_image_write.h"
     - "src/image_process.h"
 structs:
   exclude:
@@ -69,6 +73,10 @@ enums:
     'mnn_power_mode': 'PowerMode'
     'mnn_precision_mode': 'PrecisionMode'
     'mnn_runtime_status': 'RuntimeStatus'
+    'stbir_pixel_layout': 'StbirPixelLayout'
+    'stbir_edge': 'StbirEdge'
+    'stbir_filter': 'StbirFilter'
+    'stbir_datatype': 'StbirDataType'
 
 preamble: |
   // Copyright (c) 2025, rainyl.  Please see the AUTHORS file

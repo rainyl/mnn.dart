@@ -11,7 +11,8 @@ import 'base.dart';
 import 'exception.dart';
 import 'g/mnn.g.dart' as c;
 import 'halide_runtime.dart';
-import 'image.dart';
+import 'image/enums.dart';
+import 'image/image.dart';
 import 'matrix.dart';
 import 'tensor.dart';
 
@@ -246,46 +247,6 @@ class ImageProcess extends NativeObject {
   void release() {
     c.mnn_cv_image_process_destroy(ptr);
   }
-}
-
-enum ImageFormat {
-  RGBA(0),
-  RGB(1),
-  BGR(2),
-  GRAY(3),
-  BGRA(4),
-  YCrCb(5),
-  YUV(6),
-  HSV(7),
-  XYZ(8),
-  BGR555(9),
-  BGR565(10),
-  YUV_NV21(11),
-  YUV_NV12(12),
-  YUV_I420(13),
-  HSV_FULL(14);
-
-  final int value;
-  const ImageFormat(this.value);
-
-  static ImageFormat fromValue(int value) => switch (value) {
-        0 => RGBA,
-        1 => RGB,
-        2 => BGR,
-        3 => GRAY,
-        4 => BGRA,
-        5 => YCrCb,
-        6 => YUV,
-        7 => HSV,
-        8 => XYZ,
-        9 => BGR555,
-        10 => BGR565,
-        11 => YUV_NV21,
-        12 => YUV_NV12,
-        13 => YUV_I420,
-        14 => HSV_FULL,
-        _ => throw MNNException('Unknown ImageFormat: $value'),
-      };
 }
 
 enum Filter {

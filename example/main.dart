@@ -3,7 +3,6 @@
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
-import 'package:image/image.dart' as img;
 import 'package:mnn/mnn.dart' as mnn;
 
 void main(List<String> args) async {

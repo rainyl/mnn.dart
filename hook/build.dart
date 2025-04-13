@@ -34,7 +34,8 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
     targets: ['install'],
     defines: {
       'CMAKE_INSTALL_PREFIX': input.outputDirectory.resolve('install').toFilePath(),
-      // 'MNN_DEBUG': 'ON',
+      'MNN_DEBUG': 'OFF',
+      'MNNC_BUILD_TEST': 'OFF',
     },
     buildLocal: true,
   );

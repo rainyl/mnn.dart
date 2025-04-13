@@ -61,17 +61,14 @@ List<List<(int, double)>> inference(
     img.subtractScalar(cv.Scalar(mean[0], mean[1], mean[2]), inplace: true);
     img.divideScalar(cv.Scalar(std[0], std[1], std[2]), inplace: true);
     final temp = img.data.buffer.asFloat32List();
-    final pixData = List<double>.filled(temp.length, 0);
+    final pixData = Float32List.fromList(List.filled(temp.length, 0));
     final frameSize = W * H;
     for (var i = 0; i < frameSize; i++) {
       pixData[i] = temp[i * 3];
       pixData[i + frameSize] = temp[i * 3 + 1];
       pixData[i + frameSize * 2] = temp[i * 3 + 2];
     }
-    nchwTensor.setImageBytes(
-      i,
-      Float32List.fromList(pixData).buffer.asUint8List(),
-    );
+    nchwTensor.setImageBytes(i, pixData.buffer.asUint8List());
   }
 
   input.copyFromHost(nchwTensor);

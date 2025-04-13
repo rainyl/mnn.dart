@@ -3,9 +3,10 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 
-import 'base.dart';
-import 'exception.dart';
-import 'g/mnn.g.dart' as c;
+import '../base.dart';
+import '../exception.dart';
+import '../g/mnn.g.dart' as c;
+import 'enums.dart';
 
 class Image extends NativeObject {
   static final _finalizer = ffi.NativeFinalizer(c.addresses.stbi_image_free);
@@ -156,6 +157,23 @@ class Image extends NativeObject {
     );
   }
 
+  // Image normalize({List<double>? mean, List<double>? std, bool inplace = false}) {
+  //   mean ??= List.filled(channels, 0.0);
+  //   std ??= List.filled(channels, 1.0);
+  //   if (mean.length != channels || std.length != channels) {
+  //     throw Exception("mean and std must have the same length as channels");
+  //   }
+
+  //   final dst = inplace ? this : clone();
+
+  //   dst.forEachPixel((i, j, pix) {
+  //     for (var c = 0; c < channels; c++) {
+  //       pix[c] = (pix[c] - mean![c]) / std![c];
+  //     }
+  //   });
+  //   return dst;
+  // }
+
   static bool isHdr(String path) {
     final pPath = path.toNativeUtf8().cast<ffi.Char>();
     final result = c.stbi_is_hdr(pPath);
@@ -171,38 +189,32 @@ class Image extends NativeObject {
     return result != 0;
   }
 
-  static (int channels, int width, int height) info(String path) {
+  static (int result, int channels, int width, int height) info(String path) {
     final pPath = path.toNativeUtf8().cast<ffi.Char>();
     final pW = calloc<ffi.Int>();
     final pH = calloc<ffi.Int>();
     final pChannels = calloc<ffi.Int>();
     final result = c.stbi_info(pPath, pW, pH, pChannels);
-    final rval = (pChannels.value, pW.value, pH.value);
+    final rval = (result, pChannels.value, pW.value, pH.value);
     calloc.free(pPath);
     calloc.free(pW);
     calloc.free(pH);
     calloc.free(pChannels);
-    if (result == 0) {
-      throw MNNException("Failed to get image info: $path");
-    }
     return rval;
   }
 
-  static (int channels, int width, int height) infoFromMemory(Uint8List bytes) {
+  static (int result, int channels, int width, int height) infoFromMemory(Uint8List bytes) {
     final pBytes = malloc<ffi.Uint8>(bytes.length);
     pBytes.asTypedList(bytes.length).setAll(0, bytes);
     final pW = calloc<ffi.Int>();
     final pH = calloc<ffi.Int>();
     final pChannels = calloc<ffi.Int>();
     final result = c.stbi_info_from_memory(pBytes.cast(), bytes.length, pW, pH, pChannels);
-    final rval = (pChannels.value, pW.value, pH.value);
+    final rval = (result, pChannels.value, pW.value, pH.value);
     calloc.free(pBytes);
     calloc.free(pW);
     calloc.free(pH);
     calloc.free(pChannels);
-    if (result == 0) {
-      throw MNNException("Failed to get image info from memory");
-    }
     return rval;
   }
 
@@ -278,6 +290,54 @@ class Image extends NativeObject {
     };
   }
 
+  void forEachPixel(void Function(int x, int y, List<num> pixel) fn) {
+    for (var y = 0; y < _height; y++) {
+      for (var x = 0; x < _width; x++) {
+        fn(x, y, pixel(x, y));
+      }
+    }
+  }
+
+  Image resize(
+    int newWidth,
+    int newHeight, {
+    c.StbirPixelLayout pixelLayout = c.StbirPixelLayout.STBIR_RGB,
+    c.StbirDataType dtype = c.StbirDataType.STBIR_TYPE_UINT8,
+    c.StbirEdge edge = c.StbirEdge.STBIR_EDGE_CLAMP,
+    c.StbirFilter filter = c.StbirFilter.STBIR_FILTER_DEFAULT,
+    int? inputStride,
+    int? outputStride,
+  }) {
+    inputStride ??= 0;
+    outputStride ??= 0;
+    final pOutPixels = c.stbir_resize(
+      ptr,
+      _width,
+      _height,
+      inputStride,
+      ffi.nullptr,
+      newWidth,
+      newHeight,
+      outputStride,
+      pixelLayout,
+      dtype,
+      edge,
+      filter,
+    );
+    if (pOutPixels == ffi.nullptr) {
+      final pReason = c.stbi_failure_reason();
+      throw MNNException("Failed to resize image: ${pReason.cast<Utf8>().toDartString()}");
+    }
+    return Image.fromPointer(
+      pOutPixels.cast(),
+      width: newWidth,
+      height: newHeight,
+      channels: _channels,
+      desiredChannels: _desiredChannels,
+      dtype: StbiDType.fromStbirDataType(dtype),
+    );
+  }
+
   /// Convert RGBRGBRGB to RRRGGGBBB, will copy data
   Image toPlanar() {
     final frameSize = _width * _height;
@@ -333,6 +393,38 @@ class Image extends NativeObject {
     }
   }
 
+  static bool haveReader(String path) => info(path).$1 != 0;
+  static bool haveReaderFromMemory(Uint8List bytes) => infoFromMemory(bytes).$1 != 0;
+
+  int save(String path, {ImWriteFormats? format, Map<ImWriteFlags, int> params = const {}}) {
+    final cPath = path.toNativeUtf8().cast<ffi.Char>();
+    final pathExt = path.split('.').last;
+    format ??= ImWriteFormats.fromValue(pathExt);
+
+    int rval = -1;
+    switch (format) {
+      case ImWriteFormats.PNG:
+        rval = c.stbi_write_png(cPath, _width, _height, _channels, ptr, 0);
+      case ImWriteFormats.JPEG || ImWriteFormats.JPG:
+        rval = c.stbi_write_jpg(
+          cPath,
+          _width,
+          _height,
+          _channels,
+          ptr,
+          params[ImWriteFlags.IMWRITE_JPEG_QUALITY] ?? 95,
+        );
+      case ImWriteFormats.BMP:
+        rval = c.stbi_write_bmp(cPath, _width, _height, _channels, ptr);
+      case ImWriteFormats.TGA:
+        rval = c.stbi_write_tga(cPath, _width, _height, _channels, ptr);
+      case ImWriteFormats.HDR:
+        rval = c.stbi_write_hdr(cPath, _width, _height, _channels, ptr.cast());
+    }
+    calloc.free(cPath);
+    return rval;
+  }
+
   @override
   ffi.NativeFinalizer get finalizer => _finalizer;
 
@@ -344,15 +436,6 @@ class Image extends NativeObject {
     c.stbi_image_free(ptr);
   }
 }
-
-typedef OpFuncF32 = int Function(
-  ffi.Pointer<ffi.Float> src,
-  int srcWidth,
-  int srcHeight,
-  int srcChannels,
-  ffi.Pointer<ffi.Float> dst,
-  ffi.Pointer<ffi.Pointer<ffi.Float>> dstPtr,
-);
 
 void setUnpremultiplyOnLoad({bool flagTrueIfShouldUnpremultiply = true}) =>
     c.stbi_set_unpremultiply_on_load(flagTrueIfShouldUnpremultiply ? 1 : 0);
@@ -369,30 +452,3 @@ void hdrToLdrScale(double scale) => c.stbi_hdr_to_ldr_scale(scale);
 
 void ldrToHdrGamma(double gamma) => c.stbi_ldr_to_hdr_gamma(gamma);
 void ldrToHdrScale(double scale) => c.stbi_ldr_to_hdr_scale(scale);
-
-enum StbiChannel {
-  default_(c.STBI_default),
-  grey(c.STBI_grey),
-  greyAlpha(c.STBI_grey_alpha),
-  rgb(c.STBI_rgb),
-  rgba(c.STBI_rgb_alpha);
-
-  final int value;
-  const StbiChannel(this.value);
-
-  static StbiChannel fromValue(int value) => switch (value) {
-        c.STBI_default => StbiChannel.default_,
-        c.STBI_grey => StbiChannel.grey,
-        c.STBI_grey_alpha => StbiChannel.greyAlpha,
-        c.STBI_rgb => StbiChannel.rgb,
-        c.STBI_rgb_alpha => StbiChannel.rgba,
-        _ => throw ArgumentError("Invalid value: $value"),
-      };
-}
-
-enum StbiDType {
-  u8,
-  u16,
-  // f16,
-  f32;
-}

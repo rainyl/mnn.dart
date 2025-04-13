@@ -12,7 +12,7 @@ export 'src/constant.dart';
 export 'src/exception.dart';
 export 'src/g/mnn.g.dart' show DimensionType, HalideTypeCode, HandleDataType, ErrorCode, MapType;
 export 'src/halide_runtime.dart';
-export 'src/image.dart';
+export 'src/image/image.dart';
 export 'src/image_process.dart';
 export 'src/interpreter.dart';
 export 'src/matrix.dart';
