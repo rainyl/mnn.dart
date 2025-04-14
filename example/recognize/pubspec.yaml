@@ -29,7 +29,7 @@ hooks:
         - contrib
         - calib3d
         - features2d
-        # - dnn
+        - dnn
         - highgui
         - flann
         - objdetect
@@ -37,3 +37,10 @@ hooks:
         - stitching
         - video
         - videoio
+    mnn:
+      defines:
+        MNN_SUPPORT_BF16: ON
+        MNN_BUILD_OPENCV: OFF
+        MNN_LOW_MEMORY: OFF
+        MNN_METAL: ON
+        MNN_OPENCL: ON

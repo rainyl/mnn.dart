@@ -6,8 +6,8 @@ import 'package:dartcv4/dartcv.dart' as cv;
 
 mnn.Interpreter loadModel(String modelPath) {
   final net = mnn.Interpreter.fromFile(modelPath);
-  net.setSessionMode(mnn.SessionMode.Session_Backend_Auto);
-  net.setSessionHint(mnn.HintMode.MAX_TUNING_NUMBER, 5);
+  net.setSessionMode(mnn.SessionMode.Session_Backend_Fix);
+  // net.setSessionHint(mnn.HintMode.MAX_TUNING_NUMBER, 5);
   return net;
 }
 

@@ -67,7 +67,7 @@ void main(List<String> arguments) {
 
     final model = loadModel(modelPath!);
     final config = mnn.ScheduleConfig.create(
-      type: mnn.ForwardType.MNN_FORWARD_AUTO,
+      type: mnn.ForwardType.MNN_FORWARD_METAL,
     );
     final session = model.createSession(config: config);
     final result = inference(session, imagePaths, topK: topk);

@@ -10,7 +10,17 @@ export 'src/backend.dart';
 export 'src/base.dart';
 export 'src/constant.dart';
 export 'src/exception.dart';
-export 'src/g/mnn.g.dart' show DimensionType, HalideTypeCode, HandleDataType, ErrorCode, MapType;
+export 'src/g/mnn.g.dart'
+    show
+        DimensionType,
+        HalideTypeCode,
+        HandleDataType,
+        ErrorCode,
+        MapType,
+        StbirDataType,
+        StbirEdge,
+        StbirFilter,
+        StbirPixelLayout;
 export 'src/halide_runtime.dart';
 export 'src/image/image.dart';
 export 'src/image_process.dart';

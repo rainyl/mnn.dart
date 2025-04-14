@@ -13,6 +13,7 @@ dependencies:
   native_assets_cli: ^0.13.0
   native_toolchain_cmake: ^0.0.5
   path: ^1.9.1
+  yaml: ^3.1.3
   # native_toolchain_cmake:
   #   path: ../native_toolchain_cmake
 
