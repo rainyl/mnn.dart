@@ -106,11 +106,20 @@ class _MyHomePageState extends State<MyHomePage> {
       final bytes = byteData.buffer.asUint8List();
       _net = mnn.Interpreter.fromBuffer(bytes);
       _net!.setCacheFile('.cachefile');
-      _net!.setSessionMode(mnn.SessionMode.Session_Backend_Auto);
-      _net!.setSessionHint(mnn.HintMode.MAX_TUNING_NUMBER, 5);
+      _net!.setSessionMode(mnn.SessionMode.Session_Backend_Fix);
+      // _net!.setSessionHint(mnn.HintMode.MAX_TUNING_NUMBER, 5);
 
-      final config = mnn.ScheduleConfig.create(type: mnn.ForwardType.MNN_FORWARD_AUTO);
+      final config = mnn.ScheduleConfig.create(type: mnn.ForwardType.MNN_FORWARD_OPENCL);
       _session = _net!.createSession(config: config);
+      final memoryUsage = _session?.memoryInfo;
+      final flops = _session?.flopsInfo;
+      final backendType = _session?.backendsInfo;
+      debugPrint(
+        'Session Info:\n'
+        '  memory use ${memoryUsage?.toStringAsFixed(2)} MB,\n'
+        '  flops is ${flops?.toStringAsFixed(2)} M,\n'
+        '  backendType is $backendType,\n',
+      );
     } catch (e) {
       debugPrint('Failed to load model: $e');
     }

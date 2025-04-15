@@ -91,3 +91,25 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+hooks:
+  user_defines:
+    mnn:
+      options:
+        build_local: false
+      defines:
+        common:
+          MNN_SUPPORT_BF16: ON
+          MNN_BUILD_OPENCV: OFF
+          MNN_LOW_MEMORY: ON
+        macos:
+          MNN_METAL: ON
+        android:
+          MNN_DEBUG: ON
+          MNN_GPU_TRACE: ON
+          MNN_OPENCL: ON
+          MNN_OPENGL: ON
+          MNN_VULKAN: OFF
+          MNN_VULKAN_DEBUG: ON
+          MNN_ARM82: ON
+          MNN_USE_SYSTEM_LIB: ON
