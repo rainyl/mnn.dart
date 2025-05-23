@@ -19,14 +19,16 @@ class ScheduleConfig extends NativeObject {
   factory ScheduleConfig.create({
     ForwardType type = ForwardType.MNN_FORWARD_CPU,
     int numThread = 4,
-    int mode = 0,
+    int? mode,
     BackendConfig? backendConfig,
   }) {
     final p = calloc<c.mnn_schedule_config_t>()
       ..ref.type = type.value
       ..ref.unnamed.num_thread = numThread
-      ..ref.unnamed.mode = mode
       ..ref.backend_config = backendConfig == null ? ffi.nullptr : backendConfig.ptr.cast();
+    if (mode != null) {
+      p.ref.unnamed.mode = mode;
+    }
     return ScheduleConfig.fromPointer(p);
   }
 
@@ -68,7 +70,7 @@ class ScheduleConfig extends NativeObject {
 
   @override
   String toString() {
-    return 'ScheduleConfig(address=0x${ptr.address})';
+    return 'ScheduleConfig(address=0x${ptr.address}, type=$type, numThread=$numThread, mode=$mode)';
   }
 }
 

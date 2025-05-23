@@ -1,6 +1,6 @@
 name: mnn
 description: A package for running MNN models on Dart and Flutter.
-version: 0.0.2
+version: 0.0.3
 repository: https://github.com/rainyl/mnn.dart
 
 environment:
@@ -10,12 +10,13 @@ dependencies:
   ffi: ^2.1.4
   logging: ^1.3.0
   meta: ^1.16.0
-  native_assets_cli: ^0.14.0
-  # native_toolchain_cmake: ^0.0.5
+  hooks: ^0.19.0
+  native_toolchain_cmake: ^0.0.6-dev.0
+  # native_toolchain_cmake:
+  #   path: ../native_toolchain_cmake
   path: ^1.9.1
   yaml: ^3.1.3
-  native_toolchain_cmake:
-    path: ../native_toolchain_cmake
+  code_assets: ^0.19.0
 
 dev_dependencies:
   ffigen: ^18.0.0

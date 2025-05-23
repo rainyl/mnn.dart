@@ -59,8 +59,6 @@ enum ImageFormat {
       };
 }
 
-
-
 enum ImWriteFormats {
   PNG("png"),
   BMP("bmp"),

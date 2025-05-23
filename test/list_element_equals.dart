@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 
-ListCloseTo listCloseTo(List<num> expectedValues, [double tolerance=1.0e-8]) => ListCloseTo(expectedValues, tolerance);
+ListCloseTo listCloseTo(List<num> expectedValues, [double tolerance = 1.0e-8]) =>
+    ListCloseTo(expectedValues, tolerance);
 
 class ListCloseTo extends Matcher {
   final List<num> expected;
