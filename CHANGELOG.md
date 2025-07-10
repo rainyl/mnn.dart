@@ -3,6 +3,7 @@
 - new: support custom definations
 - new: add image process
 - new: async run session
+- sync: MNN 3.2.1
 
 ## 0.0.2
 

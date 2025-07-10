@@ -6,7 +6,24 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(MNNC_BUILD_TEST "Build test" OFF)
 
-set(MNN_VERSION 3.1.2)
+get_filename_component(PROJ_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
+
+macro(_find_version _version_var _version_file _regex_find _regex_replace)
+  # read versions
+  if(EXISTS ${_version_file})
+    file(STRINGS ${_version_file} _version_string REGEX ${_regex_find})
+    string(REGEX REPLACE ${_regex_replace} "\\1" _version_string "${_version_string}")
+    set(${_version_var} "${_version_string}")
+  else()
+    message(FATAL_ERROR "file ${_version_file} not found!")
+  endif()
+endmacro()
+
+_find_version(PROJECT_VERSION "${PROJ_DIR}/pubspec.yaml" "^version: (.+)*$" "version: (.+)*$")
+_find_version(MNN_VERSION "${PROJ_DIR}/pubspec.yaml" "^mnn_version: (.+)*$" "mnn_version: (.+)*$")
+
+message(STATUS "mnn.dart Version: ${PROJECT_VERSION}")
+message(STATUS "MNN Version: ${MNN_VERSION}")
 
 cmake_policy(SET CMP0077 NEW)
 
