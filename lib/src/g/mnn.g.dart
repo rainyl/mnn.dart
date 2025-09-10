@@ -555,6 +555,1751 @@ external void mnn_cv_matrix_set_translate(
   double dy,
 );
 
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Abs(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Acos(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Acosh(
+  mnn_expr_VARP_t x,
+);
+
+/// Math Op
+/// BinaryOPs
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Add(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_ArgMax(
+  mnn_expr_VARP_t input,
+  int axis,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_ArgMin(
+  mnn_expr_VARP_t input,
+  int axis,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Asin(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Asinh(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Atan(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Atan2(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Atanh(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_AvePool(
+  mnn_expr_VARP_t x,
+  ffi.Pointer<ffi.Int> kernel,
+  int kernelLength,
+  ffi.Pointer<ffi.Int> stride,
+  int strideLength,
+  int pad,
+  ffi.Pointer<ffi.Int> pads,
+  int padsLength,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Bool, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_BatchMatMul(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+  bool adj_x,
+  bool adj_y,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_BatchToSpaceND(
+  mnn_expr_VARP_t input,
+  mnn_expr_VARP_t block_shape,
+  mnn_expr_VARP_t crops,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_BiasAdd(
+  mnn_expr_VARP_t value,
+  mnn_expr_VARP_t bias,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_BitwiseAnd(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_BitwiseOr(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_BitwiseXor(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_BroadcastTo(
+  mnn_expr_VARP_t a,
+  mnn_expr_VARP_t shape,
+);
+
+/// OtherOPs
+/// template<typename T>
+/// VARP _Cast(VARP x) {
+/// return _Cast(x, halide_type_of<T>());
+/// }
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, halide_type_c_t)>()
+external mnn_expr_VARP_t mnn_expr_Cast(
+  mnn_expr_VARP_t x,
+  halide_type_c_t dtype,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Ceil(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_ChangeInputFormat(
+  mnn_expr_VARP_t input,
+  int format,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_ChannelShuffle(
+  mnn_expr_VARP_t x,
+  int group,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_Clone(
+  mnn_expr_VARP_t source,
+  bool deepCopy,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t,
+        mnn_expr_VARP_t,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Col2Im(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t outputShape,
+  ffi.Pointer<ffi.Int> kernelSize,
+  int kernelSizeLength,
+  ffi.Pointer<ffi.Int> dilate,
+  int dilateLength,
+  ffi.Pointer<ffi.Int> pads,
+  int padsLength,
+  ffi.Pointer<ffi.Int> stride,
+  int strideLength,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARPS_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_Concat(
+  mnn_expr_VARPS_t values,
+  int axis,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        ffi.Float, ffi.Pointer<ffi.Int>, ffi.Size, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_Const(
+  double value,
+  ffi.Pointer<ffi.Int> shape,
+  int shapeLength,
+  int format,
+);
+
+/// MNN_PUBLIC VARP _Const(const void* ptr, INTS shape = {}, Dimensionformat format = NHWC,
+/// halide_type_t type = halide_type_of<float>());
+/// MNN_PUBLIC VARP _InnerProduct(std::vector<float>&& weight, std::vector<float>&& bias, VARP x,
+/// INTS outputShape);
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t,
+        mnn_expr_VARP_t,
+        mnn_expr_VARP_t,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Conv(
+  mnn_expr_VARP_t weight,
+  mnn_expr_VARP_t bias,
+  mnn_expr_VARP_t x,
+  int pad,
+  ffi.Pointer<ffi.Int> stride,
+  int strideLength,
+  ffi.Pointer<ffi.Int> dilate,
+  int dilateLength,
+  int group,
+  ffi.Pointer<ffi.Int> pads,
+  int padsLength,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_Convert(
+  mnn_expr_VARP_t input,
+  int format,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Cos(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Cosh(
+  mnn_expr_VARP_t x,
+);
+
+/// Int8 Inference
+/// MNN_PUBLIC VARP _Conv(std::vector<int8_t>&& weight, std::vector<int>&& bias, std::vector<float>&&
+/// scale, VARP x, INTS channel, INTS kernelSize,
+/// PaddingMode pad, INTS stride, INTS dilate, int group, INTS pads, bool relu,
+/// int nbits = 8);
+/// MNN_PUBLIC VARP _Conv(std::vector<int8_t>&& weight, std::vector<int>&& bias, std::vector<float>&&
+/// scale,
+/// VARP x, INTS channel, INTS kernelSize,
+/// PaddingMode pad, INTS stride, INTS dilate, int group, INTS pads, bool relu,
+/// int8_t inputZeroPoint, int8_t outputZeroPoint,
+/// int8_t minValue, int8_t maxValue, bool accumulateToInt16);
+/// MNN_PUBLIC VARP _Conv(std::vector<int8_t>&& weight, std::vector<float>&& bias,
+/// std::vector<float>&& weightScale,
+/// VARP x, INTS channel, INTS kernelSize,
+/// PaddingMode pad, INTS stride, INTS dilate, int group, INTS pads, bool relu,
+/// float scaleIn, float scaleOut,
+/// int8_t inputZeroPoint, int8_t outputZeroPoint,
+/// int8_t minValue, int8_t maxValue, float weightClampValue, bool
+/// accumulateToInt16);
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_CosineSimilarity(
+  mnn_expr_VARP_t input0,
+  mnn_expr_VARP_t input1,
+  mnn_expr_VARP_t inputDim,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Int,
+        ffi.Pointer<ffi.Int>, ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Crop(
+  mnn_expr_VARP_t images,
+  mnn_expr_VARP_t size,
+  int axis,
+  ffi.Pointer<ffi.Int> offset,
+  int offsetLength,
+);
+
+/// enum InterpolationMethod {BILINEAR, NEAREST};
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t,
+        mnn_expr_VARP_t, ffi.Int, ffi.Float)>()
+external mnn_expr_VARP_t mnn_expr_CropAndResize(
+  mnn_expr_VARP_t image,
+  mnn_expr_VARP_t boxes,
+  mnn_expr_VARP_t box_ind,
+  mnn_expr_VARP_t crop_size,
+  int method,
+  double extrapolation_value,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_CumProd(
+  mnn_expr_VARP_t x,
+  int axis,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Int, ffi.Bool, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_CumSum(
+  mnn_expr_VARP_t x,
+  int axis,
+  bool exclusive,
+  bool reverse,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t,
+        mnn_expr_VARP_t,
+        mnn_expr_VARP_t,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Deconv(
+  mnn_expr_VARP_t weight,
+  mnn_expr_VARP_t bias,
+  mnn_expr_VARP_t x,
+  int pad,
+  ffi.Pointer<ffi.Int> stride,
+  int strideLength,
+  ffi.Pointer<ffi.Int> dilate,
+  int dilateLength,
+  int group,
+  ffi.Pointer<ffi.Int> pads,
+  int padsLength,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_DepthToSpace(
+  mnn_expr_VARP_t input,
+  int block_size,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Divide(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Float)>()
+external mnn_expr_VARP_t mnn_expr_Elu(
+  mnn_expr_VARP_t features,
+  double alpha,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Equal(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Erf(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Erfc(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Erfinv(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Exp(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_ExpandDims(
+  mnn_expr_VARP_t input,
+  int axis,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_ExpandDims_1(
+  mnn_expr_VARP_t input,
+  mnn_expr_VARP_t axis,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Expm1(
+  mnn_expr_VARP_t x,
+);
+
+/// static EXPRP create(std::shared_ptr<BufferStorage> extra, std::vector<VARP>&& inputs, int
+/// outputSize = 1);
+@ffi.Native<ffi.Void Function(mnn_expr_Expr_t, ffi.Pointer<ffi.Char>)>()
+external void mnn_expr_Expr_setName(
+  mnn_expr_Expr_t self,
+  ffi.Pointer<ffi.Char> name,
+);
+
+/// MNN::Express::Expr
+@ffi.Native<mnn_expr_EXPRP_t Function(mnn_tensor_t, ffi.Bool)>()
+external mnn_expr_EXPRP_t mnn_expr_Expr_static_create(
+  mnn_tensor_t tensor,
+  bool own,
+);
+
+@ffi.Native<
+    mnn_expr_EXPRP_t Function(ffi.Pointer<mnn_expr_Variable_Info>,
+        ffi.Pointer<ffi.Void>, ffi.Int, ffi.Int)>()
+external mnn_expr_EXPRP_t mnn_expr_Expr_static_create_1(
+  ffi.Pointer<mnn_expr_Variable_Info> info,
+  ffi.Pointer<ffi.Void> ptr,
+  int type,
+  int memoryType,
+);
+
+@ffi.Native<mnn_expr_EXPRP_t Function(mnn_OpT_t, mnn_expr_VARPS_t, ffi.Int)>()
+external mnn_expr_EXPRP_t mnn_expr_Expr_static_create_2(
+  mnn_OpT_t op,
+  mnn_expr_VARPS_t inputs,
+  int outputSize,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Fill(
+  mnn_expr_VARP_t dims,
+  mnn_expr_VARP_t value,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Char, ffi.Char)>()
+external mnn_expr_VARP_t mnn_expr_FloatToInt8(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t scale,
+  int minValue,
+  int maxValue,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Int8, ffi.Int8, ffi.Int8)>()
+external mnn_expr_VARP_t mnn_expr_FloatToInt8_1(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t scale,
+  int minValue,
+  int maxValue,
+  int zeroPoint,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Floor(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_FloorDiv(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_FloorMod(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Gather(
+  mnn_expr_VARP_t params,
+  mnn_expr_VARP_t indices,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_GatherElements(
+  mnn_expr_VARP_t params,
+  mnn_expr_VARP_t indices,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_GatherElements_1(
+  mnn_expr_VARP_t params,
+  mnn_expr_VARP_t indices,
+  mnn_expr_VARP_t axis,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_GatherND(
+  mnn_expr_VARP_t params,
+  mnn_expr_VARP_t indices,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_GatherV2(
+  mnn_expr_VARP_t params,
+  mnn_expr_VARP_t indices,
+  mnn_expr_VARP_t axis,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Gelu(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Greater(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_GreaterEqual(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+/// enum GridSamplePaddingMode {GRID_SAMPLE_PADDING_ZEROS, GRID_SAMPLE_PADDING_BORDER,
+/// GRID_SAMPLE_PADDING_REFLECTION};
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Int, ffi.Int, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_GridSample(
+  mnn_expr_VARP_t input,
+  mnn_expr_VARP_t grid,
+  int mode,
+  int paddingMode,
+  bool alignCorners,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Hardswish(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, ffi.Int, ffi.Int, ffi.Int, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_Histogram(
+  mnn_expr_VARP_t x,
+  int bin,
+  int min,
+  int max,
+  int channel,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Im2Col(
+  mnn_expr_VARP_t x,
+  ffi.Pointer<ffi.Int> kernelSize,
+  int kernelSizeLength,
+  ffi.Pointer<ffi.Int> dilate,
+  int dilateLength,
+  ffi.Pointer<ffi.Int> pads,
+  int padsLength,
+  ffi.Pointer<ffi.Int> stride,
+  int strideLength,
+);
+
+/// Neural Network Ops
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        ffi.Pointer<ffi.Int>, ffi.Size, ffi.Int, halide_type_c_t)>()
+external mnn_expr_VARP_t mnn_expr_Input(
+  ffi.Pointer<ffi.Int> shape,
+  int shapeLength,
+  int data_format,
+  halide_type_c_t dtype,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Int8ToFloat(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t scale,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Int8)>()
+external mnn_expr_VARP_t mnn_expr_Int8ToFloat_1(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t scale,
+  int zeroPoint,
+);
+
+/// MNN_PUBLIC VARP _DetectionOutput(VARP location, VARP confidence, VARP priorbox,
+/// unsigned int num_classes, bool share_location, int background_label_id,
+/// float nms_threshhold, int nms_topk, int code_type,
+/// bool variance_encoded_in_target,
+/// int keep_top_k, float confidence_threshold, float visualize_threshold);
+/// MNN_PUBLIC  std::vector<VARP> _DetectionPostProcess(VARP encode_boxes, VARP class_predictions,
+/// VARP anchors,
+/// int num_classes, int max_detections,
+/// int max_class_per_detection, int detections_per_class,
+/// float nms_threshold, float iou_threshold,
+/// bool use_regular_nms, std::vector<float> centersize_encoding);
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARPS_t, ffi.Float, ffi.Float, ffi.Int,
+        ffi.Int, ffi.Int, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_Interp(
+  mnn_expr_VARPS_t xs,
+  double widthScale,
+  double heightScale,
+  int outputWidth,
+  int outputHeight,
+  int resizeType,
+  bool alignCorners,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Less(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_LessEqual(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_LinSpace(
+  mnn_expr_VARP_t start,
+  mnn_expr_VARP_t stop,
+  mnn_expr_VARP_t num,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Log(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Log1p(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_LogicalOr(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Bool, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_MatMul(
+  mnn_expr_VARP_t a,
+  mnn_expr_VARP_t b,
+  bool tranposeA,
+  bool tranposeB,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_MatrixBandPart(
+  mnn_expr_VARP_t input,
+  mnn_expr_VARP_t num_lower,
+  mnn_expr_VARP_t num_upper,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Pointer<ffi.Float>, ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Max(
+  mnn_expr_VARP_t a,
+  mnn_expr_VARP_t b,
+  ffi.Pointer<ffi.Float> coeff,
+  int coeffSize,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_MaxPool(
+  mnn_expr_VARP_t x,
+  ffi.Pointer<ffi.Int> kernel,
+  int kernelLength,
+  ffi.Pointer<ffi.Int> stride,
+  int strideLength,
+  int pad,
+  ffi.Pointer<ffi.Int> pads,
+  int padsLength,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Maximum(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Minimum(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+/// MNN_PUBLIC VARP _EltwiseProdInt8(VARP x, VARP y,
+/// std::vector<int8_t> x_weight, std::vector<int32_t> x_bias, std::vector<float>
+/// x_scale, std::vector<float> x_tensorScale, std::vector<int8_t> y_weight,
+/// std::vector<int32_t> y_bias, std::vector<float> y_scale, std::vector<float>
+/// y_tensorScale, std::vector<int8_t> output_weight, std::vector<int32_t>
+/// output_bias, std::vector<float> output_scale, std::vector<float>
+/// output_tensorScale);
+/// MNN_PUBLIC VARP _EltwiseSumInt8(VARP x, VARP y,
+/// std::vector<int8_t> x_weight, std::vector<int32_t> x_bias,
+/// std::vector<float> x_scale, std::vector<float> x_tensorScale,
+/// std::vector<int8_t> y_weight, std::vector<int32_t> y_bias, std::vector<float>
+/// y_scale, std::vector<float> y_tensorScale, std::vector<int8_t> output_weight,
+/// std::vector<int32_t> output_bias, std::vector<float> output_scale,
+/// std::vector<float> output_tensorScale);
+/// MNN_PUBLIC VARP _EltwiseSubInt8(VARP x, VARP y,
+/// std::vector<int8_t> x_weight, std::vector<int32_t> x_bias,
+/// std::vector<float> x_scale, std::vector<float> x_tensorScale,
+/// std::vector<int8_t> y_weight, std::vector<int32_t> y_bias, std::vector<float>
+/// y_scale, std::vector<float> y_tensorScale, std::vector<int8_t> output_weight,
+/// std::vector<int32_t> output_bias, std::vector<float> output_scale,
+/// std::vector<float> output_tensorScale);
+/// MNN_PUBLIC VARP _EltwiseMaxInt8(VARP x, VARP y,
+/// std::vector<int8_t> x_weight, std::vector<int32_t> x_bias,
+/// std::vector<float> x_scale, std::vector<float> x_tensorScale,
+/// std::vector<int8_t> y_weight, std::vector<int32_t> y_bias, std::vector<float>
+/// y_scale, std::vector<float> y_tensorScale, std::vector<int8_t> output_weight,
+/// std::vector<int32_t> output_bias, std::vector<float> output_scale,
+/// std::vector<float> output_tensorScale);
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Mod(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<
+    mnn_expr_VARPS_t Function(mnn_expr_VARP_t, ffi.Pointer<ffi.Int>, ffi.Size,
+        mnn_expr_VARP_t, ffi.Bool)>()
+external mnn_expr_VARPS_t mnn_expr_Moments(
+  mnn_expr_VARP_t x,
+  ffi.Pointer<ffi.Int> axis,
+  int axisLength,
+  mnn_expr_VARP_t shift,
+  bool keepDims,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Multiply(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Negative(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Int, ffi.Float, ffi.Float)>()
+external mnn_expr_VARP_t mnn_expr_Nms(
+  mnn_expr_VARP_t boxes,
+  mnn_expr_VARP_t scores,
+  int maxDetections,
+  double iouThreshold,
+  double scoreThreshold,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Int32, ffi.Int32, ffi.Float,
+        ffi.Pointer<ffi.Float>, ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Normalize(
+  mnn_expr_VARP_t x,
+  int acrossSpatial,
+  int channelShared,
+  double eps,
+  ffi.Pointer<ffi.Float> scale,
+  int scaleLength,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_NotEqual(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t,
+        mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_OneHot(
+  mnn_expr_VARP_t indices,
+  mnn_expr_VARP_t depth,
+  mnn_expr_VARP_t onValue,
+  mnn_expr_VARP_t offValue,
+  int axis,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, ffi.Pointer<ffi.Float>, ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_PRelu(
+  mnn_expr_VARP_t x,
+  ffi.Pointer<ffi.Float> slopes,
+  int slopeLength,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_Pad(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t paddings,
+  int mode,
+);
+
+/// MNN_PUBLIC VARP _PriorBox(VARP feature, VARP image,
+/// std::vector<float> min_size, std::vector<float> max_size,
+/// std::vector<float>aspect_ratio, bool flip, bool clip,
+/// std::vector<float>variance, unsigned int img_h, unsigned int img_w,
+/// float step_h, float step_w, float offset = 0.5);
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Pointer<ffi.Int>, ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Permute(
+  mnn_expr_VARP_t input,
+  ffi.Pointer<ffi.Int> dims,
+  int dimsLength,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Pow(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+/// EltwiseOPs
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Pointer<ffi.Float>, ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Prod(
+  mnn_expr_VARP_t a,
+  mnn_expr_VARP_t b,
+  ffi.Pointer<ffi.Float> coeff,
+  int coeffSize,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, halide_type_c_t, ffi.Float,
+        ffi.Float, ffi.Int, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_RandomUnifom(
+  mnn_expr_VARP_t shape,
+  halide_type_c_t dtype,
+  double low,
+  double high,
+  int seed0,
+  int seed1,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Range(
+  mnn_expr_VARP_t start,
+  mnn_expr_VARP_t limit,
+  mnn_expr_VARP_t delta,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Rank(
+  mnn_expr_VARP_t input,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARPS_t, ffi.Pointer<ffi.Int>, ffi.Size,
+        ffi.Pointer<ffi.Int>, ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Raster(
+  mnn_expr_VARPS_t vars,
+  ffi.Pointer<ffi.Int> regions,
+  int regionsLength,
+  ffi.Pointer<ffi.Int> shape,
+  int shapeLength,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARPS_t, ffi.Pointer<ffi.Int>, ffi.Size,
+        ffi.Pointer<ffi.Int>, ffi.Size, halide_type_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_RasterRaw(
+  mnn_expr_VARPS_t vars,
+  ffi.Pointer<ffi.Int> region,
+  int regionLength,
+  ffi.Pointer<ffi.Int> shape,
+  int shapeLength,
+  halide_type_t dataType,
+  int format,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Reciprocal(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_INTS_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_ReduceAll(
+  mnn_expr_VARP_t input_variable,
+  mnn_expr_INTS_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_ReduceAllMutable(
+  mnn_expr_VARP_t input_variable,
+  mnn_expr_VARP_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_INTS_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_ReduceAny(
+  mnn_expr_VARP_t input_variable,
+  mnn_expr_INTS_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_ReduceAnyMutable(
+  mnn_expr_VARP_t input_variable,
+  mnn_expr_VARP_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_INTS_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_ReduceMax(
+  mnn_expr_VARP_t input_variable,
+  mnn_expr_INTS_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_ReduceMaxMutable(
+  mnn_expr_VARP_t input_variable,
+  mnn_expr_VARP_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_INTS_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_ReduceMean(
+  mnn_expr_VARP_t input_variable,
+  mnn_expr_INTS_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_ReduceMeanMutable(
+  mnn_expr_VARP_t input_variable,
+  mnn_expr_VARP_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_INTS_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_ReduceMin(
+  mnn_expr_VARP_t input_variable,
+  mnn_expr_INTS_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_ReduceMinMutable(
+  mnn_expr_VARP_t input_variable,
+  mnn_expr_VARP_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_INTS_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_ReduceProd(
+  mnn_expr_VARP_t input_variable,
+  mnn_expr_INTS_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_ReduceProdMutable(
+  mnn_expr_VARP_t input_variable,
+  mnn_expr_VARP_t axis,
+  bool keepDims,
+);
+
+/// ReduceOPs
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_INTS_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_ReduceSum(
+  mnn_expr_VARP_t input_variable,
+  mnn_expr_INTS_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_ReduceSumMutable(
+  mnn_expr_VARP_t input_variable,
+  mnn_expr_VARP_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Float)>()
+external mnn_expr_VARP_t mnn_expr_Relu(
+  mnn_expr_VARP_t x,
+  double slope,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Float, ffi.Float)>()
+external mnn_expr_VARP_t mnn_expr_Relu6(
+  mnn_expr_VARP_t x,
+  double minValue,
+  double maxValue,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, ffi.Pointer<ffi.Int>, ffi.Size, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_Reshape(
+  mnn_expr_VARP_t x,
+  ffi.Pointer<ffi.Int> shape,
+  int shapeLength,
+  int original_format,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Reshape_1(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t shape,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Float, ffi.Float)>()
+external mnn_expr_VARP_t mnn_expr_Resize(
+  mnn_expr_VARP_t images,
+  double xScale,
+  double yScale,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Reverse(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t axis,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Int, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_ReverseSequence(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+  int batchDim,
+  int seqDim,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Round(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Rsqrt(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(ffi.Pointer<ffi.Void>, halide_type_c_t)>()
+external mnn_expr_VARP_t mnn_expr_Scalar(
+  ffi.Pointer<ffi.Void> ptr,
+  halide_type_c_t type,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Int, ffi.Pointer<ffi.Float>,
+        ffi.Size, ffi.Pointer<ffi.Float>, ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Scale(
+  mnn_expr_VARP_t x,
+  int channels,
+  ffi.Pointer<ffi.Float> scales,
+  int scaleLength,
+  ffi.Pointer<ffi.Float> bias,
+  int biasLength,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_ScatterElements(
+  mnn_expr_VARP_t data,
+  mnn_expr_VARP_t indices,
+  mnn_expr_VARP_t updates,
+  int reduction,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t,
+        mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_ScatterElements_1(
+  mnn_expr_VARP_t data,
+  mnn_expr_VARP_t indices,
+  mnn_expr_VARP_t updates,
+  mnn_expr_VARP_t axis,
+  int reduction,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_ScatterNd(
+  mnn_expr_VARP_t indices,
+  mnn_expr_VARP_t updates,
+  mnn_expr_VARP_t shape,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_ScatterNd_1(
+  mnn_expr_VARP_t indices,
+  mnn_expr_VARP_t updates,
+  mnn_expr_VARP_t shape,
+  mnn_expr_VARP_t input,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_ScatterNd_2(
+  mnn_expr_VARP_t indices,
+  mnn_expr_VARP_t updates,
+  mnn_expr_VARP_t shape,
+  int reduction,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t,
+        mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_ScatterNd_3(
+  mnn_expr_VARP_t indices,
+  mnn_expr_VARP_t updates,
+  mnn_expr_VARP_t shape,
+  mnn_expr_VARP_t input,
+  int reduction,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Select(
+  mnn_expr_VARP_t select,
+  mnn_expr_VARP_t input0,
+  mnn_expr_VARP_t input1,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Float, ffi.Float)>()
+external mnn_expr_VARP_t mnn_expr_Selu(
+  mnn_expr_VARP_t features,
+  double scale,
+  double alpha,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_SetDiff1D(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_Shape(
+  mnn_expr_VARP_t input,
+  bool nchw,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Sigmoid(
+  mnn_expr_VARP_t x,
+);
+
+/// UnaryOPs
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Sign(
+  mnn_expr_VARP_t a,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Silu(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Sin(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Sinh(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Size(
+  mnn_expr_VARP_t input,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Slice(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t starts,
+  mnn_expr_VARP_t sizes,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_Softmax(
+  mnn_expr_VARP_t logits,
+  int axis,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Softplus(
+  mnn_expr_VARP_t features,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Softsign(
+  mnn_expr_VARP_t features,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Int, ffi.Bool, ffi.Bool)>()
+external mnn_expr_VARP_t mnn_expr_Sort(
+  mnn_expr_VARP_t x,
+  int axis,
+  bool arg,
+  bool descend,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_SpaceToBatchND(
+  mnn_expr_VARP_t input,
+  mnn_expr_VARP_t block_shape,
+  mnn_expr_VARP_t paddings,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_SpaceToDepth(
+  mnn_expr_VARP_t input,
+  int block_size,
+);
+
+@ffi.Native<
+    mnn_expr_VARPS_t Function(
+        mnn_expr_VARP_t, ffi.Pointer<ffi.Int>, ffi.Size, ffi.Int)>()
+external mnn_expr_VARPS_t mnn_expr_Split(
+  mnn_expr_VARP_t value,
+  ffi.Pointer<ffi.Int> size_splits,
+  int size_splitsLength,
+  int axis,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Sqrt(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Square(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_SquaredDifference(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Pointer<ffi.Int>, ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Squeeze(
+  mnn_expr_VARP_t input,
+  ffi.Pointer<ffi.Int> axis,
+  int axisLength,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARPS_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_Stack(
+  mnn_expr_VARPS_t values,
+  int axis,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t,
+        mnn_expr_VARP_t,
+        mnn_expr_VARP_t,
+        mnn_expr_VARP_t,
+        ffi.Int32,
+        ffi.Int32,
+        ffi.Int32,
+        ffi.Int32,
+        ffi.Int32)>()
+external mnn_expr_VARP_t mnn_expr_StridedSlice(
+  mnn_expr_VARP_t input,
+  mnn_expr_VARP_t begin,
+  mnn_expr_VARP_t end,
+  mnn_expr_VARP_t strided,
+  int beginMask,
+  int endMask,
+  int ellipsisMask,
+  int newAxisMask,
+  int shrinkAxisMask,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t,
+        mnn_expr_VARP_t,
+        mnn_expr_VARP_t,
+        mnn_expr_VARP_t,
+        mnn_expr_VARP_t,
+        ffi.Int32,
+        ffi.Int32,
+        ffi.Int32,
+        ffi.Int32,
+        ffi.Int32)>()
+external mnn_expr_VARP_t mnn_expr_StridedSliceWrite(
+  mnn_expr_VARP_t input,
+  mnn_expr_VARP_t begin,
+  mnn_expr_VARP_t end,
+  mnn_expr_VARP_t strided,
+  mnn_expr_VARP_t write,
+  int beginMask,
+  int endMask,
+  int ellipsisMask,
+  int newAxisMask,
+  int shrinkAxisMask,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Pointer<ffi.Float>, ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Sub(
+  mnn_expr_VARP_t a,
+  mnn_expr_VARP_t b,
+  ffi.Pointer<ffi.Float> coeff,
+  int coeffSize,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Subtract(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t y,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(
+        mnn_expr_VARP_t, mnn_expr_VARP_t, ffi.Pointer<ffi.Float>, ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Sum(
+  mnn_expr_VARP_t a,
+  mnn_expr_VARP_t b,
+  ffi.Pointer<ffi.Float> coeff,
+  int coeffSize,
+);
+
+@ffi.Native<mnn_expr_VARPS_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARPS_t mnn_expr_Svd(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Tan(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Tanh(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Float)>()
+external mnn_expr_VARP_t mnn_expr_Threshold(
+  mnn_expr_VARP_t features,
+  double alpha,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Tile(
+  mnn_expr_VARP_t input,
+  mnn_expr_VARP_t multiples,
+);
+
+@ffi.Native<mnn_expr_VARPS_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARPS_t mnn_expr_TopKV2(
+  mnn_expr_VARP_t input0,
+  mnn_expr_VARP_t input1,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Pointer<ffi.Int>, ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Transpose(
+  mnn_expr_VARP_t x,
+  ffi.Pointer<ffi.Int> perm,
+  int permLength,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Transpose_1(
+  mnn_expr_VARP_t x,
+  mnn_expr_VARP_t perm,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_UnravelIndex(
+  mnn_expr_VARP_t indices,
+  mnn_expr_VARP_t dims,
+);
+
+@ffi.Native<
+    mnn_expr_VARP_t Function(mnn_expr_VARP_t, ffi.Pointer<ffi.Int>, ffi.Size)>()
+external mnn_expr_VARP_t mnn_expr_Unsqueeze(
+  mnn_expr_VARP_t input,
+  ffi.Pointer<ffi.Int> axis,
+  int axisLength,
+);
+
+@ffi.Native<mnn_expr_VARPS_t Function(mnn_expr_VARP_t, ffi.Int)>()
+external mnn_expr_VARPS_t mnn_expr_Unstack(
+  mnn_expr_VARP_t value,
+  int axis,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_VARP_create_VARP(
+  mnn_expr_VARP_t other,
+);
+
+/// MNN::Express::VARP
+@ffi.Native<mnn_expr_VARP_t Function()>()
+external mnn_expr_VARP_t mnn_expr_VARP_create_empty();
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_Variable_t)>()
+external mnn_expr_VARP_t mnn_expr_VARP_create_variable(
+  mnn_expr_Variable_t var$,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VariableP_t)>()
+external mnn_expr_VARP_t mnn_expr_VARP_create_variableP(
+  mnn_expr_VariableP_t var$,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_expr_VARP_t, ffi.Int)>()
+external bool mnn_expr_VARP_fix(
+  mnn_expr_VARP_t self,
+  int type,
+);
+
+@ffi.Native<ffi.Void Function(mnn_expr_VARP_t)>()
+external void mnn_expr_VARP_free(
+  mnn_expr_VARP_t self,
+);
+
+@ffi.Native<mnn_expr_Variable_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_Variable_t mnn_expr_VARP_get(
+  mnn_expr_VARP_t self,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_INTS_t)>()
+external mnn_expr_VARP_t mnn_expr_VARP_mean(
+  mnn_expr_VARP_t self,
+  mnn_expr_INTS_t dims,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_VARP_op_add(
+  mnn_expr_VARP_t self,
+  mnn_expr_VARP_t other,
+);
+
+@ffi.Native<ffi.Void Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external void mnn_expr_VARP_op_assign(
+  mnn_expr_VARP_t self,
+  mnn_expr_VARP_t other,
+);
+
+@ffi.Native<ffi.Void Function(mnn_expr_VARP_t, mnn_expr_Variable_t)>()
+external void mnn_expr_VARP_op_assign_variable(
+  mnn_expr_VARP_t self,
+  mnn_expr_Variable_t other,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_VARP_op_div(
+  mnn_expr_VARP_t self,
+  mnn_expr_VARP_t other,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external bool mnn_expr_VARP_op_eqeq(
+  mnn_expr_VARP_t self,
+  mnn_expr_VARP_t other,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external bool mnn_expr_VARP_op_less(
+  mnn_expr_VARP_t self,
+  mnn_expr_VARP_t other,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external bool mnn_expr_VARP_op_lessequal(
+  mnn_expr_VARP_t self,
+  mnn_expr_VARP_t other,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_VARP_op_mul(
+  mnn_expr_VARP_t self,
+  mnn_expr_VARP_t other,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_VARP_op_sub(
+  mnn_expr_VARP_t self,
+  mnn_expr_VARP_t other,
+);
+
+@ffi.Native<ffi.Void Function(mnn_expr_VARP_t, ffi.Int)>()
+external void mnn_expr_VARP_setOrder(
+  mnn_expr_VARP_t self,
+  int format,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t, mnn_expr_INTS_t)>()
+external mnn_expr_VARP_t mnn_expr_VARP_sum(
+  mnn_expr_VARP_t self,
+  mnn_expr_INTS_t dims,
+);
+
+@ffi.Native<
+    ffi.Bool Function(mnn_expr_Variable_t, ffi.Pointer<ffi.Void>, ffi.Int)>()
+external bool mnn_expr_Variable_copyToDevicePtr(
+  mnn_expr_Variable_t self,
+  ffi.Pointer<ffi.Void> devicePtr,
+  int memoryType,
+);
+
+/// MNN::Express::Variable
+@ffi.Native<ffi.Void Function(mnn_expr_Variable_t)>()
+external void mnn_expr_Variable_free(
+  mnn_expr_Variable_t self,
+);
+
+@ffi.Native<ffi.Pointer<mnn_expr_Variable_Info> Function(mnn_expr_Variable_t)>()
+external ffi.Pointer<mnn_expr_Variable_Info> mnn_expr_Variable_getInfo(
+  mnn_expr_Variable_t self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_expr_Variable_t)>()
+external ffi.Pointer<ffi.Char> mnn_expr_Variable_getName(
+  mnn_expr_Variable_t self,
+);
+
+@ffi.Native<mnn_tensor_t Function(mnn_expr_Variable_t)>()
+external mnn_tensor_t mnn_expr_Variable_getTensor(
+  mnn_expr_Variable_t self,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_expr_Variable_t, mnn_expr_VARP_t)>()
+external bool mnn_expr_Variable_input(
+  mnn_expr_Variable_t self,
+  mnn_expr_VARP_t src,
+);
+
+@ffi.Native<ffi.Size Function(mnn_expr_Variable_t)>()
+external int mnn_expr_Variable_linkNumber(
+  mnn_expr_Variable_t self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Void> Function(mnn_expr_Variable_t)>()
+external ffi.Pointer<ffi.Void> mnn_expr_Variable_readMap(
+  mnn_expr_Variable_t self,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_expr_Variable_t, mnn_expr_INTS_t)>()
+external bool mnn_expr_Variable_resize(
+  mnn_expr_Variable_t self,
+  mnn_expr_INTS_t dims,
+);
+
+@ffi.Native<
+    ffi.Bool Function(mnn_expr_Variable_t, ffi.Pointer<ffi.Void>, ffi.Int)>()
+external bool mnn_expr_Variable_setDevicePtr(
+  mnn_expr_Variable_t self,
+  ffi.Pointer<ffi.Void> devicePtr,
+  int memoryType,
+);
+
+@ffi.Native<ffi.Void Function(mnn_expr_Variable_t, mnn_expr_EXPRP_t, ffi.Int)>()
+external void mnn_expr_Variable_setExpr(
+  mnn_expr_Variable_t self,
+  mnn_expr_EXPRP_t expr,
+  int index,
+);
+
+@ffi.Native<ffi.Void Function(mnn_expr_Variable_t, ffi.Pointer<ffi.Char>)>()
+external void mnn_expr_Variable_setName(
+  mnn_expr_Variable_t self,
+  ffi.Pointer<ffi.Char> name,
+);
+
+@ffi.Native<ffi.Void Function(mnn_expr_VARPS_t, ffi.Bool)>()
+external void mnn_expr_Variable_static_compute(
+  mnn_expr_VARPS_t vars,
+  bool forceCPU,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_EXPRP_t, ffi.Int)>()
+external mnn_expr_VARP_t mnn_expr_Variable_static_create_EXPRP(
+  mnn_expr_EXPRP_t expr,
+  int index,
+);
+
+@ffi.Native<mnn_expr_VARPS_t Function(ffi.Pointer<ffi.Char>)>()
+external mnn_expr_VARPS_t mnn_expr_Variable_static_load(
+  ffi.Pointer<ffi.Char> fileName,
+);
+
+@ffi.Native<mnn_expr_VARPS_t Function(ffi.Pointer<ffi.Uint8>, ffi.Size)>()
+external mnn_expr_VARPS_t mnn_expr_Variable_static_loadBuffer(
+  ffi.Pointer<ffi.Uint8> buffer,
+  int length,
+);
+
+@ffi.Native<ffi.Void Function(mnn_expr_VARPS_t, ffi.Bool)>()
+external void mnn_expr_Variable_static_prepareCompute(
+  mnn_expr_VARPS_t vars,
+  bool forceCPU,
+);
+
+@ffi.Native<ffi.Void Function(mnn_expr_VARP_t, mnn_expr_VARP_t)>()
+external void mnn_expr_Variable_static_replace(
+  mnn_expr_VARP_t dst,
+  mnn_expr_VARP_t src,
+);
+
+/// static std::map<std::string, VARP> loadMap(const char* fileName);
+/// static std::map<std::string, VARP> loadMap(const uint8_t* buffer, size_t length);
+/// static std::pair<std::map<std::string, VARP>, std::map<std::string, VARP>>
+/// getInputAndOutput(const std::map<std::string, VARP>& allVariable); static std::vector<VARP>
+/// mapToSequence(const std::map<std::string, VARP>& source); static std::vector<EXPRP>
+/// getExecuteOrder(const std::vector<VARP>& output);
+@ffi.Native<ffi.Void Function(mnn_expr_VARPS_t, ffi.Pointer<ffi.Char>)>()
+external void mnn_expr_Variable_static_save(
+  mnn_expr_VARPS_t vars,
+  ffi.Pointer<ffi.Char> fileName,
+);
+
+@ffi.Native<mnn_expr_WeakEXPRPS_t Function(mnn_expr_Variable_t)>()
+external mnn_expr_WeakEXPRPS_t mnn_expr_Variable_toExprs(
+  mnn_expr_Variable_t self,
+);
+
+@ffi.Native<ffi.Void Function(mnn_expr_Variable_t)>()
+external void mnn_expr_Variable_unMap(
+  mnn_expr_Variable_t self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Void> Function(mnn_expr_Variable_t)>()
+external ffi.Pointer<ffi.Void> mnn_expr_Variable_writeMap(
+  mnn_expr_Variable_t self,
+);
+
+@ffi.Native<ffi.Void Function(mnn_expr_Variable_t, ffi.Float, ffi.Float)>()
+external void mnn_expr_Variable_writeScaleMap(
+  mnn_expr_Variable_t self,
+  double scaleValue,
+  double zeroPoint,
+);
+
+/// MNN_PUBLIC VARP _ImageProcess(VARP input, CV::ImageProcess::Config config, CV::Matrix matrix, int
+/// oh, int ow, int oc, int dtype, uint8_t padVal = 0); mnn_expr_VARP_t
+/// mnn_expr_ImageProcess(mnn_expr_VARP_t input, CV::ImageProcess::Config config, CV::Matrix matrix,
+/// int oh, int ow, int oc, int dtype, uint8_t padVal);
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_Where(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_ZeroGrad(
+  mnn_expr_VARP_t x,
+);
+
+@ffi.Native<mnn_expr_VARP_t Function(mnn_expr_VARP_t)>()
+external mnn_expr_VARP_t mnn_expr_ZerosLike(
+  mnn_expr_VARP_t input,
+);
+
 /// @brief Get MNN version
 /// @return Version string
 @ffi.Native<ffi.Pointer<ffi.Char> Function()>()
@@ -2629,6 +4374,11 @@ class _SymbolAddresses {
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_cv_matrix_t)>>
       get mnn_cv_matrix_destroy =>
           ffi.Native.addressOf(self.mnn_cv_matrix_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_expr_VARP_t)>>
+      get mnn_expr_VARP_free => ffi.Native.addressOf(self.mnn_expr_VARP_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_expr_Variable_t)>>
+      get mnn_expr_Variable_free =>
+          ffi.Native.addressOf(self.mnn_expr_Variable_free);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_interpreter_t)>>
       get mnn_interpreter_destroy =>
           ffi.Native.addressOf(self.mnn_interpreter_destroy);
@@ -3511,6 +5261,7 @@ final class halide_type_t extends ffi.Struct {
   external int lanes;
 }
 
+typedef mnn_OpT_t = ffi.Pointer<ffi.Void>;
 typedef mnn_auto_time_t = ffi.Pointer<ffi.Void>;
 
 final class mnn_backend_config_t extends ffi.Struct {
@@ -3558,6 +5309,43 @@ final class mnn_cv_rect_t extends ffi.Struct {
   @ffi.Float()
   external double bottom;
 }
+
+typedef mnn_expr_EXPRP_t = ffi.Pointer<ffi.Void>;
+typedef mnn_expr_Expr_t = ffi.Pointer<ffi.Void>;
+typedef mnn_expr_INTS_t = ffi.Pointer<ffi.Void>;
+typedef mnn_expr_VARPS_t = ffi.Pointer<ffi.Void>;
+typedef mnn_expr_VARP_t = ffi.Pointer<ffi.Void>;
+typedef mnn_expr_VariableP_t = ffi.Pointer<ffi.Void>;
+
+/// MNN_C_API struct mnn_expr_Variable_expr_pair *mnn_expr_Variable_getExpr(mnn_expr_Variable_t
+/// self); struct Info {
+/// Dimensionformat order = NHWC;
+/// INTS dim;
+/// halide_type_t type;
+/// size_t size;
+/// void syncSize();
+/// };
+final class mnn_expr_Variable_Info extends ffi.Struct {
+  @ffi.Int()
+  external int order;
+
+  external mnn_expr_INTS_t dim;
+
+  external halide_type_c_t type;
+
+  @ffi.Size()
+  external int size;
+}
+
+final class mnn_expr_Variable_expr_pair extends ffi.Struct {
+  external mnn_expr_EXPRP_t expr;
+
+  @ffi.Int()
+  external int index;
+}
+
+typedef mnn_expr_Variable_t = ffi.Pointer<ffi.Void>;
+typedef mnn_expr_WeakEXPRPS_t = ffi.Pointer<ffi.Void>;
 
 /// Forward type enum */
 /// // typedef mnn_forward_type mnn_forward_type_t;

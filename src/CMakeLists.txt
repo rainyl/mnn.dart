@@ -61,7 +61,7 @@ else()
   endif()
 endif()
 
-set(MNNC_LINK_LIBS MNN)
+set(MNNC_LINK_LIBS MNN MNN_Express)
 if (ANDROID)
     set(MNNC_LINK_LIBS ${MNNC_LINK_LIBS} mediandk -landroid)
     if(MNN_OPENCL)
@@ -110,6 +110,7 @@ set(SOURCES
     tensor.cpp
     image_process.cpp
     mnn_stb_image.cpp
+    expr.cpp
 )
 
 include_directories(

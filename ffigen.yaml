@@ -27,6 +27,7 @@ headers:
     - "src/stb_image_resize2.h"
     - "src/stb_image_write.h"
     - "src/image_process.h"
+    - "src/expr.h"
   include-directives:
     - "src/autotime.h"
     - "src/error_code.h"
@@ -39,6 +40,7 @@ headers:
     - "src/stb_image_resize2.h"
     - "src/stb_image_write.h"
     - "src/image_process.h"
+    - "src/expr.h"
 structs:
   exclude:
     - 'halide_type_t'
