@@ -3,6 +3,6 @@ class MNNException implements Exception {
   MNNException(this.message);
   @override
   String toString() {
-    return '(MNNException: $message)';
+    return 'MNNException: $message';
   }
 }

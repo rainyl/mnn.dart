@@ -91,6 +91,12 @@ Future<T> mnnRunAsync0<T>(
   return completer.future;
 }
 
+void MnnAssert(bool condition, String message) {
+  if (!condition) {
+    throw MNNException(message);
+  }
+}
+
 typedef u8 = ffi.Uint8;
 typedef u16 = ffi.Uint16;
 typedef u32 = ffi.Uint32;

@@ -105,12 +105,14 @@ elseif (APPLE AND NOT IOS)
 endif ()
 
 set(SOURCES
-    autotime.cpp
-    interpreter.cpp
-    tensor.cpp
-    image_process.cpp
-    mnn_stb_image.cpp
-    expr.cpp
+    "stdvec.cpp"
+    "autotime.cpp"
+    "interpreter.cpp"
+    "tensor.cpp"
+    "image_process.cpp"
+    "mnn_stb_image.cpp"
+    "expr.cpp"
+    "expr_op.cpp"
 )
 
 include_directories(

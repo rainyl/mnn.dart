@@ -10,6 +10,9 @@ export 'src/backend.dart';
 export 'src/base.dart';
 export 'src/constant.dart';
 export 'src/exception.dart';
+export 'src/expr/expr.dart';
+export 'src/expr/utils.dart';
+export 'src/formatter.dart';
 export 'src/g/mnn.g.dart'
     show
         DimensionType,

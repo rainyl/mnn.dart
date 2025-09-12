@@ -30,7 +30,7 @@ class Tensor extends NativeObject {
   }) {
     final pShape = calloc<ffi.Int>(shape.length);
     pShape.cast<ffi.Int32>().asTypedList(shape.length).setAll(0, shape);
-    final p = c.mnn_tensor_create_device(pShape, shape.length, type.ref, dimType);
+    final p = c.mnn_tensor_create_device(pShape, shape.length, type.native.ref, dimType);
     return Tensor.fromPointer(p);
   }
 
@@ -55,7 +55,7 @@ class Tensor extends NativeObject {
     if (data != null) {
       pData.asTypedList(data.length).setAll(0, data);
     }
-    final p = c.mnn_tensor_create_with_data(pShape, shape.length, type.ref, pData.cast(), dimType);
+    final p = c.mnn_tensor_create_with_data(pShape, shape.length, type.native.ref, pData.cast(), dimType);
     return Tensor.fromPointer(p);
   }
 
@@ -224,7 +224,16 @@ class Tensor extends NativeObject {
   /// @brief Get data type
   ///
   /// @return Data type
-  HalideType get type => HalideType.fromPointer(c.mnn_tensor_get_type(ptr));
+  HalideType get type {
+    final p = c.mnn_tensor_get_type(ptr);
+    final rval = HalideType(
+      code: c.HalideTypeCode.fromValue(p.ref.code),
+      bits: p.ref.bits,
+      lanes: p.ref.lanes,
+    );
+    calloc.free(p);
+    return rval;
+  }
 
   /// @brief Map tensor for access
   ///
@@ -343,26 +352,26 @@ extension DataTypeExt on DataType {
     switch (this) {
       case DataType.DataType_DT_DOUBLE:
       case DataType.DataType_DT_FLOAT:
-        return HalideType.f32();
+        return HalideType.f32;
       case DataType.DataType_DT_BFLOAT16:
-        return HalideType.bf16();
+        return HalideType.bf16;
       case DataType.DataType_DT_QINT32:
       case DataType.DataType_DT_INT32:
       case DataType.DataType_DT_BOOL:
       case DataType.DataType_DT_INT64:
-        return HalideType.i32();
+        return HalideType.i32;
       case DataType.DataType_DT_QINT8:
       case DataType.DataType_DT_INT8:
-        return HalideType.i8();
+        return HalideType.i8;
       case DataType.DataType_DT_QUINT8:
       case DataType.DataType_DT_UINT8:
-        return HalideType.u8();
+        return HalideType.u8;
       case DataType.DataType_DT_QUINT16:
       case DataType.DataType_DT_UINT16:
-        return HalideType.u16();
+        return HalideType.u16;
       case DataType.DataType_DT_QINT16:
       case DataType.DataType_DT_INT16:
-        return HalideType.i16();
+        return HalideType.i16;
       default:
         throw MNNException('Unsupported data type: $this');
     }

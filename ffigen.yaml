@@ -28,6 +28,8 @@ headers:
     - "src/stb_image_write.h"
     - "src/image_process.h"
     - "src/expr.h"
+    - "src/expr_op.h"
+    - "src/stdvec.h"
   include-directives:
     - "src/autotime.h"
     - "src/error_code.h"
@@ -41,6 +43,8 @@ headers:
     - "src/stb_image_write.h"
     - "src/image_process.h"
     - "src/expr.h"
+    - "src/expr_op.h"
+    - "src/stdvec.h"
 structs:
   exclude:
     - 'halide_type_t'

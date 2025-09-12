@@ -34,6 +34,7 @@ analyzer:
 
   errors:
     constant_identifier_names: ignore
+    library_prefixes: ignore
     missing_required_param: error
     missing_return: error
     non_constant_identifier_names: ignore

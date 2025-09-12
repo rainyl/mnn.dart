@@ -25,21 +25,21 @@ void testSession(mnn.Session session) {
     final input = session.getInput();
     expect(input, isNotNull);
     expect(input?.shape, [1, 1, 28, 28]);
-    expect(input?.type, mnn.HalideType.f32());
+    expect(input?.type, mnn.HalideType.f32);
     final output = session.getOutput();
     expect(output, isNotNull);
     expect(output?.shape, [1, 10]);
-    expect(output?.type, mnn.HalideType.f32());
+    expect(output?.type, mnn.HalideType.f32);
   }
   {
     final input = session.getInput(name: "Input3");
     expect(input, isNotNull);
     expect(input?.shape, [1, 1, 28, 28]);
-    expect(input?.type, mnn.HalideType.f32());
+    expect(input?.type, mnn.HalideType.f32);
     final output = session.getOutput(name: "Plus214_Output_0");
     expect(output, isNotNull);
     expect(output?.shape, [1, 10]);
-    expect(output?.type, mnn.HalideType.f32());
+    expect(output?.type, mnn.HalideType.f32);
   }
 
   final inputs = session.getInputAll();
@@ -69,7 +69,7 @@ Future<void> testInferenceMnistCopy(
 
   final inputTensor = mnn.Tensor.fromData(
     input.shape,
-    mnn.HalideType.f32(),
+    mnn.HalideType.f32,
     data: pixData.buffer.asUint8List(),
     dimType: mnn.DimensionType.MNN_CAFFE,
   );
@@ -87,7 +87,7 @@ Future<void> testInferenceMnistCopy(
   final outputTensor = mnn.Tensor.fromTensor(output!, dimType: mnn.DimensionType.MNN_CAFFE);
   expect(output.copyToHost(outputTensor), true);
   expect(outputTensor.shape, [1, 10]);
-  expect(outputTensor.type, mnn.HalideType.f32());
+  expect(outputTensor.type, mnn.HalideType.f32);
   final logits = outputTensor.host.cast<mnn.f32>().asTypedList(10);
   expect(logits.indexOf(logits.reduce(max)), target);
 }
