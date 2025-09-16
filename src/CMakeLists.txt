@@ -105,13 +105,14 @@ elseif (APPLE AND NOT IOS)
 endif ()
 
 set(SOURCES
+    "base.cpp"
     "stdvec.cpp"
+    "expr.cpp"
     "autotime.cpp"
     "interpreter.cpp"
     "tensor.cpp"
     "image_process.cpp"
     "mnn_stb_image.cpp"
-    "expr.cpp"
     "expr_op.cpp"
 )
 

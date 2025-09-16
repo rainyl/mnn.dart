@@ -19,7 +19,7 @@ enum PaddingMode {
 
   const PaddingMode(this.value);
 
-  factory PaddingMode.fromInt(int value) => switch (value) {
+  factory PaddingMode.fromValue(int value) => switch (value) {
         0 => CAFFE,
         1 => VALID,
         2 => SAME,
@@ -35,7 +35,7 @@ enum PoolingMode {
 
   const PoolingMode(this.value);
 
-  factory PoolingMode.fromInt(int value) => switch (value) {
+  factory PoolingMode.fromValue(int value) => switch (value) {
         0 => MAXPOOL,
         1 => AVEPOOL,
         _ => throw ArgumentError.value(value, 'value', 'Invalid PoolingMode value'),
@@ -52,7 +52,7 @@ enum PadValueMode {
 
   const PadValueMode(this.value);
 
-  factory PadValueMode.fromInt(int value) => switch (value) {
+  factory PadValueMode.fromValue(int value) => switch (value) {
         0 => CONSTANT,
         1 => REFLECT,
         2 => SYMMETRIC,
@@ -69,7 +69,7 @@ enum InterpolationMethod {
   final int value;
   const InterpolationMethod(this.value);
 
-  factory InterpolationMethod.fromInt(int value) => switch (value) {
+  factory InterpolationMethod.fromValue(int value) => switch (value) {
         0 => BILINEAR,
         1 => NEAREST,
         _ => throw ArgumentError.value(value, 'value', 'Invalid InterpolationMethod value'),
@@ -84,7 +84,7 @@ enum GridSamplePaddingMode {
   final int value;
   const GridSamplePaddingMode(this.value);
 
-  factory GridSamplePaddingMode.fromInt(int value) => switch (value) {
+  factory GridSamplePaddingMode.fromValue(int value) => switch (value) {
         0 => GRID_SAMPLE_PADDING_ZEROS,
         1 => GRID_SAMPLE_PADDING_BORDER,
         2 => GRID_SAMPLE_PADDING_REFLECTION,
@@ -267,8 +267,9 @@ VARP cumSum(VARP x, int axis, {bool exclusive = false, bool reverse = false}) =>
 VARP cumProd(VARP x, int axis) => VARP.fromPointer(C.mnn_expr_CumProd(x.ptr, axis));
 List<VARP> svd(VARP x) {
   final p = C.mnn_expr_Svd(x.ptr);
-  final rval = List.generate(p.ref.size, (i) => VARP.fromPointer(p.ref.ptr.cast<C.mnn_expr_VARP_t>()[i]));
-  calloc.free(p);
+  final size = C.mnn_expr_VecVARP_size(p);
+  final rval = List.generate(size, (i) => VARP.fromPointer(C.mnn_expr_VecVARP_at(p, i)));
+  C.mnn_expr_VecVARP_free(p);
   return rval;
 }
 
@@ -557,12 +558,12 @@ VARP softSign(VARP features) => VARP.fromPointer(C.mnn_expr_Softsign(features.pt
 List<VARP> split(VARP value, List<int> sizeSplits, {int axis = 0}) {
   final (sizeSplitsPtr, sizeSplitsSize) = sizeSplits.toNativeArrayI32();
   final p = C.mnn_expr_Split(value.ptr, sizeSplitsPtr.cast(), sizeSplitsSize, axis);
+  final size = C.mnn_expr_VecVARP_size(p);
   calloc.free(sizeSplitsPtr);
-  final rval =
-      List.generate(sizeSplitsSize, (index) => VARP.fromPointer(p.ref.ptr.cast<C.mnn_expr_VARP_t>()[index]));
+  final rval = List.generate(size, (index) => VARP.fromPointer(C.mnn_expr_VecVARP_at(p, index)));
   // only free the struct, keep internal ref.ptr since they are attached
   // and will be managed by VARP object
-  calloc.free(p);
+  C.mnn_expr_VecVARP_free(p);
   return rval;
 }
 
@@ -621,9 +622,8 @@ VARP stridedSliceWrite(
 
 VARP concat(List<VARP> values, int axis) {
   final pVec = values.toNativeVec();
-  final rval = VARP.fromPointer(C.mnn_expr_Concat(pVec.ref, axis));
-  calloc.free(pVec.ref.ptr);
-  calloc.free(pVec);
+  final rval = VARP.fromPointer(C.mnn_expr_Concat(pVec.ptr, axis));
+  pVec.dispose();
   return rval;
 }
 
@@ -669,9 +669,8 @@ VARP shape(VARP input, {bool nchw = false}) => VARP.fromPointer(C.mnn_expr_Shape
 
 VARP stack(List<VARP> values, {int axis = 0}) {
   final pVec = values.toNativeVec();
-  final rval = VARP.fromPointer(C.mnn_expr_Stack(pVec.ref, axis));
-  calloc.free(pVec.ref.ptr);
-  calloc.free(pVec);
+  final rval = VARP.fromPointer(C.mnn_expr_Stack(pVec.ptr, axis));
+  pVec.dispose();
   return rval;
 }
 
@@ -722,11 +721,10 @@ VARP matrixBandPart(VARP input, VARP lower, VARP upper) =>
     VARP.fromPointer(C.mnn_expr_MatrixBandPart(input.ptr, lower.ptr, upper.ptr));
 List<VARP> moments(VARP x, List<int> axis, VARP shift, bool keepDims) {
   final (axisPtr, axisSize) = axis.toNativeArrayI32();
-  final p = C.mnn_expr_Moments(x.ptr, axisPtr.cast(), axisSize, shift.ptr, keepDims);
+  final vec = VecVARP.fromPointer(C.mnn_expr_Moments(x.ptr, axisPtr.cast(), axisSize, shift.ptr, keepDims));
   calloc.free(axisPtr);
-  final rval =
-      List.generate(p.ref.size, (index) => VARP.fromPointer(p.ref.ptr.cast<C.mnn_expr_VARP_t>()[index]));
-  calloc.free(p);
+  final rval = vec.toList();
+  vec.dispose();
   return rval;
 }
 
@@ -737,10 +735,9 @@ VARP spaceToBatchND(VARP input, VARP blockShape, VARP paddings) =>
     VARP.fromPointer(C.mnn_expr_SpaceToBatchND(input.ptr, blockShape.ptr, paddings.ptr));
 VARP zerosLike(VARP input) => VARP.fromPointer(C.mnn_expr_ZerosLike(input.ptr));
 List<VARP> unstack(VARP input, {int axis = 0}) {
-  final p = C.mnn_expr_Unstack(input.ptr, axis);
-  final rval =
-      List.generate(p.ref.size, (index) => VARP.fromPointer(p.ref.ptr.cast<C.mnn_expr_VARP_t>()[index]));
-  calloc.free(p);
+  final vec = VecVARP.fromPointer(C.mnn_expr_Unstack(input.ptr, axis));
+  final rval = vec.toList();
+  vec.dispose();
   return rval;
 }
 
@@ -768,7 +765,7 @@ VARP interp(
   final xsPtr = xs.toNativeVec();
   final rval = VARP.fromPointer(
     C.mnn_expr_Interp(
-      xsPtr.ref,
+      xsPtr.ptr,
       widthScale,
       heightScale,
       outputWidth,
@@ -777,8 +774,7 @@ VARP interp(
       alignCorners,
     ),
   );
-  calloc.free(xsPtr.ref.ptr);
-  calloc.free(xsPtr);
+  xsPtr.dispose();
   return rval;
 }
 
@@ -815,16 +811,3 @@ VARP where(VARP x) => VARP.fromPointer(C.mnn_expr_Where(x.ptr));
 
 VARP sort(VARP x, {int axis = -1, bool arg = false, bool descend = false}) =>
     VARP.fromPointer(C.mnn_expr_Sort(x.ptr, axis, arg, descend));
-
-extension ListVarpExtension on List<VARP> {
-  ffi.Pointer<C.VecVARP> toNativeVec() {
-    final p = calloc<C.mnn_expr_VARP_t>(length);
-    for (int i = 0; i < length; i++) {
-      p[i] = this[i].ptr;
-    }
-    final pVec = calloc<C.VecVARP>()
-      ..ref.ptr = p.cast<ffi.Void>()
-      ..ref.size = length;
-    return pVec;
-  }
-}

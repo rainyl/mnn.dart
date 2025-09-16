@@ -25,6 +25,8 @@ analyzer:
     # test_coverage
     - test/.test_coverage.dart
 
+    - src/**
+
   language:
     # We've seen errors tied to use of implicit operations similar to the ones described in
     # https://dart.dev/guides/language/analysis-options#enabling-additional-type-checks.

@@ -1,7 +1,7 @@
 name: mnn
 description: A package for running MNN models on Dart and Flutter.
 version: 0.0.3
-mnn_version: 3.2.1
+mnn_version: 3.2.3
 repository: https://github.com/rainyl/mnn.dart
 
 environment:
@@ -30,3 +30,8 @@ topics:
   - machine-learning
   - deep-learning
   - native-assets
+
+hooks:
+  user-defines:
+    mnn:
+      build_local: true

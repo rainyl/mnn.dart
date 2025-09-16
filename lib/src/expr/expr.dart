@@ -3,6 +3,7 @@
 /// Apache 2.0 license that can be found in the LICENSE file.
 
 import 'dart:ffi' as ffi;
+import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 import 'package:mnn/src/base.dart';
@@ -89,6 +90,25 @@ class VariableInfo extends NativeObject {
   HalideType get type => HalideType.fromNative(ref.type);
   int get ndim => ref.ndim;
 
+  void syncSize() {
+    var size_ = 1;
+    final dim_ = dim;
+    final order_ = order;
+    for (int i = 0; i < dim_.length; ++i) {
+      if (dim_[i] <= 0) {
+        // Not valid
+        size_ = 0;
+        return;
+      }
+      if (order_ == DimensionFormat.NC4HW4 && i == 1) {
+        size_ *= (dim_[1] + 4 - 1) ~/ 4 * 4;
+      } else {
+        size_ *= dim_[i];
+      }
+    }
+    ref.size = size_;
+  }
+
   C.mnn_expr_Variable_Info get ref => ptr.cast<C.mnn_expr_Variable_Info>().ref;
 
   @override
@@ -121,26 +141,38 @@ class Expr extends NativeObject {
 
   factory Expr.fromVariableInfo(
     VariableInfo info,
-    ffi.Pointer<ffi.Void> ptr,
     InputType type, {
+    ffi.Pointer<ffi.Void>? ptr,
     MemoryType copy = MemoryType.COPY,
   }) {
-    return Expr.fromPointer(C.mnn_expr_Expr_static_create_1(info.ptr.cast(), ptr, type.value, copy.value));
+    return Expr.fromPointer(
+      C.mnn_expr_Expr_static_create_1(
+        info.ptr.cast(),
+        ptr ?? ffi.nullptr,
+        type.value,
+        copy.value,
+      ),
+    );
   }
 
   String get name => C.mnn_expr_Expr_getName(ptr).cast<Utf8>().toDartString();
   set name(String name) {
     final cname = name.toNativeUtf8().cast<ffi.Char>();
     C.mnn_expr_Expr_setName(ptr, cname);
-    calloc.free(cname);
+    malloc.free(cname);
   }
 
   //  const Op* get() const {
   //       return mOp;
   //   }
-  //   const std::vector<VARP>& inputs() const {
-  //       return mInputs;
-  //   }
+
+  List<VARP> get inputs {
+    final p = C.mnn_expr_Expr_getInputs(ptr);
+    final size = C.mnn_expr_VecVARP_size(p);
+    final rval = List.generate(size, (index) => VARP.fromPointer(C.mnn_expr_VecVARP_at(p, index)));
+    C.mnn_expr_VecVARP_free(p);
+    return rval;
+  }
 
   int get outputSize => C.mnn_expr_Expr_getOutputSize(ptr);
   bool get requireInfo => C.mnn_expr_Expr_requireInfo(ptr);
@@ -148,9 +180,9 @@ class Expr extends NativeObject {
   InputType get inputType => InputType.fromValue(C.mnn_expr_Expr_inputType(ptr));
   String outputName(int index) => C.mnn_expr_Expr_getOutputName(ptr, index).cast<Utf8>().toDartString();
 
-  // static void replace(Expr oldExpr, Expr newExpr) {
-  //   c.mnn_expr_Expr_static_replace(oldExpr.ptr, newExpr.ptr);
-  // }
+  static void replace(Expr old, Expr newExpr) {
+    C.mnn_expr_Expr_static_replace(old.ptr, newExpr.ptr);
+  }
 
   //   void visitOutputs(const std::function<bool(EXPRP, int)>& visit);
   //   static void visit(EXPRP expr, const std::function<bool(EXPRP)>& before, const std::function<bool(EXPRP)>& after);
@@ -158,6 +190,12 @@ class Expr extends NativeObject {
   //   const std::vector<WeakEXPRP>& outputs() const {
   //       return mTo;
   //   }
+  // List<WeakReference<Expr>> get outputs {
+  //   final p = C.mnn_expr_Expr_getOutputs(ptr);
+  //   final rval = List.generate(p.ref.size, (index) => WeakReference(Expr.fromPointer(p.ref.ptr.cast<C.mnn_expr_Expr_t>()[index])));
+  //   malloc.free(p);
+  //   return rval;
+  // }
 
   VariableInfo outputInfo(int index) => VariableInfo.fromPointer(C.mnn_expr_Expr_outputInfo(ptr, index));
 
@@ -172,99 +210,24 @@ class Expr extends NativeObject {
     finalizer.detach(this);
     C.mnn_expr_Expr_free(ptr);
   }
-}
-
-class Variable extends NativeObject {
-  static final _finalizer = ffi.NativeFinalizer(C.addresses.mnn_expr_Variable_free);
-
-  Variable.fromPointer(C.mnn_expr_Variable_t ptr, {super.attach, super.externalSize}) : super(ptr.cast());
-
-  static VARP create(Expr expr, {int index = 0}) =>
-      VARP.fromPointer(C.mnn_expr_Variable_static_create_EXPRP(expr.ptr, index));
-
-  String get name => C.mnn_expr_Variable_getName(ptr).cast<Utf8>().toDartString();
-  set name(String name) {
-    final cname = name.toNativeUtf8().cast<ffi.Char>();
-    C.mnn_expr_Variable_setName(ptr, cname);
-    calloc.free(cname);
-  }
-
-  bool setDevicePtr(ffi.Pointer<ffi.Void> devicePtr, int memoryType) =>
-      C.mnn_expr_Variable_setDevicePtr(ptr, devicePtr, memoryType);
-  bool copyToDevicePtr(ffi.Pointer<ffi.Void> devicePtr, int memoryType) =>
-      C.mnn_expr_Variable_copyToDevicePtr(ptr, devicePtr, memoryType);
-
-  // std::pair<EXPRP, int> expr() const {
-  //     return std::make_pair(mFrom, mFromIndex);
-  // }
-
-  VariableInfo getInfo() {
-    return VariableInfo.fromPointer(C.mnn_expr_Variable_getInfo(ptr));
-  }
-
-  bool resize(List<int> dims) {
-    final cdims = dims.i32;
-    final rval = C.mnn_expr_Variable_resize(ptr, cdims.ptr);
-    cdims.dispose();
-    return rval;
-  }
-
-  ffi.Pointer<ffi.Void> readMap() => C.mnn_expr_Variable_readMap(ptr);
-  ffi.Pointer<ffi.Void> writeMap() => C.mnn_expr_Variable_writeMap(ptr);
-
-  void unMap() => C.mnn_expr_Variable_unMap(ptr);
-
-  bool input(VARP src) => C.mnn_expr_Variable_input(ptr, src.ptr);
-
-  static void replace(VARP dst, VARP src) => C.mnn_expr_Variable_static_replace(dst.ptr, src.ptr);
-
-  // static std::vector<VARP> load(const char* fileName);
-  // static std::map<std::string, VARP> loadMap(const char* fileName);
-  // static std::vector<VARP> load(const uint8_t* buffer, size_t length);
-  // static std::map<std::string, VARP> loadMap(const uint8_t* buffer, size_t length);
-  // static std::pair<std::map<std::string, VARP>, std::map<std::string, VARP>> getInputAndOutput(const std::map<std::string, VARP>& allVariable);
-  // static std::vector<VARP> mapToSequence(const std::map<std::string, VARP>& source);
-  // static std::vector<EXPRP> getExecuteOrder(const std::vector<VARP>& output);
-  // static void save(const std::vector<VARP>& vars, const char* fileName);
-  // static std::vector<int8_t> save(const std::vector<VARP>& vars);
-  // static void save(const std::vector<VARP>& vars, NetT* dest);
-
-  // Pack a few Variable to compute in one pipeline
-  // static void prepareCompute(const std::vector<VARP>& vars, bool forceCPU = false);
-  // static void compute(const std::vector<VARP>& vars, bool forceCPU = false);
-
-  int linkNumber() => C.mnn_expr_Variable_linkNumber(ptr);
-
-  // const std::vector<WeakEXPRP>& toExprs() const;
-
-  void setExpr(Expr expr, int index) => C.mnn_expr_Variable_setExpr(ptr, expr.ptr, index);
-
-  Tensor getTensor() => Tensor.fromPointer(C.mnn_expr_Variable_getTensor(ptr), attach: false);
 
   @override
-  ffi.NativeFinalizer get finalizer => _finalizer;
-
-  @override
-  List<Object?> get props => [ptr.address];
-
-  @override
-  void release() {
-    finalizer.detach(this);
-    C.mnn_expr_VARP_free(ptr);
+  String toString() {
+    return "Expr(name=$name, inputType=$inputType, outputSize=$outputSize, requireInfo=$requireInfo)";
   }
 }
 
 class VARP extends NativeObject {
   static final _finalizer = ffi.NativeFinalizer(C.addresses.mnn_expr_VARP_free);
 
-  VARP.fromPointer(C.mnn_expr_VARP_t ptr, {super.attach, super.externalSize}) : super(ptr.cast());
+  VARP.fromPointer(C.VARP_t ptr, {super.attach, super.externalSize}) : super(ptr.cast());
 
   factory VARP.empty() => VARP.fromPointer(C.mnn_expr_VARP_create_empty());
 
   factory VARP.copyFrom(VARP varp) => VARP.fromPointer(C.mnn_expr_VARP_create_VARP(varp.ptr));
 
-  factory VARP.fromVariable(Variable variable) =>
-      VARP.fromPointer(C.mnn_expr_VARP_create_variable(variable.ptr));
+  factory VARP.create(Expr expr, {int index = 0}) =>
+      VARP.fromPointer(C.mnn_expr_VARP_static_create_EXPRP(expr.ptr, index));
 
   static VARP scalar<T extends ffi.SizedNativeType>(num value) => op.scalar<T>(value);
 
@@ -309,37 +272,129 @@ class VARP extends NativeObject {
 
   VARP astype<T extends ffi.SizedNativeType>() => op.cast<T>(this);
 
-  static HalideType dtypeOf<T extends ffi.SizedNativeType>() {
-    if (T == ffi.Float) {
-      return HalideType.f32;
-    } else if (T == ffi.Double) {
-      return HalideType.f64;
-    } else if (T == ffi.Bool) {
-      return HalideType.bool_;
-    } else if (T == ffi.Uint8) {
-      return HalideType.u8;
-    } else if (T == ffi.Uint16) {
-      return HalideType.u16;
-    } else if (T == ffi.Uint32) {
-      return HalideType.u32;
-    } else if (T == ffi.Uint64) {
-      return HalideType.u64;
-    } else if (T == ffi.Int8) {
-      return HalideType.i8;
-    } else if (T == ffi.Int16) {
-      return HalideType.i16;
-    } else if (T == ffi.Int32) {
-      return HalideType.i32;
-    } else if (T == ffi.Int64) {
-      return HalideType.i64;
-    } else {
-      throw ArgumentError('Unsupported type $T');
-    }
+  String getName() => C.mnn_expr_VARP_getName(ptr).cast<Utf8>().toDartString();
+  void setName(String name) {
+    final cname = name.toNativeUtf8().cast<ffi.Char>();
+    C.mnn_expr_VARP_setName(ptr, cname);
+    malloc.free(cname);
   }
 
-  ffi.Pointer<ffi.Void> readMap() => C.mnn_expr_VARP_readMap(ptr);
-  ffi.Pointer<ffi.Void> writeMap() => C.mnn_expr_VARP_writeMap(ptr);
+  bool setDevicePtr(ffi.Pointer<ffi.Void> devicePtr, int memoryType) =>
+      C.mnn_expr_VARP_setDevicePtr(ptr, devicePtr, memoryType);
+  bool copyToDevicePtr(ffi.Pointer<ffi.Void> devicePtr, int memoryType) =>
+      C.mnn_expr_VARP_copyToDevicePtr(ptr, devicePtr, memoryType);
+
+  // this will return a new shared_ptr of internel shared_ptr<Expr>
+  // the refcount will increase and safe to dispose
+  (Expr expr, int index) get expr {
+    final p = C.mnn_expr_VARP_getExpr(ptr);
+    final rval = (Expr.fromPointer(p.ref.expr), p.ref.index);
+    malloc.free(p);
+    return rval;
+  }
+
+  VariableInfo getInfo() {
+    return VariableInfo.fromPointer(C.mnn_expr_VARP_getInfo(ptr));
+  }
+
+  bool resize(List<int> dims) {
+    final cdims = dims.i32;
+    final rval = C.mnn_expr_VARP_resize(ptr, cdims.ptr);
+    cdims.dispose();
+    return rval;
+  }
+
+  ffi.Pointer<T> readMap<T extends ffi.NativeType>() => C.mnn_expr_VARP_readMap(ptr).cast<T>();
+  ffi.Pointer<T> writeMap<T extends ffi.NativeType>() => C.mnn_expr_VARP_writeMap(ptr).cast<T>();
+
   void unMap() => C.mnn_expr_VARP_unMap(ptr);
+
+  bool input(VARP src) => C.mnn_expr_VARP_input(ptr, src.ptr);
+
+  static void replace(VARP dst, VARP src) => C.mnn_expr_VARP_static_replace(dst.ptr, src.ptr);
+
+  // static std::vector<VARP> load(const char* fileName);
+  static List<VARP> loadFromFile(String fileName) {
+    final cname = fileName.toNativeUtf8().cast<ffi.Char>();
+    final p = C.mnn_expr_VARP_static_load(cname);
+    malloc.free(cname);
+    final size = C.mnn_expr_VecVARP_size(p);
+    final rval = List.generate(size, (index) => VARP.fromPointer(C.mnn_expr_VecVARP_at(p, index)));
+    C.mnn_expr_VecVARP_free(p);
+    return rval;
+  }
+
+  // static std::map<std::string, VARP> loadMap(const char* fileName);
+  static Map<String, VARP> loadMapFromFile(String fileName) {
+    final cname = fileName.toNativeUtf8().cast<ffi.Char>();
+    final p = C.mnn_expr_VARP_static_loadMap(cname);
+    malloc.free(cname);
+    final varmap = VarMap.fromPointer(p);
+    final rval = varmap.toMap();
+    varmap.dispose();
+    return rval;
+  }
+
+  // static std::vector<VARP> load(const uint8_t* buffer, size_t length);
+  static List<VARP> loadFromBuffer(Uint8List buffer) {
+    final pBuf = malloc<ffi.Uint8>(buffer.length)..asTypedList(buffer.length).setAll(0, buffer);
+    final p = C.mnn_expr_VARP_static_loadBuffer(pBuf, buffer.length);
+    malloc.free(pBuf);
+
+    final size = C.mnn_expr_VecVARP_size(p);
+    final rval = List.generate(size, (index) => VARP.fromPointer(C.mnn_expr_VecVARP_at(p, index)));
+    C.mnn_expr_VecVARP_free(p);
+    return rval;
+  }
+
+  // static std::map<std::string, VARP> loadMap(const uint8_t* buffer, size_t length);
+  static Map<String, VARP> loadMapFromBuffer(Uint8List buffer) {
+    final pBuf = malloc<ffi.Uint8>(buffer.length)..asTypedList(buffer.length).setAll(0, buffer);
+    final p = C.mnn_expr_VARP_static_loadMapBuffer(pBuf, buffer.length);
+    malloc.free(pBuf);
+
+    final varmap = VarMap.fromPointer(p);
+    final rval = varmap.toMap();
+    varmap.dispose();
+    return rval;
+  }
+
+  // static std::pair<std::map<std::string, VARP>, std::map<std::string, VARP>> getInputAndOutput(const std::map<std::string, VARP>& allVariable);
+
+  // static std::vector<VARP> mapToSequence(const std::map<std::string, VARP>& source);
+
+  // static std::vector<EXPRP> getExecuteOrder(const std::vector<VARP>& output);
+
+  // static void save(const std::vector<VARP>& vars, const char* fileName);
+  static void saveToFile(List<VARP> vars, String fileName) {
+    final cname = fileName.toNativeUtf8().cast<ffi.Char>();
+    final cVars = vars.toNativeVec();
+    C.mnn_expr_VARP_static_save(cVars.ptr, cname);
+    malloc.free(cname);
+    cVars.dispose();
+  }
+
+  // static std::vector<int8_t> save(const std::vector<VARP>& vars);
+  static VecI8 saveToBuffer(List<VARP> vars) {
+    final cVars = vars.toNativeVec();
+    final p = C.mnn_expr_VARP_static_saveBytes(cVars.ptr);
+    cVars.dispose();
+    return VecI8.fromPointer(p);
+  }
+
+  // static void save(const std::vector<VARP>& vars, NetT* dest);
+
+  // Pack a few Variable to compute in one pipeline
+  // static void prepareCompute(const std::vector<VARP>& vars, bool forceCPU = false);
+  // static void compute(const std::vector<VARP>& vars, bool forceCPU = false);
+
+  int linkNumber() => C.mnn_expr_VARP_linkNumber(ptr);
+
+  // const std::vector<WeakEXPRP>& toExprs() const;
+
+  void setExpr(Expr expr, int index) => C.mnn_expr_VARP_setExpr(ptr, expr.ptr, index);
+
+  Tensor getTensor() => Tensor.fromPointer(C.mnn_expr_VARP_getTensor(ptr), attach: false);
 
   VariableInfo get info => VariableInfo.fromPointer(C.mnn_expr_VARP_getInfo(ptr));
 
@@ -395,8 +450,6 @@ class VARP extends NativeObject {
     return VARP.fromPointer(C.mnn_expr_VARP_sum(ptr, cdims.ptr));
   }
 
-  Variable get variable => Variable.fromPointer(C.mnn_expr_VARP_get(ptr), attach: false);
-
   @override
   bool operator ==(Object other) => other is VARP && C.mnn_expr_VARP_op_eqeq(ptr, other.ptr);
   @override
@@ -408,4 +461,143 @@ class VARP extends NativeObject {
   bool fix(InputType type) => C.mnn_expr_VARP_fix(ptr, type.value);
 
   void setOrder(DimensionFormat format) => C.mnn_expr_VARP_setOrder(ptr, format.value);
+
+  @override
+  String toString() {
+    return 'VARP(address=0x${ptr.address.toRadixString(16)})';
+  }
+}
+
+class VecVARP extends NativeObject {
+  static final _finalizer = ffi.NativeFinalizer(C.addresses.mnn_expr_VecVARP_free);
+
+  VecVARP.fromPointer(C.VecVARP_t ptr, {super.attach, super.externalSize}) : super(ptr.cast());
+
+  factory VecVARP.create({int size = 0, VARP? value}) {
+    final p = C.mnn_expr_VecVARP_create(size, value?.ptr ?? ffi.nullptr);
+    return VecVARP.fromPointer(p);
+  }
+
+  factory VecVARP.of(List<VARP> vars) {
+    final p = C.mnn_expr_VecVARP_create(0, ffi.nullptr);
+    for (int i = 0; i < vars.length; i++) {
+      C.mnn_expr_VecVARP_push_back(p, vars[i].ptr);
+    }
+    return VecVARP.fromPointer(p);
+  }
+
+  int size() => C.mnn_expr_VecVARP_size(ptr);
+  int get length => C.mnn_expr_VecVARP_size(ptr);
+
+  List<VARP> toList() => List.generate(size(), (i) => VARP.fromPointer(C.mnn_expr_VecVARP_at(ptr, i)));
+  List<VARP> asList() => List.generate(size(), (i) => VARP.fromPointer(C.mnn_expr_VecVARP_at_ref(ptr, i)));
+
+  VARP at(int index) => VARP.fromPointer(C.mnn_expr_VecVARP_at(ptr, index));
+  VARP atRef(int index) => VARP.fromPointer(C.mnn_expr_VecVARP_at_ref(ptr, index));
+  void set(int index, VARP varp) => C.mnn_expr_VecVARP_set(ptr, index, varp.ptr);
+  void push_back(VARP varp) => C.mnn_expr_VecVARP_push_back(ptr, varp.ptr);
+
+  @override
+  ffi.NativeFinalizer get finalizer => _finalizer;
+
+  @override
+  List<Object?> get props => [ptr.address];
+
+  @override
+  void release() {
+    finalizer.detach(this);
+    C.mnn_expr_VecVARP_free(ptr);
+  }
+
+  @override
+  String toString() {
+    return "VecVARP(address=0x${ptr.address.toRadixString(16)})";
+  }
+}
+
+class VarMap extends NativeObject {
+  static final _finalizer = ffi.NativeFinalizer(C.addresses.mnn_expr_VecVARP_free);
+
+  VarMap.fromPointer(C.VARMAP_t ptr, {super.attach, super.externalSize}) : super(ptr.cast());
+
+  factory VarMap.create() {
+    final p = C.mnn_expr_VARMAP_create();
+    return VarMap.fromPointer(p);
+  }
+
+  factory VarMap.of(Map<String, VARP> vars) {
+    final p = C.mnn_expr_VARMAP_create();
+    for (final MapEntry(key: key, value: value) in vars.entries) {
+      final ckey = key.toNativeUtf8().cast<ffi.Char>();
+      C.mnn_expr_VARMAP_set(p, ckey, value.ptr);
+      malloc.free(ckey);
+    }
+    return VarMap.fromPointer(p);
+  }
+
+  int size() => C.mnn_expr_VARMAP_size(ptr);
+  int get length => C.mnn_expr_VARMAP_size(ptr);
+
+  Map<String, VARP> toMap() {
+    final pKeys = C.mnn_expr_VARMAP_keys(ptr);
+    if (pKeys == ffi.nullptr) {
+      return {};
+    }
+    final map = <String, VARP>{};
+    for (int i = 0; i < length; i++) {
+      final cKey = pKeys[i];
+      if (cKey == ffi.nullptr) {
+        continue;
+      }
+      final key = cKey.cast<Utf8>().toDartString();
+      final value = VARP.fromPointer(C.mnn_expr_VARMAP_get(ptr, cKey));
+      map[key] = value;
+
+      malloc.free(cKey);
+      cKey.value = 0;
+    }
+    malloc.free(pKeys);
+    return map;
+  }
+
+  VARP at(String key) {
+    final ckey = key.toNativeUtf8().cast<ffi.Char>();
+    final rval = VARP.fromPointer(C.mnn_expr_VARMAP_get(ptr, ckey));
+    malloc.free(ckey);
+    return rval;
+  }
+
+  VARP atRef(String key) {
+    final ckey = key.toNativeUtf8().cast<ffi.Char>();
+    final rval = VARP.fromPointer(C.mnn_expr_VARMAP_get_ref(ptr, ckey));
+    malloc.free(ckey);
+    return rval;
+  }
+
+  void set(String key, VARP varp) {
+    final ckey = key.toNativeUtf8().cast<ffi.Char>();
+    C.mnn_expr_VARMAP_set(ptr, ckey, varp.ptr);
+    malloc.free(ckey);
+  }
+
+  @override
+  ffi.NativeFinalizer get finalizer => _finalizer;
+
+  @override
+  List<Object?> get props => [ptr.address];
+
+  @override
+  void release() {
+    finalizer.detach(this);
+    C.mnn_expr_VARMAP_free(ptr);
+  }
+
+  @override
+  String toString() {
+    return "VarMap(address=0x${ptr.address.toRadixString(16)})";
+  }
+}
+
+extension ListVarpExtension on List<VARP> {
+  VecVARP toNativeVec() => VecVARP.of(this);
 }

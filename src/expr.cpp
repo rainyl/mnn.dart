@@ -3,78 +3,121 @@
 //
 
 #include "expr.h"
+
 #include "MNN/expr/Expr.hpp"
+#include "base.h"
+#include <cstdlib>
+#include <iostream>
+#include <ostream>
 #include <vector>
 
-MNN_C_API void mnn_expr_VecVARP_free(void *self) {
-  if (self != nullptr) {
-    delete static_cast<VecVARP *>(self)->ptr;
-    delete static_cast<VecVARP *>(self);
-  }
+VecVARP_t mnn_expr_VecVARP_create(size_t length, VARP_t value) {
+  if (value) return new std::vector<MNN::Express::VARP>(length, *value);
+  return new std::vector<MNN::Express::VARP>(length);
 }
-MNN_C_API void mnn_expr_VecWeakEXPRP_free(void *self) {
-  if (self != nullptr) {
-    delete static_cast<VecWeakEXPRP *>(self)->ptr;
-    delete static_cast<VecWeakEXPRP *>(self);
+
+void mnn_expr_VecVARP_free(void *self) {
+  delete static_cast<VecVARP_t>(self);
+  self = nullptr;
+}
+VARP_t mnn_expr_VecVARP_at(VecVARP_t self, int i) { return new MNN::Express::VARP(self->at(i)); }
+VARP_t mnn_expr_VecVARP_at_ref(VecVARP_t self, int i) { return &self->at(i); }
+void mnn_expr_VecVARP_set(VecVARP_t self, int i, VARP_t value) { self->at(i) = *value; }
+void mnn_expr_VecVARP_push_back(VecVARP_t self, VARP_t value) { return self->push_back(*value); }
+size_t mnn_expr_VecVARP_size(VecVARP_t self) { return self->size(); }
+
+void mnn_expr_VecWeakEXPRP_free(void *self) { delete static_cast<VecWeakEXPRP_t>(self); }
+MNN_C_API EXPRP_t mnn_expr_VecWeakEXPRP_at(VecWeakEXPRP_t self, int i) {
+  auto _varp = self->at(i);
+  if (_varp.expired()) return nullptr;
+  return new MNN::Express::EXPRP(_varp.lock());
+}
+MNN_C_API void mnn_expr_VecWeakEXPRP_set(VecWeakEXPRP_t self, int i, EXPRP_t value) {
+  self->at(i) = *value;
+}
+MNN_C_API void mnn_expr_VecWeakEXPRP_push_back(VecWeakEXPRP_t self, EXPRP_t value) {
+  self->push_back(*value);
+}
+MNN_C_API size_t mnn_expr_VecWeakEXPRP_size(VecWeakEXPRP_t self) { return self->size(); }
+
+void mnn_expr_Variable_Info_free(void *self) {
+  auto p = static_cast<mnn_expr_Variable_Info *>(self);
+  if (p != nullptr) {
+    free(p->dim);
+    free(p);
   }
 }
 
-mnn_expr_VARP_t mnn_expr_VARP_create_empty() { return new MNN::Express::VARP(); }
-mnn_expr_VARP_t mnn_expr_VARP_create_variable(mnn_expr_Variable_t var) {
-  return new MNN::Express::VARP(var);
+MNN_C_API VARMAP_t mnn_expr_VARMAP_create() {
+  return new std::map<std::string, MNN::Express::VARP>();
 }
-mnn_expr_VARP_t mnn_expr_VARP_create_variableP(mnn_expr_VariableP_t var) {
-  return new MNN::Express::VARP(*var);
+MNN_C_API void mnn_expr_VARMAP_free(void *self) { delete static_cast<VARMAP_t>(self); }
+MNN_C_API size_t mnn_expr_VARMAP_size(VARMAP_t self) { return self->size(); }
+MNN_C_API char **mnn_expr_VARMAP_keys(VARMAP_t self) {
+  char **keys = static_cast<char **>(dart_malloc(self->size() * sizeof(char *)));
+  int idx = 0;
+  for (const auto &pair : *self) {
+    keys[idx] = strdup(pair.first.c_str());
+    idx++;
+  }
+  return keys;
 }
-mnn_expr_VARP_t mnn_expr_VARP_create_VARP(mnn_expr_VARP_t other) {
-  return new MNN::Express::VARP(*other);
+MNN_C_API VARP_t mnn_expr_VARMAP_get(VARMAP_t self, char *key) {
+  auto it = self->find(key);
+  if (it != self->end()) return new MNN::Express::VARP(self->at(key));
+  return nullptr;
 }
-void mnn_expr_VARP_free(mnn_expr_VARP_t self) { delete self; }
-mnn_expr_Variable_t mnn_expr_VARP_get(mnn_expr_VARP_t self) { return self->get(); }
-mnn_expr_VARP_t mnn_expr_VARP_op_add(mnn_expr_VARP_t self, mnn_expr_VARP_t other) {
+MNN_C_API VARP_t mnn_expr_VARMAP_get_ref(VARMAP_t self, char *key) {
+  auto it = self->find(key);
+  if (it != self->end()) return &self->at(key);
+  return nullptr;
+}
+MNN_C_API void mnn_expr_VARMAP_set(VARMAP_t self, char *key, VARP_t value) {
+  self->at(key) = *value;
+}
+
+VARP_t mnn_expr_VARP_create_empty() { return new MNN::Express::VARP(); }
+VARP_t mnn_expr_VARP_create_VARP(VARP_t other) { return new MNN::Express::VARP(*other); }
+void mnn_expr_VARP_free(void *self) {
+  delete static_cast<MNN::Express::VARP *>(self);
+  self = nullptr;
+}
+VARP_t mnn_expr_VARP_op_add(VARP_t self, VARP_t other) {
   return new MNN::Express::VARP((*self) + (*other));
 }
-mnn_expr_VARP_t mnn_expr_VARP_op_sub(mnn_expr_VARP_t self, mnn_expr_VARP_t other) {
+VARP_t mnn_expr_VARP_op_sub(VARP_t self, VARP_t other) {
   return new MNN::Express::VARP((*self) - (*other));
 }
-mnn_expr_VARP_t mnn_expr_VARP_op_mul(mnn_expr_VARP_t self, mnn_expr_VARP_t other) {
+VARP_t mnn_expr_VARP_op_mul(VARP_t self, VARP_t other) {
   return new MNN::Express::VARP((*self) * (*other));
 }
-mnn_expr_VARP_t mnn_expr_VARP_op_div(mnn_expr_VARP_t self, mnn_expr_VARP_t other) {
+VARP_t mnn_expr_VARP_op_div(VARP_t self, VARP_t other) {
   return new MNN::Express::VARP((*self) / (*other));
 }
-mnn_expr_VARP_t mnn_expr_VARP_mean(mnn_expr_VARP_t self, VecI32 dims) {
+VARP_t mnn_expr_VARP_mean(VARP_t self, VecI32 dims) {
   return new MNN::Express::VARP(self->mean(*dims));
 }
-mnn_expr_VARP_t mnn_expr_VARP_sum(mnn_expr_VARP_t self, VecI32 dims) {
+VARP_t mnn_expr_VARP_sum(VARP_t self, VecI32 dims) {
   return new MNN::Express::VARP(self->sum(*dims));
 }
-bool mnn_expr_VARP_op_eqeq(mnn_expr_VARP_t self, mnn_expr_VARP_t other) {
-  return (*self) == (*other);
-}
-bool mnn_expr_VARP_op_less(mnn_expr_VARP_t self, mnn_expr_VARP_t other) {
-  return (*self) < (*other);
-}
-bool mnn_expr_VARP_op_lessequal(mnn_expr_VARP_t self, mnn_expr_VARP_t other) {
-  return (*self) <= (*other);
-}
-void mnn_expr_VARP_op_assign(mnn_expr_VARP_t self, mnn_expr_VARP_t other) { (*self) = (*other); }
-void mnn_expr_VARP_op_assign_variable(mnn_expr_VARP_t self, mnn_expr_Variable_t other) {
-  (*self) = other;
-}
-bool mnn_expr_VARP_fix(mnn_expr_VARP_t self, int type) {
+bool mnn_expr_VARP_op_eqeq(VARP_t self, VARP_t other) { return (*self) == (*other); }
+bool mnn_expr_VARP_op_less(VARP_t self, VARP_t other) { return (*self) < (*other); }
+bool mnn_expr_VARP_op_lessequal(VARP_t self, VARP_t other) { return (*self) <= (*other); }
+void mnn_expr_VARP_op_assign(VARP_t self, VARP_t other) { (*self) = (*other); }
+bool mnn_expr_VARP_fix(VARP_t self, int type) {
   return self->fix(static_cast<MNN::Express::VARP::InputType>(type));
 }
-void mnn_expr_VARP_setOrder(mnn_expr_VARP_t self, int format) {
+void mnn_expr_VARP_setOrder(VARP_t self, int format) {
   self->setOrder(static_cast<MNN::Express::Dimensionformat>(format));
 }
 
-struct mnn_expr_Variable_Info *mnn_expr_VARP_getInfo(mnn_expr_VARP_t self) {
-  auto _info = self->get()->getInfo();
-  auto info = new mnn_expr_Variable_Info{};
+struct mnn_expr_Variable_Info *mnn_expr_VARP_getInfo(VARP_t self) {
+  auto _info = (*self)->getInfo();
+  if (_info == nullptr) { return nullptr; }
+  auto info = static_cast<mnn_expr_Variable_Info *>(dart_malloc(sizeof(mnn_expr_Variable_Info)));
   info->order = static_cast<int>(_info->order);
   info->ndim = _info->dim.size();
-  auto pdim = static_cast<int32_t *>(malloc(info->ndim * sizeof(int32_t)));
+  auto pdim = static_cast<int32_t *>(dart_malloc(info->ndim * sizeof(int32_t)));
   for (int i = 0; i < info->ndim; i++) { pdim[i] = _info->dim[i]; }
   info->dim = pdim;
   info->type = {static_cast<uint8_t>(_info->type.code), _info->type.bits, _info->type.lanes};
@@ -82,127 +125,93 @@ struct mnn_expr_Variable_Info *mnn_expr_VARP_getInfo(mnn_expr_VARP_t self) {
   return info;
 }
 
-MNN_C_API const void *mnn_expr_VARP_readMap(mnn_expr_VARP_t self) {
-  return self->get()->readMap<void>();
-}
-MNN_C_API void *mnn_expr_VARP_writeMap(mnn_expr_VARP_t self) {
-  return self->get()->writeMap<void>();
-}
-MNN_C_API void mnn_expr_VARP_unMap(mnn_expr_VARP_t self) { self->get()->unMap(); }
+const void *mnn_expr_VARP_readMap(VARP_t self) { return (*self)->readMap<void>(); }
+void *mnn_expr_VARP_writeMap(VARP_t self) { return (*self)->writeMap<void>(); }
+void mnn_expr_VARP_unMap(VARP_t self) { (*self)->unMap(); }
 
 // MNN::Express::Variable
-void mnn_expr_Variable_free(mnn_expr_Variable_t self) { delete self; }
-void mnn_expr_Variable_setName(mnn_expr_Variable_t self, char *name) { self->setName(name); }
-char *mnn_expr_Variable_getName(mnn_expr_Variable_t self) { return strdup(self->name().c_str()); }
-bool mnn_expr_Variable_setDevicePtr(
-    mnn_expr_Variable_t self, const void *devicePtr, int memoryType
-) {
-  return self->setDevicePtr(devicePtr, memoryType);
+void mnn_expr_VARP_setName(VARP_t self, char *name) { (*self)->setName(name); }
+char *mnn_expr_VARP_getName(VARP_t self) { return strdup((*self)->name().c_str()); }
+bool mnn_expr_VARP_setDevicePtr(VARP_t self, const void *devicePtr, int memoryType) {
+  return (*self)->setDevicePtr(devicePtr, memoryType);
 }
-bool mnn_expr_Variable_copyToDevicePtr(mnn_expr_Variable_t self, void *devicePtr, int memoryType) {
-  return self->copyToDevicePtr(devicePtr, memoryType);
+bool mnn_expr_VARP_copyToDevicePtr(VARP_t self, void *devicePtr, int memoryType) {
+  return (*self)->copyToDevicePtr(devicePtr, memoryType);
 }
 
-struct mnn_expr_Variable_expr_pair *mnn_expr_Variable_getExpr(mnn_expr_Variable_t self) {
-  auto _expr = self->expr();
-  return new mnn_expr_Variable_expr_pair{
-      .expr = new MNN::Express::EXPRP{_expr.first}, .index = _expr.second
-  };
+struct Variable_expr_pair *mnn_expr_VARP_getExpr(VARP_t self) {
+  auto _expr = (*self)->expr();
+  auto pair = static_cast<Variable_expr_pair *>(dart_malloc(sizeof(Variable_expr_pair)));
+  pair->index = _expr.second;
+  pair->expr = new MNN::Express::EXPRP{_expr.first};
+  return pair;
 }
 
-MNN_C_API void mnn_expr_Variable_Info_free(void *self) {
-  auto p = static_cast<mnn_expr_Variable_Info *>(self);
-  free(p->dim);
-  delete p;
+bool mnn_expr_VARP_resize(VARP_t self, VecI32 dims) { return (*self)->resize(*dims); }
+void mnn_expr_VARP_writeScaleMap(VARP_t self, float scaleValue, float zeroPoint) {
+  (*self)->writeScaleMap(scaleValue, zeroPoint);
 }
-
-mnn_expr_Variable_Info *mnn_expr_Variable_getInfo(mnn_expr_Variable_t self) {
-  auto _info = self->getInfo();
-  auto info = new mnn_expr_Variable_Info{};
-  info->order = static_cast<int>(_info->order);
-  info->ndim = _info->dim.size();
-  auto pdim = static_cast<int32_t *>(malloc(info->ndim * sizeof(int32_t)));
-  for (int i = 0; i < info->ndim; i++) { pdim[i] = _info->dim[i]; }
-  info->dim = pdim;
-  info->type = {static_cast<uint8_t>(_info->type.code), _info->type.bits, _info->type.lanes};
-  info->size = _info->size;
-  return info;
-}
-bool mnn_expr_Variable_resize(mnn_expr_Variable_t self, VecI32 dims) { return self->resize(*dims); }
-const void *mnn_expr_Variable_readMap(mnn_expr_Variable_t self) { return self->readMap<void>(); }
-void *mnn_expr_Variable_writeMap(mnn_expr_Variable_t self) { return self->writeMap<void>(); }
-void mnn_expr_Variable_writeScaleMap(mnn_expr_Variable_t self, float scaleValue, float zeroPoint) {
-  self->writeScaleMap(scaleValue, zeroPoint);
-}
-void mnn_expr_Variable_unMap(mnn_expr_Variable_t self) { self->unMap(); }
-bool mnn_expr_Variable_input(mnn_expr_Variable_t self, mnn_expr_VARP_t src) {
-  return self->input(*src);
-}
-void mnn_expr_Variable_static_replace(mnn_expr_VARP_t dst, mnn_expr_VARP_t src) {
+bool mnn_expr_VARP_input(VARP_t self, VARP_t src) { return (*self)->input(*src); }
+void mnn_expr_VARP_static_replace(VARP_t dst, VARP_t src) {
   MNN::Express::Variable::replace(*dst, *src);
 }
-mnn_expr_VARP_t mnn_expr_Variable_static_create_EXPRP(mnn_expr_EXPRP_t expr, int index) {
+VARP_t mnn_expr_VARP_static_create_EXPRP(EXPRP_t expr, int index) {
   return new MNN::Express::VARP(MNN::Express::Variable::create(*expr, index));
 }
-VecVARP *mnn_expr_Variable_static_load(const char *fileName) {
-  auto p = new MNN::Express::VARPS(MNN::Express::Variable::load(fileName));
-  return new VecVARP{p->data(), p->size()};
+VecVARP_t mnn_expr_VARP_static_load(const char *fileName) {
+  auto v = MNN::Express::Variable::load(fileName);
+  auto rval = new std::vector<MNN::Express::VARP>(v);
+  return rval;
 }
 
-mnn_expr_VARMAP_t mnn_expr_Variable_static_loadMap(const char *fileName) {
-  return new std::map<std::string, MNN::Express::VARP>(MNN::Express::Variable::loadMap(fileName));
+VARMAP_t mnn_expr_VARP_static_loadMap(const char *fileName) {
+  auto varmap = MNN::Express::Variable::loadMap(fileName);
+  return new std::map<std::string, MNN::Express::VARP>(varmap);
 }
 
-VecVARP *mnn_expr_Variable_static_loadBuffer(const uint8_t *buffer, size_t length) {
-  auto p = new MNN::Express::VARPS(MNN::Express::Variable::load(buffer, length));
-  return new VecVARP{p->data(), p->size()};
+VecVARP_t mnn_expr_VARP_static_loadBuffer(const uint8_t *buffer, size_t length) {
+  auto vec = MNN::Express::Variable::load(buffer, length);
+  return new std::vector<MNN::Express::VARP>(vec);
 }
 
-mnn_expr_VARMAP_t mnn_expr_Variable_static_loadMapBuffer(const uint8_t *buffer, size_t length) {
-  return new std::map<std::string, MNN::Express::VARP>(
-      MNN::Express::Variable::loadMap(buffer, length)
-  );
+VARMAP_t mnn_expr_VARP_static_loadMapBuffer(const uint8_t *buffer, size_t length) {
+  auto varmap = MNN::Express::Variable::loadMap(buffer, length);
+  return new std::map<std::string, MNN::Express::VARP>(varmap);
 }
 
-void mnn_expr_Variable_static_save(VecVARP vars, const char *fileName) {
-  MNN::Express::Variable::save(MNN::Express::VARPS(vars.ptr, vars.ptr + vars.size), fileName);
+void mnn_expr_VARP_static_save(VecVARP_t vars, const char *fileName) {
+  MNN::Express::Variable::save(*vars, fileName);
 }
 
-VecI8 mnn_expr_Variable_static_saveBytes(VecVARP vars) {
-  return new std::vector<int8_t>(
-      MNN::Express::Variable::save(MNN::Express::VARPS(vars.ptr, vars.ptr + vars.size))
-  );
+VecI8 mnn_expr_VARP_static_saveBytes(VecVARP_t vars) {
+  return new std::vector<int8_t>(MNN::Express::Variable::save(*vars));
 }
 
-void mnn_expr_Variable_static_saveNet(VecVARP vars, mnn_net_t dest) {
-  MNN::Express::Variable::save(MNN::Express::VARPS(vars.ptr, vars.ptr + vars.size), dest);
+void mnn_expr_VARP_static_saveNet(VecVARP_t vars, Net_t dest) {
+  MNN::Express::Variable::save(*vars, dest);
 }
 
-void mnn_expr_Variable_static_prepareCompute(VecVARP vars, bool forceCPU) {
-  MNN::Express::Variable::prepareCompute(
-      MNN::Express::VARPS(vars.ptr, vars.ptr + vars.size), forceCPU
-  );
+void mnn_expr_VARP_static_prepareCompute(VecVARP_t vars, bool forceCPU) {
+  MNN::Express::Variable::prepareCompute(*vars, forceCPU);
 }
-void mnn_expr_Variable_static_compute(VecVARP vars, bool forceCPU) {
-  MNN::Express::Variable::compute(MNN::Express::VARPS(vars.ptr, vars.ptr + vars.size), forceCPU);
+void mnn_expr_VARP_static_compute(VecVARP_t vars, bool forceCPU) {
+  MNN::Express::Variable::compute(*vars, forceCPU);
 }
-size_t mnn_expr_Variable_linkNumber(mnn_expr_Variable_t self) { return self->linkNumber(); }
-const VecWeakEXPRP *mnn_expr_Variable_toExprs(mnn_expr_Variable_t self) {
-  auto p = new std::vector<MNN::Express::WeakEXPRP>(self->toExprs());
-  return new VecWeakEXPRP{p->data(), p->size()};
+size_t mnn_expr_VARP_linkNumber(VARP_t self) { return (*self)->linkNumber(); }
+const VecWeakEXPRP_t mnn_expr_VARP_toExprs(VARP_t self) {
+  auto exprs = (*self)->toExprs();
+  return new std::vector<std::weak_ptr<MNN::Express::Expr>>(exprs);
 }
-void mnn_expr_Variable_setExpr(mnn_expr_Variable_t self, mnn_expr_EXPRP_t expr, int index) {
-  self->setExpr(*expr, index);
-}
-const mnn_tensor_t mnn_expr_Variable_getTensor(mnn_expr_Variable_t self) {
-  return new MNN::Tensor(self->getTensor());
+void mnn_expr_VARP_setExpr(VARP_t self, EXPRP_t expr, int index) { (*self)->setExpr(*expr, index); }
+const mnn_tensor_t mnn_expr_VARP_getTensor(VARP_t self) {
+  return new MNN::Tensor((*self)->getTensor());
 }
 
-mnn_expr_EXPRP_t mnn_expr_Expr_create_empty() { return new std::shared_ptr<MNN::Express::Expr>(); }
-mnn_expr_EXPRP_t mnn_expr_Expr_static_create(mnn_tensor_t tensor, bool own) {
+EXPRP_t mnn_expr_Expr_create_empty() { return new std::shared_ptr<MNN::Express::Expr>(); }
+EXPRP_t mnn_expr_Expr_static_create(mnn_tensor_t tensor, bool own) {
   return new MNN::Express::EXPRP(MNN::Express::Expr::create(tensor, own));
 }
-mnn_expr_EXPRP_t mnn_expr_Expr_static_create_1(
+EXPRP_t mnn_expr_Expr_static_create_1(
     struct mnn_expr_Variable_Info *info, const void *ptr, int type, int memoryType
 ) {
   MNN::Express::Variable::Info _info;
@@ -220,47 +229,42 @@ mnn_expr_EXPRP_t mnn_expr_Expr_static_create_1(
       )
   );
 }
-mnn_expr_EXPRP_t mnn_expr_Expr_static_create_2(mnn_OpT_t op, VecVARP inputs, int outputSize) {
-  return new MNN::Express::EXPRP(
-      MNN::Express::Expr::create(
-          op, MNN::Express::VARPS(inputs.ptr, inputs.ptr + inputs.size), outputSize
-      )
-  );
+EXPRP_t mnn_expr_Expr_static_create_2(OpT_t op, VecVARP_t inputs, int outputSize) {
+  return new MNN::Express::EXPRP(MNN::Express::Expr::create(op, *inputs, outputSize));
 }
 
-void mnn_expr_Expr_free(mnn_expr_EXPRP_t self) { delete self; }
+void mnn_expr_Expr_free(EXPRP_t self) { delete self; }
 
-void mnn_expr_Expr_setName(mnn_expr_EXPRP_t self, const char *name) { self->get()->setName(name); }
-const char *mnn_expr_Expr_getName(mnn_expr_EXPRP_t self) {
-  return strdup(self->get()->name().c_str());
+void mnn_expr_Expr_setName(EXPRP_t self, const char *name) { self->get()->setName(name); }
+const char *mnn_expr_Expr_getName(EXPRP_t self) { return strdup(self->get()->name().c_str()); }
+const Op_t mnn_expr_Expr_getOp(EXPRP_t self) { return const_cast<Op_t>(self->get()->get()); }
+VecVARP_t mnn_expr_Expr_getInputs(EXPRP_t self) {
+  auto _inputs = self->get()->inputs();
+  return new std::vector<MNN::Express::VARP>(_inputs);
 }
-const mnn_Op_t mnn_expr_Expr_getOp(mnn_expr_EXPRP_t self) {
-  return const_cast<mnn_Op_t>(self->get()->get());
+
+VecWeakEXPRP_t mnn_expr_Expr_getOutputs(EXPRP_t self) {
+  auto vec = self->get()->outputs();
+  return new std::vector<std::weak_ptr<MNN::Express::Expr>>(vec);
 }
-VecVARP *mnn_expr_Expr_getInputs(mnn_expr_EXPRP_t self) {
-  auto p = new std::vector<MNN::Express::VARP>(self->get()->inputs());
-  return new VecVARP{p->data(), p->size()};
-}
-int mnn_expr_Expr_getOutputSize(mnn_expr_EXPRP_t self) { return self->get()->outputSize(); }
-const char *mnn_expr_Expr_getOutputName(mnn_expr_EXPRP_t self, int index) {
+
+int mnn_expr_Expr_getOutputSize(EXPRP_t self) { return self->get()->outputSize(); }
+const char *mnn_expr_Expr_getOutputName(EXPRP_t self, int index) {
   return strdup(self->get()->outputName(index).c_str());
 }
-void mnn_expr_Expr_static_replace(mnn_expr_EXPRP_t oldExpr, mnn_expr_EXPRP_t newExpr) {
+void mnn_expr_Expr_static_replace(EXPRP_t oldExpr, EXPRP_t newExpr) {
   MNN::Express::Expr::replace(*oldExpr, *newExpr);
 }
-bool mnn_expr_Expr_requireInfo(mnn_expr_EXPRP_t self) { return self->get()->requireInfo(); }
+bool mnn_expr_Expr_requireInfo(EXPRP_t self) { return self->get()->requireInfo(); }
 
-int mnn_expr_Expr_inputType(mnn_expr_EXPRP_t self) {
-  return static_cast<int>(self->get()->inputType());
-}
+int mnn_expr_Expr_inputType(EXPRP_t self) { return static_cast<int>(self->get()->inputType()); }
 
-MNN_C_API struct mnn_expr_Variable_Info *
-mnn_expr_Expr_outputInfo(mnn_expr_EXPRP_t self, int index) {
+struct mnn_expr_Variable_Info *mnn_expr_Expr_outputInfo(EXPRP_t self, int index) {
   auto _info = self->get()->outputInfo(index);
-  auto info = new mnn_expr_Variable_Info{};
+  auto info = static_cast<mnn_expr_Variable_Info *>(dart_malloc(sizeof(mnn_expr_Variable_Info)));
   info->order = static_cast<int>(_info->order);
   info->ndim = _info->dim.size();
-  auto pdim = static_cast<int32_t *>(malloc(info->ndim * sizeof(int32_t)));
+  auto pdim = static_cast<int32_t *>(dart_malloc(info->ndim * sizeof(int32_t)));
   for (int i = 0; i < info->ndim; i++) { pdim[i] = _info->dim[i]; }
   info->dim = pdim;
   info->type = {static_cast<uint8_t>(_info->type.code), _info->type.bits, _info->type.lanes};
