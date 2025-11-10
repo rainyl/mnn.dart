@@ -20,7 +20,7 @@ dependencies:
   code_assets: ^0.19.0
 
 dev_dependencies:
-  ffigen: ^19.0.0
+  ffigen: ">=19.0.0 <21.0.0"
   image: ^4.5.4
   lints: ">=5.0.0 <7.0.0"
   test: ^1.24.0
