@@ -8,6 +8,7 @@ pubspec.lock
 .ccls-cache
 
 .vscode/
+.idea/
 *.framework
 build/
 .DS_Store
