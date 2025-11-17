@@ -61,7 +61,7 @@ else()
   endif()
 endif()
 
-set(MNNC_LINK_LIBS MNN)
+set(MNNC_LINK_LIBS MNN MNN_Express)
 if (ANDROID)
     set(MNNC_LINK_LIBS ${MNNC_LINK_LIBS} mediandk -landroid)
     if(MNN_OPENCL)
@@ -105,11 +105,15 @@ elseif (APPLE AND NOT IOS)
 endif ()
 
 set(SOURCES
-    autotime.cpp
-    interpreter.cpp
-    tensor.cpp
-    image_process.cpp
-    mnn_stb_image.cpp
+    "base.cpp"
+    "stdvec.cpp"
+    "expr.cpp"
+    "autotime.cpp"
+    "interpreter.cpp"
+    "tensor.cpp"
+    "image_process.cpp"
+    "mnn_stb_image.cpp"
+    "expr_op.cpp"
 )
 
 include_directories(

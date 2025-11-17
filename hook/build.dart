@@ -71,6 +71,7 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
       'MNN_BUILD_CODEGEN': 'OFF',
       'MNN_ENABLE_COVERAGE': 'OFF',
       'MNN_JNI': 'OFF',
+      "MNN_KLEIDIAI": 'OFF',
       ...defines,
     },
     buildLocal: options["build_local"] as bool? ?? false,

@@ -168,7 +168,8 @@ class ImageProcess extends NativeObject {
     Image? image,
   }) {
     final pImage = image == null ? ffi.nullptr : image.ptr;
-    final ptr = c.mnn_cv_image_process_create_image_tensor(type.ref, width, height, bytesPerChannel, pImage);
+    final ptr =
+        c.mnn_cv_image_process_create_image_tensor(type.native.ref, width, height, bytesPerChannel, pImage);
     return Tensor.fromPointer(ptr);
   }
 

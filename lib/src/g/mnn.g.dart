@@ -555,6 +555,1811 @@ external void mnn_cv_matrix_set_translate(
   double dy,
 );
 
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Abs(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Acos(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Acosh(
+  VARP_t x,
+);
+
+/// Math Op
+/// BinaryOPs
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Add(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_ArgMax(
+  VARP_t input,
+  int axis,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_ArgMin(
+  VARP_t input,
+  int axis,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Asin(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Asinh(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Atan(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Atan2(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Atanh(
+  VARP_t x,
+);
+
+@ffi.Native<
+    VARP_t Function(
+        VARP_t,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size)>()
+external VARP_t mnn_expr_AvePool(
+  VARP_t x,
+  ffi.Pointer<ffi.Int> kernel,
+  int kernelLength,
+  ffi.Pointer<ffi.Int> stride,
+  int strideLength,
+  int pad,
+  ffi.Pointer<ffi.Int> pads,
+  int padsLength,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Bool, ffi.Bool)>()
+external VARP_t mnn_expr_BatchMatMul(
+  VARP_t x,
+  VARP_t y,
+  bool adj_x,
+  bool adj_y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t)>()
+external VARP_t mnn_expr_BatchToSpaceND(
+  VARP_t input,
+  VARP_t block_shape,
+  VARP_t crops,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_BiasAdd(
+  VARP_t value,
+  VARP_t bias,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_BitwiseAnd(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_BitwiseOr(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_BitwiseXor(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_BroadcastTo(
+  VARP_t a,
+  VARP_t shape,
+);
+
+/// OtherOPs
+/// template<typename T>
+/// VARP _Cast(VARP x) {
+/// return _Cast(x, halide_type_of<T>());
+/// }
+@ffi.Native<VARP_t Function(VARP_t, halide_type_c_t)>()
+external VARP_t mnn_expr_Cast(
+  VARP_t x,
+  halide_type_c_t dtype,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Ceil(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_ChangeInputFormat(
+  VARP_t input,
+  int format,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_ChannelShuffle(
+  VARP_t x,
+  int group,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Bool)>()
+external VARP_t mnn_expr_Clone(
+  VARP_t source,
+  bool deepCopy,
+);
+
+@ffi.Native<
+    VARP_t Function(
+        VARP_t,
+        VARP_t,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size)>()
+external VARP_t mnn_expr_Col2Im(
+  VARP_t x,
+  VARP_t outputShape,
+  ffi.Pointer<ffi.Int> kernelSize,
+  int kernelSizeLength,
+  ffi.Pointer<ffi.Int> dilate,
+  int dilateLength,
+  ffi.Pointer<ffi.Int> pads,
+  int padsLength,
+  ffi.Pointer<ffi.Int> stride,
+  int strideLength,
+);
+
+@ffi.Native<VARP_t Function(VecVARP_t, ffi.Int)>()
+external VARP_t mnn_expr_Concat(
+  VecVARP_t values,
+  int axis,
+);
+
+@ffi.Native<
+    VARP_t Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Int>, ffi.Size,
+        ffi.Int, halide_type_c_t)>()
+external VARP_t mnn_expr_Const(
+  ffi.Pointer<ffi.Void> value,
+  ffi.Pointer<ffi.Int> shape,
+  int shapeLength,
+  int format,
+  halide_type_c_t type,
+);
+
+/// MNN_PUBLIC VARP _InnerProduct(std::vector<float>&& weight, std::vector<float>&& bias, VARP x,
+/// INTS outputShape);
+@ffi.Native<
+    VARP_t Function(
+        VARP_t,
+        VARP_t,
+        VARP_t,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size)>()
+external VARP_t mnn_expr_Conv(
+  VARP_t weight,
+  VARP_t bias,
+  VARP_t x,
+  int pad,
+  ffi.Pointer<ffi.Int> stride,
+  int strideLength,
+  ffi.Pointer<ffi.Int> dilate,
+  int dilateLength,
+  int group,
+  ffi.Pointer<ffi.Int> pads,
+  int padsLength,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_Convert(
+  VARP_t input,
+  int format,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Cos(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Cosh(
+  VARP_t x,
+);
+
+/// Int8 Inference
+/// MNN_PUBLIC VARP _Conv(std::vector<int8_t>&& weight, std::vector<int>&& bias, std::vector<float>&&
+/// scale, VARP x, INTS channel, INTS kernelSize,
+/// PaddingMode pad, INTS stride, INTS dilate, int group, INTS pads, bool relu,
+/// int nbits = 8);
+/// MNN_PUBLIC VARP _Conv(std::vector<int8_t>&& weight, std::vector<int>&& bias, std::vector<float>&&
+/// scale,
+/// VARP x, INTS channel, INTS kernelSize,
+/// PaddingMode pad, INTS stride, INTS dilate, int group, INTS pads, bool relu,
+/// int8_t inputZeroPoint, int8_t outputZeroPoint,
+/// int8_t minValue, int8_t maxValue, bool accumulateToInt16);
+/// MNN_PUBLIC VARP _Conv(std::vector<int8_t>&& weight, std::vector<float>&& bias,
+/// std::vector<float>&& weightScale,
+/// VARP x, INTS channel, INTS kernelSize,
+/// PaddingMode pad, INTS stride, INTS dilate, int group, INTS pads, bool relu,
+/// float scaleIn, float scaleOut,
+/// int8_t inputZeroPoint, int8_t outputZeroPoint,
+/// int8_t minValue, int8_t maxValue, float weightClampValue, bool
+/// accumulateToInt16);
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t)>()
+external VARP_t mnn_expr_CosineSimilarity(
+  VARP_t input0,
+  VARP_t input1,
+  VARP_t inputDim,
+);
+
+@ffi.Native<
+    VARP_t Function(VARP_t, VARP_t, ffi.Int, ffi.Pointer<ffi.Int>, ffi.Size)>()
+external VARP_t mnn_expr_Crop(
+  VARP_t images,
+  VARP_t size,
+  int axis,
+  ffi.Pointer<ffi.Int> offset,
+  int offsetLength,
+);
+
+/// enum InterpolationMethod {BILINEAR, NEAREST};
+@ffi.Native<
+    VARP_t Function(VARP_t, VARP_t, VARP_t, VARP_t, ffi.Int, ffi.Float)>()
+external VARP_t mnn_expr_CropAndResize(
+  VARP_t image,
+  VARP_t boxes,
+  VARP_t box_ind,
+  VARP_t crop_size,
+  int method,
+  double extrapolation_value,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_CumProd(
+  VARP_t x,
+  int axis,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int, ffi.Bool, ffi.Bool)>()
+external VARP_t mnn_expr_CumSum(
+  VARP_t x,
+  int axis,
+  bool exclusive,
+  bool reverse,
+);
+
+@ffi.Native<
+    VARP_t Function(
+        VARP_t,
+        VARP_t,
+        VARP_t,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size)>()
+external VARP_t mnn_expr_Deconv(
+  VARP_t weight,
+  VARP_t bias,
+  VARP_t x,
+  int pad,
+  ffi.Pointer<ffi.Int> stride,
+  int strideLength,
+  ffi.Pointer<ffi.Int> dilate,
+  int dilateLength,
+  int group,
+  ffi.Pointer<ffi.Int> pads,
+  int padsLength,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_DepthToSpace(
+  VARP_t input,
+  int block_size,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Divide(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Float)>()
+external VARP_t mnn_expr_Elu(
+  VARP_t features,
+  double alpha,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Equal(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Erf(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Erfc(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Erfinv(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Exp(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_ExpandDims(
+  VARP_t input,
+  int axis,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_ExpandDims_1(
+  VARP_t input,
+  VARP_t axis,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Expm1(
+  VARP_t x,
+);
+
+/// MNN::Express::Expr
+@ffi.Native<EXPRP_t Function()>()
+external EXPRP_t mnn_expr_Expr_create_empty();
+
+@ffi.Native<ffi.Void Function(EXPRP_t)>()
+external void mnn_expr_Expr_free(
+  EXPRP_t self,
+);
+
+@ffi.Native<VecVARP_t Function(EXPRP_t)>()
+external VecVARP_t mnn_expr_Expr_getInputs(
+  EXPRP_t self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(EXPRP_t)>()
+external ffi.Pointer<ffi.Char> mnn_expr_Expr_getName(
+  EXPRP_t self,
+);
+
+@ffi.Native<Op_t Function(EXPRP_t)>()
+external Op_t mnn_expr_Expr_getOp(
+  EXPRP_t self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(EXPRP_t, ffi.Int)>()
+external ffi.Pointer<ffi.Char> mnn_expr_Expr_getOutputName(
+  EXPRP_t self,
+  int index,
+);
+
+@ffi.Native<ffi.Int Function(EXPRP_t)>()
+external int mnn_expr_Expr_getOutputSize(
+  EXPRP_t self,
+);
+
+@ffi.Native<VecWeakEXPRP_t Function(EXPRP_t)>()
+external VecWeakEXPRP_t mnn_expr_Expr_getOutputs(
+  EXPRP_t self,
+);
+
+@ffi.Native<ffi.Int Function(EXPRP_t)>()
+external int mnn_expr_Expr_inputType(
+  EXPRP_t self,
+);
+
+/// MNN_C_API void mnn_expr_Expr_visitOutputs();
+@ffi.Native<ffi.Pointer<mnn_expr_Variable_Info> Function(EXPRP_t, ffi.Int)>()
+external ffi.Pointer<mnn_expr_Variable_Info> mnn_expr_Expr_outputInfo(
+  EXPRP_t self,
+  int index,
+);
+
+@ffi.Native<ffi.Bool Function(EXPRP_t)>()
+external bool mnn_expr_Expr_requireInfo(
+  EXPRP_t self,
+);
+
+@ffi.Native<ffi.Void Function(EXPRP_t, ffi.Pointer<ffi.Char>)>()
+external void mnn_expr_Expr_setName(
+  EXPRP_t self,
+  ffi.Pointer<ffi.Char> name,
+);
+
+@ffi.Native<EXPRP_t Function(mnn_tensor_t, ffi.Bool)>()
+external EXPRP_t mnn_expr_Expr_static_create(
+  mnn_tensor_t tensor,
+  bool own,
+);
+
+@ffi.Native<
+    EXPRP_t Function(ffi.Pointer<mnn_expr_Variable_Info>, ffi.Pointer<ffi.Void>,
+        ffi.Int, ffi.Int)>()
+external EXPRP_t mnn_expr_Expr_static_create_1(
+  ffi.Pointer<mnn_expr_Variable_Info> info,
+  ffi.Pointer<ffi.Void> ptr,
+  int type,
+  int memoryType,
+);
+
+@ffi.Native<EXPRP_t Function(OpT_t, VecVARP_t, ffi.Int)>()
+external EXPRP_t mnn_expr_Expr_static_create_2(
+  OpT_t op,
+  VecVARP_t inputs,
+  int outputSize,
+);
+
+@ffi.Native<ffi.Void Function(EXPRP_t, EXPRP_t)>()
+external void mnn_expr_Expr_static_replace(
+  EXPRP_t oldExpr,
+  EXPRP_t newExpr,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Fill(
+  VARP_t dims,
+  VARP_t value,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Char, ffi.Char)>()
+external VARP_t mnn_expr_FloatToInt8(
+  VARP_t x,
+  VARP_t scale,
+  int minValue,
+  int maxValue,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Int8, ffi.Int8, ffi.Int8)>()
+external VARP_t mnn_expr_FloatToInt8_1(
+  VARP_t x,
+  VARP_t scale,
+  int minValue,
+  int maxValue,
+  int zeroPoint,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Floor(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_FloorDiv(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_FloorMod(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Gather(
+  VARP_t params,
+  VARP_t indices,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_GatherElements(
+  VARP_t params,
+  VARP_t indices,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t)>()
+external VARP_t mnn_expr_GatherElements_1(
+  VARP_t params,
+  VARP_t indices,
+  VARP_t axis,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_GatherND(
+  VARP_t params,
+  VARP_t indices,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t)>()
+external VARP_t mnn_expr_GatherV2(
+  VARP_t params,
+  VARP_t indices,
+  VARP_t axis,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Gelu(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Greater(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_GreaterEqual(
+  VARP_t x,
+  VARP_t y,
+);
+
+/// enum GridSamplePaddingMode {GRID_SAMPLE_PADDING_ZEROS, GRID_SAMPLE_PADDING_BORDER,
+/// GRID_SAMPLE_PADDING_REFLECTION};
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Int, ffi.Int, ffi.Bool)>()
+external VARP_t mnn_expr_GridSample(
+  VARP_t input,
+  VARP_t grid,
+  int mode,
+  int paddingMode,
+  bool alignCorners,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Hardswish(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int, ffi.Int, ffi.Int, ffi.Int)>()
+external VARP_t mnn_expr_Histogram(
+  VARP_t x,
+  int bin,
+  int min,
+  int max,
+  int channel,
+);
+
+@ffi.Native<
+    VARP_t Function(
+        VARP_t,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size)>()
+external VARP_t mnn_expr_Im2Col(
+  VARP_t x,
+  ffi.Pointer<ffi.Int> kernelSize,
+  int kernelSizeLength,
+  ffi.Pointer<ffi.Int> dilate,
+  int dilateLength,
+  ffi.Pointer<ffi.Int> pads,
+  int padsLength,
+  ffi.Pointer<ffi.Int> stride,
+  int strideLength,
+);
+
+/// Neural Network Ops
+@ffi.Native<
+    VARP_t Function(ffi.Pointer<ffi.Int>, ffi.Size, ffi.Int, halide_type_c_t)>()
+external VARP_t mnn_expr_Input(
+  ffi.Pointer<ffi.Int> shape,
+  int shapeLength,
+  int data_format,
+  halide_type_c_t dtype,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Int8ToFloat(
+  VARP_t x,
+  VARP_t scale,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Int8)>()
+external VARP_t mnn_expr_Int8ToFloat_1(
+  VARP_t x,
+  VARP_t scale,
+  int zeroPoint,
+);
+
+/// MNN_PUBLIC VARP _DetectionOutput(VARP location, VARP confidence, VARP priorbox,
+/// unsigned int num_classes, bool share_location, int background_label_id,
+/// float nms_threshhold, int nms_topk, int code_type,
+/// bool variance_encoded_in_target,
+/// int keep_top_k, float confidence_threshold, float visualize_threshold);
+/// MNN_PUBLIC  std::vector<VARP> _DetectionPostProcess(VARP encode_boxes, VARP class_predictions,
+/// VARP anchors,
+/// int num_classes, int max_detections,
+/// int max_class_per_detection, int detections_per_class,
+/// float nms_threshold, float iou_threshold,
+/// bool use_regular_nms, std::vector<float> centersize_encoding);
+@ffi.Native<
+    VARP_t Function(
+        VecVARP_t, ffi.Float, ffi.Float, ffi.Int, ffi.Int, ffi.Int, ffi.Bool)>()
+external VARP_t mnn_expr_Interp(
+  VecVARP_t xs,
+  double widthScale,
+  double heightScale,
+  int outputWidth,
+  int outputHeight,
+  int resizeType,
+  bool alignCorners,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Less(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_LessEqual(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t)>()
+external VARP_t mnn_expr_LinSpace(
+  VARP_t start,
+  VARP_t stop,
+  VARP_t num,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Log(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Log1p(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_LogicalOr(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Bool, ffi.Bool)>()
+external VARP_t mnn_expr_MatMul(
+  VARP_t a,
+  VARP_t b,
+  bool tranposeA,
+  bool tranposeB,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t)>()
+external VARP_t mnn_expr_MatrixBandPart(
+  VARP_t input,
+  VARP_t num_lower,
+  VARP_t num_upper,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Pointer<ffi.Float>, ffi.Size)>()
+external VARP_t mnn_expr_Max(
+  VARP_t a,
+  VARP_t b,
+  ffi.Pointer<ffi.Float> coeff,
+  int coeffSize,
+);
+
+@ffi.Native<
+    VARP_t Function(
+        VARP_t,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size,
+        ffi.Int,
+        ffi.Pointer<ffi.Int>,
+        ffi.Size)>()
+external VARP_t mnn_expr_MaxPool(
+  VARP_t x,
+  ffi.Pointer<ffi.Int> kernel,
+  int kernelLength,
+  ffi.Pointer<ffi.Int> stride,
+  int strideLength,
+  int pad,
+  ffi.Pointer<ffi.Int> pads,
+  int padsLength,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Maximum(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Minimum(
+  VARP_t x,
+  VARP_t y,
+);
+
+/// MNN_PUBLIC VARP _EltwiseProdInt8(VARP x, VARP y,
+/// std::vector<int8_t> x_weight, std::vector<int32_t> x_bias, std::vector<float>
+/// x_scale, std::vector<float> x_tensorScale, std::vector<int8_t> y_weight,
+/// std::vector<int32_t> y_bias, std::vector<float> y_scale, std::vector<float>
+/// y_tensorScale, std::vector<int8_t> output_weight, std::vector<int32_t>
+/// output_bias, std::vector<float> output_scale, std::vector<float>
+/// output_tensorScale);
+/// MNN_PUBLIC VARP _EltwiseSumInt8(VARP x, VARP y,
+/// std::vector<int8_t> x_weight, std::vector<int32_t> x_bias,
+/// std::vector<float> x_scale, std::vector<float> x_tensorScale,
+/// std::vector<int8_t> y_weight, std::vector<int32_t> y_bias, std::vector<float>
+/// y_scale, std::vector<float> y_tensorScale, std::vector<int8_t> output_weight,
+/// std::vector<int32_t> output_bias, std::vector<float> output_scale,
+/// std::vector<float> output_tensorScale);
+/// MNN_PUBLIC VARP _EltwiseSubInt8(VARP x, VARP y,
+/// std::vector<int8_t> x_weight, std::vector<int32_t> x_bias,
+/// std::vector<float> x_scale, std::vector<float> x_tensorScale,
+/// std::vector<int8_t> y_weight, std::vector<int32_t> y_bias, std::vector<float>
+/// y_scale, std::vector<float> y_tensorScale, std::vector<int8_t> output_weight,
+/// std::vector<int32_t> output_bias, std::vector<float> output_scale,
+/// std::vector<float> output_tensorScale);
+/// MNN_PUBLIC VARP _EltwiseMaxInt8(VARP x, VARP y,
+/// std::vector<int8_t> x_weight, std::vector<int32_t> x_bias,
+/// std::vector<float> x_scale, std::vector<float> x_tensorScale,
+/// std::vector<int8_t> y_weight, std::vector<int32_t> y_bias, std::vector<float>
+/// y_scale, std::vector<float> y_tensorScale, std::vector<int8_t> output_weight,
+/// std::vector<int32_t> output_bias, std::vector<float> output_scale,
+/// std::vector<float> output_tensorScale);
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Mod(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<
+    VecVARP_t Function(
+        VARP_t, ffi.Pointer<ffi.Int>, ffi.Size, VARP_t, ffi.Bool)>()
+external VecVARP_t mnn_expr_Moments(
+  VARP_t x,
+  ffi.Pointer<ffi.Int> axis,
+  int axisLength,
+  VARP_t shift,
+  bool keepDims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Multiply(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Negative(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Int, ffi.Float, ffi.Float)>()
+external VARP_t mnn_expr_Nms(
+  VARP_t boxes,
+  VARP_t scores,
+  int maxDetections,
+  double iouThreshold,
+  double scoreThreshold,
+);
+
+@ffi.Native<
+    VARP_t Function(VARP_t, ffi.Int32, ffi.Int32, ffi.Float,
+        ffi.Pointer<ffi.Float>, ffi.Size)>()
+external VARP_t mnn_expr_Normalize(
+  VARP_t x,
+  int acrossSpatial,
+  int channelShared,
+  double eps,
+  ffi.Pointer<ffi.Float> scale,
+  int scaleLength,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_NotEqual(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t, VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_OneHot(
+  VARP_t indices,
+  VARP_t depth,
+  VARP_t onValue,
+  VARP_t offValue,
+  int axis,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Pointer<ffi.Float>, ffi.Size)>()
+external VARP_t mnn_expr_PRelu(
+  VARP_t x,
+  ffi.Pointer<ffi.Float> slopes,
+  int slopeLength,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_Pad(
+  VARP_t x,
+  VARP_t paddings,
+  int mode,
+);
+
+/// MNN_PUBLIC VARP _PriorBox(VARP feature, VARP image,
+/// std::vector<float> min_size, std::vector<float> max_size,
+/// std::vector<float>aspect_ratio, bool flip, bool clip,
+/// std::vector<float>variance, unsigned int img_h, unsigned int img_w,
+/// float step_h, float step_w, float offset = 0.5);
+@ffi.Native<VARP_t Function(VARP_t, ffi.Pointer<ffi.Int>, ffi.Size)>()
+external VARP_t mnn_expr_Permute(
+  VARP_t input,
+  ffi.Pointer<ffi.Int> dims,
+  int dimsLength,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Pow(
+  VARP_t x,
+  VARP_t y,
+);
+
+/// EltwiseOPs
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Pointer<ffi.Float>, ffi.Size)>()
+external VARP_t mnn_expr_Prod(
+  VARP_t a,
+  VARP_t b,
+  ffi.Pointer<ffi.Float> coeff,
+  int coeffSize,
+);
+
+@ffi.Native<
+    VARP_t Function(
+        VARP_t, halide_type_c_t, ffi.Float, ffi.Float, ffi.Int, ffi.Int)>()
+external VARP_t mnn_expr_RandomUniform(
+  VARP_t shape,
+  halide_type_c_t dtype,
+  double low,
+  double high,
+  int seed0,
+  int seed1,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Range(
+  VARP_t start,
+  VARP_t limit,
+  VARP_t delta,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Rank(
+  VARP_t input,
+);
+
+@ffi.Native<
+    VARP_t Function(VecVARP_t, ffi.Pointer<ffi.Int>, ffi.Size,
+        ffi.Pointer<ffi.Int>, ffi.Size)>()
+external VARP_t mnn_expr_Raster(
+  VecVARP_t vars,
+  ffi.Pointer<ffi.Int> regions,
+  int regionsLength,
+  ffi.Pointer<ffi.Int> shape,
+  int shapeLength,
+);
+
+@ffi.Native<
+    VARP_t Function(VecVARP_t, ffi.Pointer<ffi.Int>, ffi.Size,
+        ffi.Pointer<ffi.Int>, ffi.Size, halide_type_t, ffi.Int)>()
+external VARP_t mnn_expr_RasterRaw(
+  VecVARP_t vars,
+  ffi.Pointer<ffi.Int> region,
+  int regionLength,
+  ffi.Pointer<ffi.Int> shape,
+  int shapeLength,
+  halide_type_t dataType,
+  int format,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Reciprocal(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VecI32, ffi.Bool)>()
+external VARP_t mnn_expr_ReduceAll(
+  VARP_t input_variable,
+  VecI32 axis,
+  bool keepDims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Bool)>()
+external VARP_t mnn_expr_ReduceAllMutable(
+  VARP_t input_variable,
+  VARP_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VecI32, ffi.Bool)>()
+external VARP_t mnn_expr_ReduceAny(
+  VARP_t input_variable,
+  VecI32 axis,
+  bool keepDims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Bool)>()
+external VARP_t mnn_expr_ReduceAnyMutable(
+  VARP_t input_variable,
+  VARP_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VecI32, ffi.Bool)>()
+external VARP_t mnn_expr_ReduceMax(
+  VARP_t input_variable,
+  VecI32 axis,
+  bool keepDims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Bool)>()
+external VARP_t mnn_expr_ReduceMaxMutable(
+  VARP_t input_variable,
+  VARP_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VecI32, ffi.Bool)>()
+external VARP_t mnn_expr_ReduceMean(
+  VARP_t input_variable,
+  VecI32 axis,
+  bool keepDims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Bool)>()
+external VARP_t mnn_expr_ReduceMeanMutable(
+  VARP_t input_variable,
+  VARP_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VecI32, ffi.Bool)>()
+external VARP_t mnn_expr_ReduceMin(
+  VARP_t input_variable,
+  VecI32 axis,
+  bool keepDims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Bool)>()
+external VARP_t mnn_expr_ReduceMinMutable(
+  VARP_t input_variable,
+  VARP_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VecI32, ffi.Bool)>()
+external VARP_t mnn_expr_ReduceProd(
+  VARP_t input_variable,
+  VecI32 axis,
+  bool keepDims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Bool)>()
+external VARP_t mnn_expr_ReduceProdMutable(
+  VARP_t input_variable,
+  VARP_t axis,
+  bool keepDims,
+);
+
+/// ReduceOPs
+@ffi.Native<VARP_t Function(VARP_t, VecI32, ffi.Bool)>()
+external VARP_t mnn_expr_ReduceSum(
+  VARP_t input_variable,
+  VecI32 axis,
+  bool keepDims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Bool)>()
+external VARP_t mnn_expr_ReduceSumMutable(
+  VARP_t input_variable,
+  VARP_t axis,
+  bool keepDims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Float)>()
+external VARP_t mnn_expr_Relu(
+  VARP_t x,
+  double slope,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Float, ffi.Float)>()
+external VARP_t mnn_expr_Relu6(
+  VARP_t x,
+  double minValue,
+  double maxValue,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Pointer<ffi.Int>, ffi.Size, ffi.Int)>()
+external VARP_t mnn_expr_Reshape(
+  VARP_t x,
+  ffi.Pointer<ffi.Int> shape,
+  int shapeLength,
+  int original_format,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Reshape_1(
+  VARP_t x,
+  VARP_t shape,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Float, ffi.Float)>()
+external VARP_t mnn_expr_Resize(
+  VARP_t images,
+  double xScale,
+  double yScale,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Reverse(
+  VARP_t x,
+  VARP_t axis,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Int, ffi.Int)>()
+external VARP_t mnn_expr_ReverseSequence(
+  VARP_t x,
+  VARP_t y,
+  int batchDim,
+  int seqDim,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Round(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Rsqrt(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(ffi.Pointer<ffi.Void>, halide_type_c_t)>()
+external VARP_t mnn_expr_Scalar(
+  ffi.Pointer<ffi.Void> ptr,
+  halide_type_c_t type,
+);
+
+@ffi.Native<
+    VARP_t Function(VARP_t, ffi.Int, ffi.Pointer<ffi.Float>, ffi.Size,
+        ffi.Pointer<ffi.Float>, ffi.Size)>()
+external VARP_t mnn_expr_Scale(
+  VARP_t x,
+  int channels,
+  ffi.Pointer<ffi.Float> scales,
+  int scaleLength,
+  ffi.Pointer<ffi.Float> bias,
+  int biasLength,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_ScatterElements(
+  VARP_t data,
+  VARP_t indices,
+  VARP_t updates,
+  int reduction,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t, VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_ScatterElements_1(
+  VARP_t data,
+  VARP_t indices,
+  VARP_t updates,
+  VARP_t axis,
+  int reduction,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t)>()
+external VARP_t mnn_expr_ScatterNd(
+  VARP_t indices,
+  VARP_t updates,
+  VARP_t shape,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t, VARP_t)>()
+external VARP_t mnn_expr_ScatterNd_1(
+  VARP_t indices,
+  VARP_t updates,
+  VARP_t shape,
+  VARP_t input,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_ScatterNd_2(
+  VARP_t indices,
+  VARP_t updates,
+  VARP_t shape,
+  int reduction,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t, VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_ScatterNd_3(
+  VARP_t indices,
+  VARP_t updates,
+  VARP_t shape,
+  VARP_t input,
+  int reduction,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Select(
+  VARP_t select,
+  VARP_t input0,
+  VARP_t input1,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Float, ffi.Float)>()
+external VARP_t mnn_expr_Selu(
+  VARP_t features,
+  double scale,
+  double alpha,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_SetDiff1D(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Bool)>()
+external VARP_t mnn_expr_Shape(
+  VARP_t input,
+  bool nchw,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Sigmoid(
+  VARP_t x,
+);
+
+/// UnaryOPs
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Sign(
+  VARP_t a,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Silu(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Sin(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Sinh(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Size(
+  VARP_t input,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Slice(
+  VARP_t x,
+  VARP_t starts,
+  VARP_t sizes,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_Softmax(
+  VARP_t logits,
+  int axis,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Softplus(
+  VARP_t features,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Softsign(
+  VARP_t features,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int, ffi.Bool, ffi.Bool)>()
+external VARP_t mnn_expr_Sort(
+  VARP_t x,
+  int axis,
+  bool arg,
+  bool descend,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t)>()
+external VARP_t mnn_expr_SpaceToBatchND(
+  VARP_t input,
+  VARP_t block_shape,
+  VARP_t paddings,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int)>()
+external VARP_t mnn_expr_SpaceToDepth(
+  VARP_t input,
+  int block_size,
+);
+
+@ffi.Native<
+    VecVARP_t Function(VARP_t, ffi.Pointer<ffi.Int>, ffi.Size, ffi.Int)>()
+external VecVARP_t mnn_expr_Split(
+  VARP_t value,
+  ffi.Pointer<ffi.Int> size_splits,
+  int size_splitsLength,
+  int axis,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Sqrt(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Square(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_SquaredDifference(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Pointer<ffi.Int>, ffi.Size)>()
+external VARP_t mnn_expr_Squeeze(
+  VARP_t input,
+  ffi.Pointer<ffi.Int> axis,
+  int axisLength,
+);
+
+@ffi.Native<VARP_t Function(VecVARP_t, ffi.Int)>()
+external VARP_t mnn_expr_Stack(
+  VecVARP_t values,
+  int axis,
+);
+
+@ffi.Native<
+    VARP_t Function(VARP_t, VARP_t, VARP_t, VARP_t, ffi.Int32, ffi.Int32,
+        ffi.Int32, ffi.Int32, ffi.Int32)>()
+external VARP_t mnn_expr_StridedSlice(
+  VARP_t input,
+  VARP_t begin,
+  VARP_t end,
+  VARP_t strided,
+  int beginMask,
+  int endMask,
+  int ellipsisMask,
+  int newAxisMask,
+  int shrinkAxisMask,
+);
+
+@ffi.Native<
+    VARP_t Function(VARP_t, VARP_t, VARP_t, VARP_t, VARP_t, ffi.Int32,
+        ffi.Int32, ffi.Int32, ffi.Int32, ffi.Int32)>()
+external VARP_t mnn_expr_StridedSliceWrite(
+  VARP_t input,
+  VARP_t begin,
+  VARP_t end,
+  VARP_t strided,
+  VARP_t write,
+  int beginMask,
+  int endMask,
+  int ellipsisMask,
+  int newAxisMask,
+  int shrinkAxisMask,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Pointer<ffi.Float>, ffi.Size)>()
+external VARP_t mnn_expr_Sub(
+  VARP_t a,
+  VARP_t b,
+  ffi.Pointer<ffi.Float> coeff,
+  int coeffSize,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Subtract(
+  VARP_t x,
+  VARP_t y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Pointer<ffi.Float>, ffi.Size)>()
+external VARP_t mnn_expr_Sum(
+  VARP_t a,
+  VARP_t b,
+  ffi.Pointer<ffi.Float> coeff,
+  int coeffSize,
+);
+
+@ffi.Native<VecVARP_t Function(VARP_t)>()
+external VecVARP_t mnn_expr_Svd(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Tan(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Tanh(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Float)>()
+external VARP_t mnn_expr_Threshold(
+  VARP_t features,
+  double alpha,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Tile(
+  VARP_t input,
+  VARP_t multiples,
+);
+
+@ffi.Native<VecVARP_t Function(VARP_t, VARP_t)>()
+external VecVARP_t mnn_expr_TopKV2(
+  VARP_t input0,
+  VARP_t input1,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Pointer<ffi.Int>, ffi.Size)>()
+external VARP_t mnn_expr_Transpose(
+  VARP_t x,
+  ffi.Pointer<ffi.Int> perm,
+  int permLength,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_Transpose_1(
+  VARP_t x,
+  VARP_t perm,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_UnravelIndex(
+  VARP_t indices,
+  VARP_t dims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Pointer<ffi.Int>, ffi.Size)>()
+external VARP_t mnn_expr_Unsqueeze(
+  VARP_t input,
+  ffi.Pointer<ffi.Int> axis,
+  int axisLength,
+);
+
+@ffi.Native<VecVARP_t Function(VARP_t, ffi.Int)>()
+external VecVARP_t mnn_expr_Unstack(
+  VARP_t value,
+  int axis,
+);
+
+@ffi.Native<VARMAP_t Function()>()
+external VARMAP_t mnn_expr_VARMAP_create();
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>()
+external void mnn_expr_VARMAP_free(
+  ffi.Pointer<ffi.Void> self,
+);
+
+@ffi.Native<VARP_t Function(VARMAP_t, ffi.Pointer<ffi.Char>)>()
+external VARP_t mnn_expr_VARMAP_get(
+  VARMAP_t self,
+  ffi.Pointer<ffi.Char> key,
+);
+
+@ffi.Native<VARP_t Function(VARMAP_t, ffi.Pointer<ffi.Char>)>()
+external VARP_t mnn_expr_VARMAP_get_ref(
+  VARMAP_t self,
+  ffi.Pointer<ffi.Char> key,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Pointer<ffi.Char>> Function(VARMAP_t)>()
+external ffi.Pointer<ffi.Pointer<ffi.Char>> mnn_expr_VARMAP_keys(
+  VARMAP_t self,
+);
+
+@ffi.Native<ffi.Void Function(VARMAP_t, ffi.Pointer<ffi.Char>, VARP_t)>()
+external void mnn_expr_VARMAP_set(
+  VARMAP_t self,
+  ffi.Pointer<ffi.Char> key,
+  VARP_t value,
+);
+
+@ffi.Native<ffi.Size Function(VARMAP_t)>()
+external int mnn_expr_VARMAP_size(
+  VARMAP_t self,
+);
+
+@ffi.Native<ffi.Bool Function(VARP_t, ffi.Pointer<ffi.Void>, ffi.Int)>()
+external bool mnn_expr_VARP_copyToDevicePtr(
+  VARP_t self,
+  ffi.Pointer<ffi.Void> devicePtr,
+  int memoryType,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_VARP_create_VARP(
+  VARP_t other,
+);
+
+/// MNN::Express::VARP
+@ffi.Native<VARP_t Function()>()
+external VARP_t mnn_expr_VARP_create_empty();
+
+@ffi.Native<ffi.Bool Function(VARP_t, ffi.Int)>()
+external bool mnn_expr_VARP_fix(
+  VARP_t self,
+  int type,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>()
+external void mnn_expr_VARP_free(
+  ffi.Pointer<ffi.Void> self,
+);
+
+@ffi.Native<ffi.Pointer<Variable_expr_pair> Function(VARP_t)>()
+external ffi.Pointer<Variable_expr_pair> mnn_expr_VARP_getExpr(
+  VARP_t self,
+);
+
+@ffi.Native<ffi.Pointer<mnn_expr_Variable_Info> Function(VARP_t)>()
+external ffi.Pointer<mnn_expr_Variable_Info> mnn_expr_VARP_getInfo(
+  VARP_t self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(VARP_t)>()
+external ffi.Pointer<ffi.Char> mnn_expr_VARP_getName(
+  VARP_t self,
+);
+
+@ffi.Native<mnn_tensor_t Function(VARP_t)>()
+external mnn_tensor_t mnn_expr_VARP_getTensor(
+  VARP_t self,
+);
+
+@ffi.Native<ffi.Bool Function(VARP_t, VARP_t)>()
+external bool mnn_expr_VARP_input(
+  VARP_t self,
+  VARP_t src,
+);
+
+@ffi.Native<ffi.Size Function(VARP_t)>()
+external int mnn_expr_VARP_linkNumber(
+  VARP_t self,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VecI32)>()
+external VARP_t mnn_expr_VARP_mean(
+  VARP_t self,
+  VecI32 dims,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_VARP_op_add(
+  VARP_t self,
+  VARP_t other,
+);
+
+@ffi.Native<ffi.Void Function(VARP_t, VARP_t)>()
+external void mnn_expr_VARP_op_assign(
+  VARP_t self,
+  VARP_t other,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_VARP_op_div(
+  VARP_t self,
+  VARP_t other,
+);
+
+@ffi.Native<ffi.Bool Function(VARP_t, VARP_t)>()
+external bool mnn_expr_VARP_op_eqeq(
+  VARP_t self,
+  VARP_t other,
+);
+
+@ffi.Native<ffi.Bool Function(VARP_t, VARP_t)>()
+external bool mnn_expr_VARP_op_less(
+  VARP_t self,
+  VARP_t other,
+);
+
+@ffi.Native<ffi.Bool Function(VARP_t, VARP_t)>()
+external bool mnn_expr_VARP_op_lessequal(
+  VARP_t self,
+  VARP_t other,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_VARP_op_mul(
+  VARP_t self,
+  VARP_t other,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t)>()
+external VARP_t mnn_expr_VARP_op_sub(
+  VARP_t self,
+  VARP_t other,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Void> Function(VARP_t)>()
+external ffi.Pointer<ffi.Void> mnn_expr_VARP_readMap(
+  VARP_t self,
+);
+
+@ffi.Native<ffi.Bool Function(VARP_t, VecI32)>()
+external bool mnn_expr_VARP_resize(
+  VARP_t self,
+  VecI32 dims,
+);
+
+@ffi.Native<ffi.Bool Function(VARP_t, ffi.Pointer<ffi.Void>, ffi.Int)>()
+external bool mnn_expr_VARP_setDevicePtr(
+  VARP_t self,
+  ffi.Pointer<ffi.Void> devicePtr,
+  int memoryType,
+);
+
+@ffi.Native<ffi.Void Function(VARP_t, EXPRP_t, ffi.Int)>()
+external void mnn_expr_VARP_setExpr(
+  VARP_t self,
+  EXPRP_t expr,
+  int index,
+);
+
+/// MNN::Express::Variable
+@ffi.Native<ffi.Void Function(VARP_t, ffi.Pointer<ffi.Char>)>()
+external void mnn_expr_VARP_setName(
+  VARP_t self,
+  ffi.Pointer<ffi.Char> name,
+);
+
+@ffi.Native<ffi.Void Function(VARP_t, ffi.Int)>()
+external void mnn_expr_VARP_setOrder(
+  VARP_t self,
+  int format,
+);
+
+@ffi.Native<ffi.Void Function(VecVARP_t, ffi.Bool)>()
+external void mnn_expr_VARP_static_compute(
+  VecVARP_t vars,
+  bool forceCPU,
+);
+
+@ffi.Native<VARP_t Function(EXPRP_t, ffi.Int)>()
+external VARP_t mnn_expr_VARP_static_create_EXPRP(
+  EXPRP_t expr,
+  int index,
+);
+
+@ffi.Native<VecVARP_t Function(ffi.Pointer<ffi.Char>)>()
+external VecVARP_t mnn_expr_VARP_static_load(
+  ffi.Pointer<ffi.Char> fileName,
+);
+
+@ffi.Native<VecVARP_t Function(ffi.Pointer<ffi.Uint8>, ffi.Size)>()
+external VecVARP_t mnn_expr_VARP_static_loadBuffer(
+  ffi.Pointer<ffi.Uint8> buffer,
+  int length,
+);
+
+@ffi.Native<VARMAP_t Function(ffi.Pointer<ffi.Char>)>()
+external VARMAP_t mnn_expr_VARP_static_loadMap(
+  ffi.Pointer<ffi.Char> fileName,
+);
+
+@ffi.Native<VARMAP_t Function(ffi.Pointer<ffi.Uint8>, ffi.Size)>()
+external VARMAP_t mnn_expr_VARP_static_loadMapBuffer(
+  ffi.Pointer<ffi.Uint8> buffer,
+  int length,
+);
+
+@ffi.Native<ffi.Void Function(VecVARP_t, ffi.Bool)>()
+external void mnn_expr_VARP_static_prepareCompute(
+  VecVARP_t vars,
+  bool forceCPU,
+);
+
+@ffi.Native<ffi.Void Function(VARP_t, VARP_t)>()
+external void mnn_expr_VARP_static_replace(
+  VARP_t dst,
+  VARP_t src,
+);
+
+/// MNN_C_API void mnn_expr_VARP_static_getExecuteOrder(VecVARP_t output);
+@ffi.Native<ffi.Void Function(VecVARP_t, ffi.Pointer<ffi.Char>)>()
+external void mnn_expr_VARP_static_save(
+  VecVARP_t vars,
+  ffi.Pointer<ffi.Char> fileName,
+);
+
+@ffi.Native<VecI8 Function(VecVARP_t)>()
+external VecI8 mnn_expr_VARP_static_saveBytes(
+  VecVARP_t vars,
+);
+
+@ffi.Native<ffi.Void Function(VecVARP_t, Net_t)>()
+external void mnn_expr_VARP_static_saveNet(
+  VecVARP_t vars,
+  Net_t dest,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VecI32)>()
+external VARP_t mnn_expr_VARP_sum(
+  VARP_t self,
+  VecI32 dims,
+);
+
+@ffi.Native<VecWeakEXPRP_t Function(VARP_t)>()
+external VecWeakEXPRP_t mnn_expr_VARP_toExprs(
+  VARP_t self,
+);
+
+@ffi.Native<ffi.Void Function(VARP_t)>()
+external void mnn_expr_VARP_unMap(
+  VARP_t self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Void> Function(VARP_t)>()
+external ffi.Pointer<ffi.Void> mnn_expr_VARP_writeMap(
+  VARP_t self,
+);
+
+@ffi.Native<ffi.Void Function(VARP_t, ffi.Float, ffi.Float)>()
+external void mnn_expr_VARP_writeScaleMap(
+  VARP_t self,
+  double scaleValue,
+  double zeroPoint,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>()
+external void mnn_expr_Variable_Info_free(
+  ffi.Pointer<ffi.Void> self,
+);
+
+@ffi.Native<VARP_t Function(VecVARP_t, ffi.Int)>()
+external VARP_t mnn_expr_VecVARP_at(
+  VecVARP_t self,
+  int i,
+);
+
+@ffi.Native<VARP_t Function(VecVARP_t, ffi.Int)>()
+external VARP_t mnn_expr_VecVARP_at_ref(
+  VecVARP_t self,
+  int i,
+);
+
+@ffi.Native<VecVARP_t Function(ffi.Size, VARP_t)>()
+external VecVARP_t mnn_expr_VecVARP_create(
+  int length,
+  VARP_t value,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>()
+external void mnn_expr_VecVARP_free(
+  ffi.Pointer<ffi.Void> self,
+);
+
+@ffi.Native<ffi.Void Function(VecVARP_t, VARP_t)>()
+external void mnn_expr_VecVARP_push_back(
+  VecVARP_t self,
+  VARP_t value,
+);
+
+@ffi.Native<ffi.Void Function(VecVARP_t, ffi.Int, VARP_t)>()
+external void mnn_expr_VecVARP_set(
+  VecVARP_t self,
+  int i,
+  VARP_t value,
+);
+
+@ffi.Native<ffi.Size Function(VecVARP_t)>()
+external int mnn_expr_VecVARP_size(
+  VecVARP_t self,
+);
+
+@ffi.Native<EXPRP_t Function(VecWeakEXPRP_t, ffi.Int)>()
+external EXPRP_t mnn_expr_VecWeakEXPRP_at(
+  VecWeakEXPRP_t self,
+  int i,
+);
+
+@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>()
+external void mnn_expr_VecWeakEXPRP_free(
+  ffi.Pointer<ffi.Void> self,
+);
+
+@ffi.Native<ffi.Void Function(VecWeakEXPRP_t, EXPRP_t)>()
+external void mnn_expr_VecWeakEXPRP_push_back(
+  VecWeakEXPRP_t self,
+  EXPRP_t value,
+);
+
+@ffi.Native<ffi.Void Function(VecWeakEXPRP_t, ffi.Int, EXPRP_t)>()
+external void mnn_expr_VecWeakEXPRP_set(
+  VecWeakEXPRP_t self,
+  int i,
+  EXPRP_t value,
+);
+
+@ffi.Native<ffi.Size Function(VecWeakEXPRP_t)>()
+external int mnn_expr_VecWeakEXPRP_size(
+  VecWeakEXPRP_t self,
+);
+
+/// MNN_PUBLIC VARP _ImageProcess(VARP input, CV::ImageProcess::Config config, CV::Matrix matrix, int
+/// oh, int ow, int oc, int dtype, uint8_t padVal = 0); mnn_expr_VARP_t
+/// mnn_expr_ImageProcess(mnn_expr_VARP_t input, CV::ImageProcess::Config config, CV::Matrix matrix,
+/// int oh, int ow, int oc, int dtype, uint8_t padVal);
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_Where(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_ZeroGrad(
+  VARP_t x,
+);
+
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_expr_ZerosLike(
+  VARP_t input,
+);
+
 /// @brief Get MNN version
 /// @return Version string
 @ffi.Native<ffi.Pointer<ffi.Char> Function()>()
@@ -2616,6 +4421,930 @@ external void stbir_set_user_data(
   ffi.Pointer<ffi.Void> user_data,
 );
 
+@ffi.Native<ffi.Void Function(VecF16)>()
+external void std_VecF16_clear(
+  VecF16 self,
+);
+
+@ffi.Native<VecF16 Function(VecF16)>()
+external VecF16 std_VecF16_clone(
+  VecF16 self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Uint16> Function(VecF16)>()
+external ffi.Pointer<ffi.Uint16> std_VecF16_data(
+  VecF16 self,
+);
+
+@ffi.Native<ffi.Void Function(VecF16, VecF16)>()
+external void std_VecF16_extend(
+  VecF16 self,
+  VecF16 other,
+);
+
+@ffi.Native<ffi.Void Function(VecF16)>()
+external void std_VecF16_free(
+  VecF16 self,
+);
+
+@ffi.Native<ffi.Uint16 Function(VecF16, ffi.Size)>()
+external int std_VecF16_get(
+  VecF16 self,
+  int index,
+);
+
+@ffi.Native<ffi.Size Function(VecF16)>()
+external int std_VecF16_length(
+  VecF16 self,
+);
+
+@ffi.Native<VecF16 Function(ffi.Size)>()
+external VecF16 std_VecF16_new(
+  int length,
+);
+
+@ffi.Native<VecF16 Function(ffi.Size, ffi.Uint16)>()
+external VecF16 std_VecF16_new_1(
+  int length,
+  int val,
+);
+
+@ffi.Native<VecF16 Function(ffi.Size, ffi.Pointer<ffi.Uint16>)>()
+external VecF16 std_VecF16_new_2(
+  int length,
+  ffi.Pointer<ffi.Uint16> val_ptr,
+);
+
+@ffi.Native<ffi.Void Function(VecF16, ffi.Uint16)>()
+external void std_VecF16_push_back(
+  VecF16 self,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecF16, ffi.Size)>()
+external void std_VecF16_reserve(
+  VecF16 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecF16, ffi.Size)>()
+external void std_VecF16_resize(
+  VecF16 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecF16, ffi.Size, ffi.Uint16)>()
+external void std_VecF16_set(
+  VecF16 self,
+  int index,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecF16)>()
+external void std_VecF16_shrink_to_fit(
+  VecF16 self,
+);
+
+@ffi.Native<ffi.Void Function(VecF32)>()
+external void std_VecF32_clear(
+  VecF32 self,
+);
+
+@ffi.Native<VecF32 Function(VecF32)>()
+external VecF32 std_VecF32_clone(
+  VecF32 self,
+);
+
+@ffi.Native<ffi.Pointer<float_t> Function(VecF32)>()
+external ffi.Pointer<float_t> std_VecF32_data(
+  VecF32 self,
+);
+
+@ffi.Native<ffi.Void Function(VecF32, VecF32)>()
+external void std_VecF32_extend(
+  VecF32 self,
+  VecF32 other,
+);
+
+@ffi.Native<ffi.Void Function(VecF32)>()
+external void std_VecF32_free(
+  VecF32 self,
+);
+
+@ffi.Native<float_t Function(VecF32, ffi.Size)>()
+external double std_VecF32_get(
+  VecF32 self,
+  int index,
+);
+
+@ffi.Native<ffi.Size Function(VecF32)>()
+external int std_VecF32_length(
+  VecF32 self,
+);
+
+@ffi.Native<VecF32 Function(ffi.Size)>()
+external VecF32 std_VecF32_new(
+  int length,
+);
+
+@ffi.Native<VecF32 Function(ffi.Size, float_t)>()
+external VecF32 std_VecF32_new_1(
+  int length,
+  double val,
+);
+
+@ffi.Native<VecF32 Function(ffi.Size, ffi.Pointer<float_t>)>()
+external VecF32 std_VecF32_new_2(
+  int length,
+  ffi.Pointer<float_t> val_ptr,
+);
+
+@ffi.Native<ffi.Void Function(VecF32, float_t)>()
+external void std_VecF32_push_back(
+  VecF32 self,
+  double val,
+);
+
+@ffi.Native<ffi.Void Function(VecF32, ffi.Size)>()
+external void std_VecF32_reserve(
+  VecF32 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecF32, ffi.Size)>()
+external void std_VecF32_resize(
+  VecF32 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecF32, ffi.Size, float_t)>()
+external void std_VecF32_set(
+  VecF32 self,
+  int index,
+  double val,
+);
+
+@ffi.Native<ffi.Void Function(VecF32)>()
+external void std_VecF32_shrink_to_fit(
+  VecF32 self,
+);
+
+@ffi.Native<ffi.Void Function(VecF64)>()
+external void std_VecF64_clear(
+  VecF64 self,
+);
+
+@ffi.Native<VecF64 Function(VecF64)>()
+external VecF64 std_VecF64_clone(
+  VecF64 self,
+);
+
+@ffi.Native<ffi.Pointer<double_t> Function(VecF64)>()
+external ffi.Pointer<double_t> std_VecF64_data(
+  VecF64 self,
+);
+
+@ffi.Native<ffi.Void Function(VecF64, VecF64)>()
+external void std_VecF64_extend(
+  VecF64 self,
+  VecF64 other,
+);
+
+@ffi.Native<ffi.Void Function(VecF64)>()
+external void std_VecF64_free(
+  VecF64 self,
+);
+
+@ffi.Native<double_t Function(VecF64, ffi.Size)>()
+external double std_VecF64_get(
+  VecF64 self,
+  int index,
+);
+
+@ffi.Native<ffi.Size Function(VecF64)>()
+external int std_VecF64_length(
+  VecF64 self,
+);
+
+@ffi.Native<VecF64 Function(ffi.Size)>()
+external VecF64 std_VecF64_new(
+  int length,
+);
+
+@ffi.Native<VecF64 Function(ffi.Size, double_t)>()
+external VecF64 std_VecF64_new_1(
+  int length,
+  double val,
+);
+
+@ffi.Native<VecF64 Function(ffi.Size, ffi.Pointer<double_t>)>()
+external VecF64 std_VecF64_new_2(
+  int length,
+  ffi.Pointer<double_t> val_ptr,
+);
+
+@ffi.Native<ffi.Void Function(VecF64, double_t)>()
+external void std_VecF64_push_back(
+  VecF64 self,
+  double val,
+);
+
+@ffi.Native<ffi.Void Function(VecF64, ffi.Size)>()
+external void std_VecF64_reserve(
+  VecF64 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecF64, ffi.Size)>()
+external void std_VecF64_resize(
+  VecF64 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecF64, ffi.Size, double_t)>()
+external void std_VecF64_set(
+  VecF64 self,
+  int index,
+  double val,
+);
+
+@ffi.Native<ffi.Void Function(VecF64)>()
+external void std_VecF64_shrink_to_fit(
+  VecF64 self,
+);
+
+@ffi.Native<ffi.Void Function(VecI16)>()
+external void std_VecI16_clear(
+  VecI16 self,
+);
+
+@ffi.Native<VecI16 Function(VecI16)>()
+external VecI16 std_VecI16_clone(
+  VecI16 self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Int16> Function(VecI16)>()
+external ffi.Pointer<ffi.Int16> std_VecI16_data(
+  VecI16 self,
+);
+
+@ffi.Native<ffi.Void Function(VecI16, VecI16)>()
+external void std_VecI16_extend(
+  VecI16 self,
+  VecI16 other,
+);
+
+@ffi.Native<ffi.Void Function(VecI16)>()
+external void std_VecI16_free(
+  VecI16 self,
+);
+
+@ffi.Native<ffi.Int16 Function(VecI16, ffi.Size)>()
+external int std_VecI16_get(
+  VecI16 self,
+  int index,
+);
+
+@ffi.Native<ffi.Size Function(VecI16)>()
+external int std_VecI16_length(
+  VecI16 self,
+);
+
+@ffi.Native<VecI16 Function(ffi.Size)>()
+external VecI16 std_VecI16_new(
+  int length,
+);
+
+@ffi.Native<VecI16 Function(ffi.Size, ffi.Int16)>()
+external VecI16 std_VecI16_new_1(
+  int length,
+  int val,
+);
+
+@ffi.Native<VecI16 Function(ffi.Size, ffi.Pointer<ffi.Int16>)>()
+external VecI16 std_VecI16_new_2(
+  int length,
+  ffi.Pointer<ffi.Int16> val_ptr,
+);
+
+@ffi.Native<ffi.Void Function(VecI16, ffi.Int16)>()
+external void std_VecI16_push_back(
+  VecI16 self,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecI16, ffi.Size)>()
+external void std_VecI16_reserve(
+  VecI16 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecI16, ffi.Size)>()
+external void std_VecI16_resize(
+  VecI16 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecI16, ffi.Size, ffi.Int16)>()
+external void std_VecI16_set(
+  VecI16 self,
+  int index,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecI16)>()
+external void std_VecI16_shrink_to_fit(
+  VecI16 self,
+);
+
+@ffi.Native<ffi.Void Function(VecI32)>()
+external void std_VecI32_clear(
+  VecI32 self,
+);
+
+@ffi.Native<VecI32 Function(VecI32)>()
+external VecI32 std_VecI32_clone(
+  VecI32 self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Int32> Function(VecI32)>()
+external ffi.Pointer<ffi.Int32> std_VecI32_data(
+  VecI32 self,
+);
+
+@ffi.Native<ffi.Void Function(VecI32, VecI32)>()
+external void std_VecI32_extend(
+  VecI32 self,
+  VecI32 other,
+);
+
+@ffi.Native<ffi.Void Function(VecI32)>()
+external void std_VecI32_free(
+  VecI32 self,
+);
+
+@ffi.Native<ffi.Int32 Function(VecI32, ffi.Size)>()
+external int std_VecI32_get(
+  VecI32 self,
+  int index,
+);
+
+@ffi.Native<ffi.Size Function(VecI32)>()
+external int std_VecI32_length(
+  VecI32 self,
+);
+
+@ffi.Native<VecI32 Function(ffi.Size)>()
+external VecI32 std_VecI32_new(
+  int length,
+);
+
+@ffi.Native<VecI32 Function(ffi.Size, ffi.Int32)>()
+external VecI32 std_VecI32_new_1(
+  int length,
+  int val,
+);
+
+@ffi.Native<VecI32 Function(ffi.Size, ffi.Pointer<ffi.Int32>)>()
+external VecI32 std_VecI32_new_2(
+  int length,
+  ffi.Pointer<ffi.Int32> val_ptr,
+);
+
+@ffi.Native<ffi.Void Function(VecI32, ffi.Int32)>()
+external void std_VecI32_push_back(
+  VecI32 self,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecI32, ffi.Size)>()
+external void std_VecI32_reserve(
+  VecI32 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecI32, ffi.Size)>()
+external void std_VecI32_resize(
+  VecI32 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecI32, ffi.Size, ffi.Int32)>()
+external void std_VecI32_set(
+  VecI32 self,
+  int index,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecI32)>()
+external void std_VecI32_shrink_to_fit(
+  VecI32 self,
+);
+
+@ffi.Native<ffi.Void Function(VecI64)>()
+external void std_VecI64_clear(
+  VecI64 self,
+);
+
+@ffi.Native<VecI64 Function(VecI64)>()
+external VecI64 std_VecI64_clone(
+  VecI64 self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Int64> Function(VecI64)>()
+external ffi.Pointer<ffi.Int64> std_VecI64_data(
+  VecI64 self,
+);
+
+@ffi.Native<ffi.Void Function(VecI64, VecI64)>()
+external void std_VecI64_extend(
+  VecI64 self,
+  VecI64 other,
+);
+
+@ffi.Native<ffi.Void Function(VecI64)>()
+external void std_VecI64_free(
+  VecI64 self,
+);
+
+@ffi.Native<ffi.Int64 Function(VecI64, ffi.Size)>()
+external int std_VecI64_get(
+  VecI64 self,
+  int index,
+);
+
+@ffi.Native<ffi.Size Function(VecI64)>()
+external int std_VecI64_length(
+  VecI64 self,
+);
+
+@ffi.Native<VecI64 Function(ffi.Size)>()
+external VecI64 std_VecI64_new(
+  int length,
+);
+
+@ffi.Native<VecI64 Function(ffi.Size, ffi.Int64)>()
+external VecI64 std_VecI64_new_1(
+  int length,
+  int val,
+);
+
+@ffi.Native<VecI64 Function(ffi.Size, ffi.Pointer<ffi.Int64>)>()
+external VecI64 std_VecI64_new_2(
+  int length,
+  ffi.Pointer<ffi.Int64> val_ptr,
+);
+
+@ffi.Native<ffi.Void Function(VecI64, ffi.Int64)>()
+external void std_VecI64_push_back(
+  VecI64 self,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecI64, ffi.Size)>()
+external void std_VecI64_reserve(
+  VecI64 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecI64, ffi.Size)>()
+external void std_VecI64_resize(
+  VecI64 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecI64, ffi.Size, ffi.Int64)>()
+external void std_VecI64_set(
+  VecI64 self,
+  int index,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecI64)>()
+external void std_VecI64_shrink_to_fit(
+  VecI64 self,
+);
+
+@ffi.Native<ffi.Void Function(VecI8)>()
+external void std_VecI8_clear(
+  VecI8 self,
+);
+
+@ffi.Native<VecI8 Function(VecI8)>()
+external VecI8 std_VecI8_clone(
+  VecI8 self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Int8> Function(VecI8)>()
+external ffi.Pointer<ffi.Int8> std_VecI8_data(
+  VecI8 self,
+);
+
+@ffi.Native<ffi.Void Function(VecI8, VecI8)>()
+external void std_VecI8_extend(
+  VecI8 self,
+  VecI8 other,
+);
+
+@ffi.Native<ffi.Void Function(VecI8)>()
+external void std_VecI8_free(
+  VecI8 self,
+);
+
+@ffi.Native<ffi.Int8 Function(VecI8, ffi.Size)>()
+external int std_VecI8_get(
+  VecI8 self,
+  int index,
+);
+
+@ffi.Native<ffi.Size Function(VecI8)>()
+external int std_VecI8_length(
+  VecI8 self,
+);
+
+@ffi.Native<VecI8 Function(ffi.Size)>()
+external VecI8 std_VecI8_new(
+  int length,
+);
+
+@ffi.Native<VecI8 Function(ffi.Size, ffi.Int8)>()
+external VecI8 std_VecI8_new_1(
+  int length,
+  int val,
+);
+
+@ffi.Native<VecI8 Function(ffi.Size, ffi.Pointer<ffi.Int8>)>()
+external VecI8 std_VecI8_new_2(
+  int length,
+  ffi.Pointer<ffi.Int8> val_ptr,
+);
+
+@ffi.Native<ffi.Void Function(VecI8, ffi.Int8)>()
+external void std_VecI8_push_back(
+  VecI8 self,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecI8, ffi.Size)>()
+external void std_VecI8_reserve(
+  VecI8 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecI8, ffi.Size)>()
+external void std_VecI8_resize(
+  VecI8 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecI8, ffi.Size, ffi.Int8)>()
+external void std_VecI8_set(
+  VecI8 self,
+  int index,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecI8)>()
+external void std_VecI8_shrink_to_fit(
+  VecI8 self,
+);
+
+@ffi.Native<ffi.Void Function(VecU16)>()
+external void std_VecU16_clear(
+  VecU16 self,
+);
+
+@ffi.Native<VecU16 Function(VecU16)>()
+external VecU16 std_VecU16_clone(
+  VecU16 self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Uint16> Function(VecU16)>()
+external ffi.Pointer<ffi.Uint16> std_VecU16_data(
+  VecU16 self,
+);
+
+@ffi.Native<ffi.Void Function(VecU16, VecU16)>()
+external void std_VecU16_extend(
+  VecU16 self,
+  VecU16 other,
+);
+
+@ffi.Native<ffi.Void Function(VecU16)>()
+external void std_VecU16_free(
+  VecU16 self,
+);
+
+@ffi.Native<ffi.Uint16 Function(VecU16, ffi.Size)>()
+external int std_VecU16_get(
+  VecU16 self,
+  int index,
+);
+
+@ffi.Native<ffi.Size Function(VecU16)>()
+external int std_VecU16_length(
+  VecU16 self,
+);
+
+@ffi.Native<VecU16 Function(ffi.Size)>()
+external VecU16 std_VecU16_new(
+  int length,
+);
+
+@ffi.Native<VecU16 Function(ffi.Size, ffi.Uint16)>()
+external VecU16 std_VecU16_new_1(
+  int length,
+  int val,
+);
+
+@ffi.Native<VecU16 Function(ffi.Size, ffi.Pointer<ffi.Uint16>)>()
+external VecU16 std_VecU16_new_2(
+  int length,
+  ffi.Pointer<ffi.Uint16> val_ptr,
+);
+
+@ffi.Native<ffi.Void Function(VecU16, ffi.Uint16)>()
+external void std_VecU16_push_back(
+  VecU16 self,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecU16, ffi.Size)>()
+external void std_VecU16_reserve(
+  VecU16 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecU16, ffi.Size)>()
+external void std_VecU16_resize(
+  VecU16 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecU16, ffi.Size, ffi.Uint16)>()
+external void std_VecU16_set(
+  VecU16 self,
+  int index,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecU16)>()
+external void std_VecU16_shrink_to_fit(
+  VecU16 self,
+);
+
+@ffi.Native<ffi.Void Function(VecU32)>()
+external void std_VecU32_clear(
+  VecU32 self,
+);
+
+@ffi.Native<VecU32 Function(VecU32)>()
+external VecU32 std_VecU32_clone(
+  VecU32 self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Uint32> Function(VecU32)>()
+external ffi.Pointer<ffi.Uint32> std_VecU32_data(
+  VecU32 self,
+);
+
+@ffi.Native<ffi.Void Function(VecU32, VecU32)>()
+external void std_VecU32_extend(
+  VecU32 self,
+  VecU32 other,
+);
+
+@ffi.Native<ffi.Void Function(VecU32)>()
+external void std_VecU32_free(
+  VecU32 self,
+);
+
+@ffi.Native<ffi.Uint32 Function(VecU32, ffi.Size)>()
+external int std_VecU32_get(
+  VecU32 self,
+  int index,
+);
+
+@ffi.Native<ffi.Size Function(VecU32)>()
+external int std_VecU32_length(
+  VecU32 self,
+);
+
+@ffi.Native<VecU32 Function(ffi.Size)>()
+external VecU32 std_VecU32_new(
+  int length,
+);
+
+@ffi.Native<VecU32 Function(ffi.Size, ffi.Uint32)>()
+external VecU32 std_VecU32_new_1(
+  int length,
+  int val,
+);
+
+@ffi.Native<VecU32 Function(ffi.Size, ffi.Pointer<ffi.Uint32>)>()
+external VecU32 std_VecU32_new_2(
+  int length,
+  ffi.Pointer<ffi.Uint32> val_ptr,
+);
+
+@ffi.Native<ffi.Void Function(VecU32, ffi.Uint32)>()
+external void std_VecU32_push_back(
+  VecU32 self,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecU32, ffi.Size)>()
+external void std_VecU32_reserve(
+  VecU32 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecU32, ffi.Size)>()
+external void std_VecU32_resize(
+  VecU32 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecU32, ffi.Size, ffi.Uint32)>()
+external void std_VecU32_set(
+  VecU32 self,
+  int index,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecU32)>()
+external void std_VecU32_shrink_to_fit(
+  VecU32 self,
+);
+
+@ffi.Native<ffi.Void Function(VecU64)>()
+external void std_VecU64_clear(
+  VecU64 self,
+);
+
+@ffi.Native<VecU64 Function(VecU64)>()
+external VecU64 std_VecU64_clone(
+  VecU64 self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Uint64> Function(VecU64)>()
+external ffi.Pointer<ffi.Uint64> std_VecU64_data(
+  VecU64 self,
+);
+
+@ffi.Native<ffi.Void Function(VecU64, VecU64)>()
+external void std_VecU64_extend(
+  VecU64 self,
+  VecU64 other,
+);
+
+@ffi.Native<ffi.Void Function(VecU64)>()
+external void std_VecU64_free(
+  VecU64 self,
+);
+
+@ffi.Native<ffi.Uint64 Function(VecU64, ffi.Size)>()
+external int std_VecU64_get(
+  VecU64 self,
+  int index,
+);
+
+@ffi.Native<ffi.Size Function(VecU64)>()
+external int std_VecU64_length(
+  VecU64 self,
+);
+
+@ffi.Native<VecU64 Function(ffi.Size)>()
+external VecU64 std_VecU64_new(
+  int length,
+);
+
+@ffi.Native<VecU64 Function(ffi.Size, ffi.Uint64)>()
+external VecU64 std_VecU64_new_1(
+  int length,
+  int val,
+);
+
+@ffi.Native<VecU64 Function(ffi.Size, ffi.Pointer<ffi.Uint64>)>()
+external VecU64 std_VecU64_new_2(
+  int length,
+  ffi.Pointer<ffi.Uint64> val_ptr,
+);
+
+@ffi.Native<ffi.Void Function(VecU64, ffi.Uint64)>()
+external void std_VecU64_push_back(
+  VecU64 self,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecU64, ffi.Size)>()
+external void std_VecU64_reserve(
+  VecU64 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecU64, ffi.Size)>()
+external void std_VecU64_resize(
+  VecU64 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecU64, ffi.Size, ffi.Uint64)>()
+external void std_VecU64_set(
+  VecU64 self,
+  int index,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecU64)>()
+external void std_VecU64_shrink_to_fit(
+  VecU64 self,
+);
+
+@ffi.Native<ffi.Void Function(VecU8)>()
+external void std_VecU8_clear(
+  VecU8 self,
+);
+
+@ffi.Native<VecU8 Function(VecU8)>()
+external VecU8 std_VecU8_clone(
+  VecU8 self,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Uint8> Function(VecU8)>()
+external ffi.Pointer<ffi.Uint8> std_VecU8_data(
+  VecU8 self,
+);
+
+@ffi.Native<ffi.Void Function(VecU8, VecU8)>()
+external void std_VecU8_extend(
+  VecU8 self,
+  VecU8 other,
+);
+
+@ffi.Native<ffi.Void Function(VecU8)>()
+external void std_VecU8_free(
+  VecU8 self,
+);
+
+@ffi.Native<ffi.Uint8 Function(VecU8, ffi.Size)>()
+external int std_VecU8_get(
+  VecU8 self,
+  int index,
+);
+
+@ffi.Native<ffi.Size Function(VecU8)>()
+external int std_VecU8_length(
+  VecU8 self,
+);
+
+@ffi.Native<VecU8 Function(ffi.Size)>()
+external VecU8 std_VecU8_new(
+  int length,
+);
+
+@ffi.Native<VecU8 Function(ffi.Size, ffi.Uint8)>()
+external VecU8 std_VecU8_new_1(
+  int length,
+  int val,
+);
+
+@ffi.Native<VecU8 Function(ffi.Size, ffi.Pointer<ffi.Uint8>)>()
+external VecU8 std_VecU8_new_2(
+  int length,
+  ffi.Pointer<ffi.Uint8> val_ptr,
+);
+
+@ffi.Native<ffi.Void Function(VecU8, ffi.Uint8)>()
+external void std_VecU8_push_back(
+  VecU8 self,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecU8, ffi.Size)>()
+external void std_VecU8_reserve(
+  VecU8 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecU8, ffi.Size)>()
+external void std_VecU8_resize(
+  VecU8 self,
+  int new_len,
+);
+
+@ffi.Native<ffi.Void Function(VecU8, ffi.Size, ffi.Uint8)>()
+external void std_VecU8_set(
+  VecU8 self,
+  int index,
+  int val,
+);
+
+@ffi.Native<ffi.Void Function(VecU8)>()
+external void std_VecU8_shrink_to_fit(
+  VecU8 self,
+);
+
 const addresses = _SymbolAddresses();
 
 class _SymbolAddresses {
@@ -2629,6 +5358,22 @@ class _SymbolAddresses {
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_cv_matrix_t)>>
       get mnn_cv_matrix_destroy =>
           ffi.Native.addressOf(self.mnn_cv_matrix_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(EXPRP_t)>>
+      get mnn_expr_Expr_free => ffi.Native.addressOf(self.mnn_expr_Expr_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
+      get mnn_expr_VARMAP_free =>
+          ffi.Native.addressOf(self.mnn_expr_VARMAP_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
+      get mnn_expr_VARP_free => ffi.Native.addressOf(self.mnn_expr_VARP_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
+      get mnn_expr_Variable_Info_free =>
+          ffi.Native.addressOf(self.mnn_expr_Variable_Info_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
+      get mnn_expr_VecVARP_free =>
+          ffi.Native.addressOf(self.mnn_expr_VecVARP_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>
+      get mnn_expr_VecWeakEXPRP_free =>
+          ffi.Native.addressOf(self.mnn_expr_VecWeakEXPRP_free);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_interpreter_t)>>
       get mnn_interpreter_destroy =>
           ffi.Native.addressOf(self.mnn_interpreter_destroy);
@@ -2643,6 +5388,28 @@ class _SymbolAddresses {
       get stbi_image_free => ffi.Native.addressOf(self.stbi_image_free);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<STBIR_RESIZE>)>>
       get stbir_free_samplers => ffi.Native.addressOf(self.stbir_free_samplers);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecF16)>>
+      get std_VecF16_free => ffi.Native.addressOf(self.std_VecF16_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecF32)>>
+      get std_VecF32_free => ffi.Native.addressOf(self.std_VecF32_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecF64)>>
+      get std_VecF64_free => ffi.Native.addressOf(self.std_VecF64_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecI16)>>
+      get std_VecI16_free => ffi.Native.addressOf(self.std_VecI16_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecI32)>>
+      get std_VecI32_free => ffi.Native.addressOf(self.std_VecI32_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecI64)>>
+      get std_VecI64_free => ffi.Native.addressOf(self.std_VecI64_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecI8)>>
+      get std_VecI8_free => ffi.Native.addressOf(self.std_VecI8_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecU16)>>
+      get std_VecU16_free => ffi.Native.addressOf(self.std_VecU16_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecU32)>>
+      get std_VecU32_free => ffi.Native.addressOf(self.std_VecU32_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecU64)>>
+      get std_VecU64_free => ffi.Native.addressOf(self.std_VecU64_free);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecU8)>>
+      get std_VecU8_free => ffi.Native.addressOf(self.std_VecU8_free);
 }
 
 enum DimensionType {
@@ -2660,6 +5427,8 @@ enum DimensionType {
         _ => throw ArgumentError('Unknown value for DimensionType: $value'),
       };
 }
+
+typedef EXPRP_t = ffi.Pointer<ffi.Void>;
 
 /// Error code enum
 enum ErrorCode {
@@ -2810,6 +5579,10 @@ enum MapType {
         _ => throw ArgumentError('Unknown value for MapType: $value'),
       };
 }
+
+typedef Net_t = ffi.Pointer<ffi.Void>;
+typedef OpT_t = ffi.Pointer<ffi.Void>;
+typedef Op_t = ffi.Pointer<ffi.Void>;
 
 final class STBIR_RESIZE extends ffi.Struct {
   external ffi.Pointer<ffi.Void> user_data;
@@ -3153,6 +5926,32 @@ final class UnnamedUnion2 extends ffi.Union {
   external int mode;
 }
 
+typedef VARMAP_PAIR_t = ffi.Pointer<ffi.Void>;
+typedef VARMAP_t = ffi.Pointer<ffi.Void>;
+typedef VARP_t = ffi.Pointer<ffi.Void>;
+
+final class Variable_expr_pair extends ffi.Struct {
+  external EXPRP_t expr;
+
+  @ffi.Int()
+  external int index;
+}
+
+typedef VecChar = ffi.Pointer<ffi.Void>;
+typedef VecF16 = ffi.Pointer<ffi.Void>;
+typedef VecF32 = ffi.Pointer<ffi.Void>;
+typedef VecF64 = ffi.Pointer<ffi.Void>;
+typedef VecI16 = ffi.Pointer<ffi.Void>;
+typedef VecI32 = ffi.Pointer<ffi.Void>;
+typedef VecI64 = ffi.Pointer<ffi.Void>;
+typedef VecI8 = ffi.Pointer<ffi.Void>;
+typedef VecU16 = ffi.Pointer<ffi.Void>;
+typedef VecU32 = ffi.Pointer<ffi.Void>;
+typedef VecU64 = ffi.Pointer<ffi.Void>;
+typedef VecU8 = ffi.Pointer<ffi.Void>;
+typedef VecUChar = ffi.Pointer<ffi.Void>;
+typedef VecVARP_t = ffi.Pointer<ffi.Void>;
+typedef VecWeakEXPRP_t = ffi.Pointer<ffi.Void>;
 typedef __darwin_off_t = __int64_t;
 typedef __int64_t = ffi.LongLong;
 typedef Dart__int64_t = int;
@@ -3270,6 +6069,10 @@ final class __sbuf extends ffi.Struct {
   external int _size;
 }
 
+typedef double_t = ffi.Double;
+typedef Dartdouble_t = double;
+typedef float_t = ffi.Float;
+typedef Dartfloat_t = double;
 typedef fpos_t = __darwin_off_t;
 
 /// The raw representation of an image passed around by generated
@@ -3559,6 +6362,23 @@ final class mnn_cv_rect_t extends ffi.Struct {
   external double bottom;
 }
 
+typedef mnn_expr_Expr_t = ffi.Pointer<ffi.Void>;
+
+final class mnn_expr_Variable_Info extends ffi.Struct {
+  @ffi.Int()
+  external int order;
+
+  external ffi.Pointer<ffi.Int32> dim;
+
+  @ffi.Size()
+  external int ndim;
+
+  external halide_type_c_t type;
+
+  @ffi.Size()
+  external int size;
+}
+
 /// Forward type enum */
 /// // typedef mnn_forward_type mnn_forward_type_t;
 typedef mnn_forward_type_t = ffi.Int;
@@ -3693,3 +6513,5 @@ typedef stbir_uint64 = ffi.Uint64;
 typedef Dartstbir_uint64 = int;
 typedef stbir_uint8 = ffi.Uint8;
 typedef Dartstbir_uint8 = int;
+typedef uchar = ffi.UnsignedChar;
+typedef Dartuchar = int;

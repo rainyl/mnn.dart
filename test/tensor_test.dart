@@ -49,7 +49,7 @@ void main() async {
     final data = Float32List.fromList(List.generate(27, (index) => index.toDouble()));
     final tensor = mnn.Tensor.fromData(
       [1, 3, 3, 3],
-      mnn.HalideType.f32(),
+      mnn.HalideType.f32,
       data: data.buffer.asUint8List(),
       dimType: mnn.DimensionType.MNN_CAFFE,
     );
@@ -89,11 +89,11 @@ void main() async {
 
   test('Tensor.createDevice', () {
     final tensor =
-        mnn.Tensor.createDevice([2, 3, 4, 5], mnn.HalideType.f32(), dimType: mnn.DimensionType.MNN_CAFFE);
+        mnn.Tensor.createDevice([2, 3, 4, 5], mnn.HalideType.f32, dimType: mnn.DimensionType.MNN_CAFFE);
     expect(tensor.dimensions, 4);
     expect(tensor.elementSize, tensor.count);
     expect(tensor.shape, [2, 3, 4, 5]);
-    expect(tensor.type, mnn.HalideType.f32());
+    expect(tensor.type, mnn.HalideType.f32);
     expect(tensor.dimensionType, mnn.DimensionType.MNN_CAFFE);
     expect(tensor.deviceId, isA<int>());
   });
@@ -108,7 +108,7 @@ void main() async {
     final tensor = mnn.Tensor.create();
     final buffer = tensor.buffer;
     expect(buffer, isA<mnn.HalideBuffer>());
-    expect(buffer.type, mnn.HalideType.f32()); // default type is float32
+    expect(buffer.type, mnn.HalideType.f32); // default type is float32
     expect(buffer.dimensions, 4);
     expect(buffer.dimensions, tensor.dimensions);
   });
