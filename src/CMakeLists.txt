@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(MNNC_BUILD_TEST "Build test" OFF)
 
-set(MNN_VERSION 3.1.2)
+set(MNN_VERSION 3.3.0)
 
 cmake_policy(SET CMP0077 NEW)
 

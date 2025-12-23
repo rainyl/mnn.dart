@@ -7,10 +7,18 @@
     #ifdef _WIN32
         #ifdef STB_IMAGE_EXPORTS
             #define STBIDEF __declspec(dllexport)
-            #define STBIRDEF extern "C" __declspec(dllexport)
+            #ifdef __cplusplus
+                #define STBIRDEF extern "C" __declspec(dllexport)
+            #else
+                #define STBIRDEF __declspec(dllexport)
+            #endif
         #else
             #define STBIDEF __declspec(dllimport)
-            #define STBIRDEF extern "C" __declspec(dllimport)
+            #ifdef __cplusplus
+                #define STBIRDEF extern "C" __declspec(dllimport)
+            #else
+                #define STBIRDEF __declspec(dllimport)
+            #endif
         #endif
     #else
         #define STBIDEF extern

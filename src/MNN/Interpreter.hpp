@@ -216,8 +216,9 @@ public:
         // Geometry Compute option, default is 0xFFFF
         GEOMETRY_COMPUTE_MASK = 4,
 
-        // 0: Close dynamic quant; 
+        // default 0
         // 1: For general convolution, use one scale&zeropoint to quant.
+        // 2: use block-quant for input data.
         DYNAMIC_QUANT_OPTIONS = 5,
 
         // For Mobile CPU with big-litter core, set decrease rate to let MNN divide task differential by CPU's performance
@@ -225,11 +226,14 @@ public:
         // Default is 50
         CPU_LITTLECORE_DECREASE_RATE = 6,
 
+        // qkvQuantOption % 8:
         // 0: Do not quantize
-        // 1: Only quantize key, use int8 asymmetric quantization 
-        // 2: Only quantize value, use fp8 quantization
-        // 3: quantize both key and value
-        // 4: quantize query, key and value, and use gemm int8 kernel to compute K*V
+        // 1: Q,K: Int8, V: Float
+        // 2: Q,K,V: Int8
+
+        // qkvQuantOption / 8:
+        // 0: don't use flash attention
+        // 1: use flash attention
         QKV_QUANT_OPTIONS = 7,
 
         // size limit of kvcache in memory (for a single layer)
@@ -245,7 +249,22 @@ public:
         USE_CACHED_MMAP = 12,
         
         // Multi-Thread Load module, default is 0 (don't use other Thread)
-        INIT_THREAD_NUMBER = 13
+        INIT_THREAD_NUMBER = 13,
+
+        // Used CPU ids
+        CPU_CORE_IDS = 14,
+
+        // set CPU threads to use when supports Arm sme2
+        CPU_SME2_INSTRUCTIONS = 15,
+
+        // Enable KleidiAI
+        CPU_ENABLE_KLEIDIAI = 16,
+
+        // Set CPU SME2 NEON division ratio, default is 41
+        CPU_SME2_NEON_DIVISION_RATIO = 17,
+
+        // Set SME cores, default is 2, if supports sme
+        CPU_SME_CORES = 18
     };
 
     enum ExternalPathType {
@@ -258,6 +277,12 @@ public:
         // Weight Buffer Cache File
         EXTERNAL_WEIGHT_DIR = 2,
 
+        // Path of the NPU Model directory
+        EXTERNAL_NPU_FILE_DIR = 3,
+
+        // Path of the kvcache directory
+        EXTERNAL_PATH_PREFIXCACHE_DIR = 4,
+        
         // Other types ...
     };
 
@@ -280,10 +305,12 @@ public:
 
     /**
      * @brief The API shoud be called before create session.
-     * @param mode      Hint type
+     * @param hint      Hint type
      * @param value     Hint value
+     * @param size      Hint value size(when use a ptr)
      */
-    void setSessionHint(HintMode mode, int value);
+    void setSessionHint(HintMode hint, int value);
+    void setSessionHint(HintMode hint, int* value, size_t size);
 public:
     /**
      * @brief create runtimeInfo separately with schedule config.
