@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(MNNC_BUILD_TEST "Build test" OFF)
 
+set(MNN_VERSION 3.3.0)
+
 get_filename_component(PROJ_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
 macro(_find_version _version_var _version_file _regex_find _regex_replace)

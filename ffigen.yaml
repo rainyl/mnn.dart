@@ -1,9 +1,9 @@
-# Run with `dart --enable-experiment=native-assets run ffigen --config ffigen.yaml`.
+# Run with `dart run ffigen --config ffigen.yaml`.
 name: NativeMNN
 description: |
   Bindings for `MNN`.
 
-  Regenerate bindings with `dart --enable-experiment=native-assets run ffigen --config ffigen.yaml`.
+  Regenerate bindings with `dart run ffigen --config ffigen.yaml`.
 output: "lib/src/g/mnn.g.dart"
 ffi-native:
   asset-id: "package:mnn/mnn.dart"

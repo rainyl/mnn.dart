@@ -58,8 +58,8 @@ List<List<(int, double)>> inference(
     cv.cvtColor(img, cv.COLOR_BGR2RGB, dst: img);
     cv.resize(img, (W, H), dst: img, interpolation: cv.INTER_LINEAR);
     img.convertTo(cv.MatType.CV_32FC3, alpha: 1 / 255.0, inplace: true);
-    img.subtractScalar(cv.Scalar(mean[0], mean[1], mean[2]), inplace: true);
-    img.divideScalar(cv.Scalar(std[0], std[1], std[2]), inplace: true);
+    // img.subtract(cv.Scalar(mean[0], mean[1], mean[2]), inplace: true);
+    // img.divideScalar(cv.Scalar(std[0], std[1], std[2]), inplace: true);
     final temp = img.data.buffer.asFloat32List();
     final pixData = Float32List.fromList(List.filled(temp.length, 0));
     final frameSize = W * H;
