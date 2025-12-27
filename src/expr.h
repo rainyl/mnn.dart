@@ -2,7 +2,6 @@
 #define MNN_EXPR_H
 
 #include "base.h"
-#include "error_code.h"
 #include "mnn_type.h"
 #include "stdvec.h"
 #include "tensor.h"

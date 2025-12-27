@@ -17,56 +17,59 @@ import 'package:mnn/src/vec.dart';
 enum MemoryType {
   COPY(0),
   MOVE(1),
-  REF(2);
+  REF(2)
+  ;
 
   final int value;
   const MemoryType(this.value);
 
   factory MemoryType.fromValue(int value) => switch (value) {
-        0 => COPY,
-        1 => MOVE,
-        2 => REF,
-        _ => throw ArgumentError.value(value, 'value', 'Invalid ExprMemoryType value')
-      };
+    0 => COPY,
+    1 => MOVE,
+    2 => REF,
+    _ => throw ArgumentError.value(value, 'value', 'Invalid ExprMemoryType value'),
+  };
 }
 
 enum DimensionFormat {
   NHWC(0),
   NC4HW4(1),
-  NCHW(2);
+  NCHW(2)
+  ;
 
   final int value;
   const DimensionFormat(this.value);
 
   factory DimensionFormat.fromValue(int value) => switch (value) {
-        0 => NHWC,
-        1 => NC4HW4,
-        2 => NCHW,
-        _ => throw ArgumentError.value(value, 'value', 'Invalid DimensionFormat value')
-      };
+    0 => NHWC,
+    1 => NC4HW4,
+    2 => NCHW,
+    _ => throw ArgumentError.value(value, 'value', 'Invalid DimensionFormat value'),
+  };
 }
 
 enum InputType {
   INPUT(0),
   CONSTANT(1),
-  TRAINABLE(2);
+  TRAINABLE(2)
+  ;
 
   final int value;
   const InputType(this.value);
 
   factory InputType.fromValue(int value) => switch (value) {
-        0 => INPUT,
-        1 => CONSTANT,
-        2 => TRAINABLE,
-        _ => throw ArgumentError.value(value, 'value', 'Invalid VARPInputType value')
-      };
+    0 => INPUT,
+    1 => CONSTANT,
+    2 => TRAINABLE,
+    _ => throw ArgumentError.value(value, 'value', 'Invalid VARPInputType value'),
+  };
 }
 
 class VariableInfo extends NativeObject {
   static final _finalizer = ffi.NativeFinalizer(C.addresses.mnn_expr_Variable_Info_free);
 
   VariableInfo.fromPointer(ffi.Pointer<C.mnn_expr_Variable_Info> ptr, {super.attach, super.externalSize})
-      : super(ptr.cast());
+    : super(ptr.cast());
 
   factory VariableInfo.create({
     DimensionFormat order = DimensionFormat.NHWC,
@@ -74,7 +77,10 @@ class VariableInfo extends NativeObject {
     HalideType type = HalideType.f32,
     int size = 0,
   }) {
-    final (pdim, ndim) = dim?.toNativeArrayI32() ?? (ffi.nullptr, 0);
+    dim ??= [];
+    final pdim = malloc<ffi.Int32>(dim.length);
+    final ndim = dim.length;
+    pdim.asTypedList(ndim).setAll(0, dim);
     final info = calloc<C.mnn_expr_Variable_Info>()
       ..ref.order = order.value
       ..ref.dim = pdim
@@ -234,41 +240,36 @@ class VARP extends NativeObject {
   static VARP list<T extends ffi.SizedNativeType>(
     Iterable<num> data, {
     DimensionFormat format = DimensionFormat.NHWC,
-  }) =>
-      op.constant<T>(data, [data.length], format: format);
+  }) => op.constant<T>(data, [data.length], format: format);
 
   static VARP list2D<T extends ffi.SizedNativeType>(
     Iterable<Iterable<num>> data, {
     DimensionFormat format = DimensionFormat.NHWC,
-  }) =>
-      op.constant<T>(data.expand((e) => e), [data.length, data.first.length], format: format);
+  }) => op.constant<T>(data.expand((e) => e), [data.length, data.first.length], format: format);
 
   static VARP list3D<T extends ffi.SizedNativeType>(
     Iterable<Iterable<Iterable<num>>> data, {
     DimensionFormat format = DimensionFormat.NHWC,
-  }) =>
-      op.constant<T>(
-        data.expand((e) => e.expand((e) => e)),
-        [data.length, data.first.length, data.first.first.length],
-        format: format,
-      );
+  }) => op.constant<T>(
+    data.expand((e) => e.expand((e) => e)),
+    [data.length, data.first.length, data.first.first.length],
+    format: format,
+  );
 
   static VARP list4D<T extends ffi.SizedNativeType>(
     Iterable<Iterable<Iterable<Iterable<num>>>> data, {
     DimensionFormat format = DimensionFormat.NHWC,
-  }) =>
-      op.constant<T>(
-        data.expand((e) => e.expand((e) => e.expand((e) => e))),
-        [data.length, data.first.length, data.first.first.length, data.first.first.first.length],
-        format: format,
-      );
+  }) => op.constant<T>(
+    data.expand((e) => e.expand((e) => e.expand((e) => e))),
+    [data.length, data.first.length, data.first.first.length, data.first.first.first.length],
+    format: format,
+  );
 
   static VARP listND<T extends ffi.SizedNativeType>(
     Iterable<num> data,
     Iterable<int> shape, {
     DimensionFormat format = DimensionFormat.NHWC,
-  }) =>
-      op.constant<T>(data, shape, format: format);
+  }) => op.constant<T>(data, shape, format: format);
 
   VARP astype<T extends ffi.SizedNativeType>() => op.cast<T>(this);
 

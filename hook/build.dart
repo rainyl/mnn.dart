@@ -47,7 +47,6 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
   final builder = CMakeBuilder.create(
     name: packageName,
     sourceDir: sourceDir,
-    // outDir: outDir,
     generator: Generator.ninja,
     buildLocal: buildLocal,
     targets: ['install'],

@@ -8,6 +8,7 @@
 #include <math.h>
 #include <stddef.h>
 #include <stdint.h>
+#include "mnn_type.h"
 
 #ifdef __cplusplus
 #include <vector>
@@ -39,21 +40,21 @@ extern "C" {
 #endif
 
 #define CVD_STD_VEC_FUNC_DEF(TYPE, ELEM)                                                           \
-  TYPE std_##TYPE##_new(size_t length);                                                            \
-  TYPE std_##TYPE##_new_1(size_t length, ELEM val);                                                \
-  TYPE std_##TYPE##_new_2(size_t length, ELEM *val_ptr);                                           \
-  void std_##TYPE##_free(TYPE self);                                                               \
-  void std_##TYPE##_push_back(TYPE self, ELEM val);                                                \
-  ELEM std_##TYPE##_get(TYPE self, size_t index);                                                  \
-  void std_##TYPE##_set(TYPE self, size_t index, ELEM val);                                        \
-  size_t std_##TYPE##_length(TYPE self);                                                           \
-  ELEM *std_##TYPE##_data(TYPE self);                                                              \
-  void std_##TYPE##_resize(TYPE self, size_t new_len);                                             \
-  void std_##TYPE##_reserve(TYPE self, size_t new_len);                                            \
-  void std_##TYPE##_clear(TYPE self);                                                              \
-  void std_##TYPE##_shrink_to_fit(TYPE self);                                                      \
-  void std_##TYPE##_extend(TYPE self, TYPE other);                                                 \
-  TYPE std_##TYPE##_clone(TYPE self)
+  MNN_C_API TYPE std_##TYPE##_new(size_t length);                                                            \
+  MNN_C_API TYPE std_##TYPE##_new_1(size_t length, ELEM val);                                                \
+  MNN_C_API TYPE std_##TYPE##_new_2(size_t length, ELEM *val_ptr);                                           \
+  MNN_C_API void std_##TYPE##_free(TYPE self);                                                               \
+  MNN_C_API void std_##TYPE##_push_back(TYPE self, ELEM val);                                                \
+  MNN_C_API ELEM std_##TYPE##_get(TYPE self, size_t index);                                                  \
+  MNN_C_API void std_##TYPE##_set(TYPE self, size_t index, ELEM val);                                        \
+  MNN_C_API size_t std_##TYPE##_length(TYPE self);                                                           \
+  MNN_C_API ELEM *std_##TYPE##_data(TYPE self);                                                              \
+  MNN_C_API void std_##TYPE##_resize(TYPE self, size_t new_len);                                             \
+  MNN_C_API void std_##TYPE##_reserve(TYPE self, size_t new_len);                                            \
+  MNN_C_API void std_##TYPE##_clear(TYPE self);                                                              \
+  MNN_C_API void std_##TYPE##_shrink_to_fit(TYPE self);                                                      \
+  MNN_C_API void std_##TYPE##_extend(TYPE self, TYPE other);                                                 \
+  MNN_C_API TYPE std_##TYPE##_clone(TYPE self);
 
 #ifdef __cplusplus
 #define CVD_TYPEDEF_STD_VEC(TYPE, NAME) typedef std::vector<TYPE> *NAME

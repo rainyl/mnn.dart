@@ -6,8 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(MNNC_BUILD_TEST "Build test" OFF)
 
-set(MNN_VERSION 3.3.0)
-
 get_filename_component(PROJ_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
 macro(_find_version _version_var _version_file _regex_find _regex_replace)
@@ -38,6 +36,7 @@ if(WIN32)
   set(MNN_WIN_RUNTIME_MT OFF CACHE BOOL "" FORCE)
 endif(WIN32)
 
+set(MNN_BUILD_SHARED_LIBS OFF)
 
 include(FetchContent)
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.28.0")
@@ -45,7 +44,9 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.28.0")
     MNN
     # GIT_REPOSITORY "https://github.com/alibaba/MNN.git"
     # GIT_TAG ${MNN_VERSION}
+    # GIT_SHALLOW TRUE
     URL https://github.com/alibaba/MNN/archive/refs/tags/${MNN_VERSION}.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP OFF
     EXCLUDE_FROM_ALL
   )
   FetchContent_MakeAvailable(MNN)
@@ -54,7 +55,9 @@ else()
     MNN
     # GIT_REPOSITORY "https://github.com/alibaba/MNN.git"
     # GIT_TAG ${MNN_VERSION}
+    # GIT_SHALLOW TRUE
     URL https://github.com/alibaba/MNN/archive/refs/tags/${MNN_VERSION}.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP OFF
   )
   FetchContent_GetProperties(MNN)
   if(NOT MNN_POPULATED)
@@ -120,12 +123,18 @@ set(SOURCES
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/MNN
+    ${MNN_SOURCE_DIR}/include
 )
 
 add_library(mnn_c_api SHARED ${SOURCES})
 
 target_link_libraries(mnn_c_api PUBLIC ${MNNC_LINK_LIBS})
+
+# The compilation error C2589 in Rect.h is caused by a conflict between std::min / std::max and the
+# min / max macros defined in the Windows headers.
+if(WIN32)
+  target_compile_definitions(mnn_c_api PRIVATE NOMINMAX)
+endif()
 
 if(MNNC_BUILD_TEST)
   add_executable(test_a test/test_interpreter.cpp)

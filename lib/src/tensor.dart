@@ -80,8 +80,8 @@ class Tensor extends NativeObject {
   bool copyFromHost(Tensor hostTensor) {
     final code = c.mnn_tensor_copy_from_host(ptr, hostTensor.ptr);
     return switch (code) {
-      c.ErrorCode.BOOL_TRUE => true,
-      c.ErrorCode.BOOL_FALSE => false,
+      c.ErrorCode.MNNC_BOOL_TRUE => true,
+      c.ErrorCode.MNNC_BOOL_FALSE => false,
       _ => throw MNNException('copyFromHost failed: $code'),
     };
   }
@@ -94,8 +94,8 @@ class Tensor extends NativeObject {
   bool copyToHost(Tensor hostTensor) {
     final code = c.mnn_tensor_copy_to_host(ptr, hostTensor.ptr);
     return switch (code) {
-      c.ErrorCode.BOOL_TRUE => true,
-      c.ErrorCode.BOOL_FALSE => false,
+      c.ErrorCode.MNNC_BOOL_TRUE => true,
+      c.ErrorCode.MNNC_BOOL_FALSE => false,
       _ => throw MNNException('copyToHost failed: $code'),
     };
   }
@@ -106,7 +106,7 @@ class Tensor extends NativeObject {
     final dims = dimensions;
     final shape = calloc<ffi.Int>(dims);
     final code = c.mnn_tensor_shape(ptr, shape, dims);
-    if (code != c.ErrorCode.NO_ERROR) {
+    if (code != c.ErrorCode.MNNC_NO_ERROR) {
       throw MNNException('mnn_tensor_shape failed: $code');
     }
     final result = List<int>.generate(dims, (i) => shape[i]);

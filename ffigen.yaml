@@ -8,7 +8,7 @@ output: "lib/src/g/mnn.g.dart"
 ffi-native:
   asset-id: "package:mnn/mnn.dart"
 compiler-opts:
-  - "-Isrc -Isrc/MNN -Wno-nullability-completeness"
+  - "-Isrc -Isrc/include -Wno-nullability-completeness"
   - "-U_MSC_VER" # HALIDE_ATTRIBUTE_ALIGN(1) uint8_t code; // halide_type_code_t
   - "-fdeclspec"
 sort: true
@@ -21,7 +21,7 @@ headers:
     - "src/interpreter.h"
     - "src/mnn_type.h"
     - "src/tensor.h"
-    - "src/MNN/HalideRuntime.h"
+    - "src/include/MNN/HalideRuntime.h"
     - "src/mnn_stb_image.h"
     - "src/stb_image.h"
     - "src/stb_image_resize2.h"
@@ -36,7 +36,7 @@ headers:
     - "src/interpreter.h"
     - "src/mnn_type.h"
     - "src/tensor.h"
-    - "src/MNN/HalideRuntime.h"
+    - "src/include/MNN/HalideRuntime.h"
     - "src/mnn_stb_image.h"
     - "src/stb_image.h"
     - "src/stb_image_resize2.h"

@@ -67,7 +67,7 @@ abstract class NativeObject with ComparableMixin implements ffi.Finalizable {
 
 void mnnRun(c.ErrorCode Function() func) {
   final code = func();
-  if (code != c.ErrorCode.NO_ERROR) {
+  if (code != c.ErrorCode.MNNC_NO_ERROR) {
     throw MNNException("MNN_ERROR: $code");
   }
 }
@@ -85,7 +85,7 @@ Future<T> mnnRunAsync0<T>(
 
   ccallback = ffi.NativeCallable.listener(onResponse);
   final code = func(ccallback.nativeFunction);
-  if (code != c.ErrorCode.NO_ERROR) {
+  if (code != c.ErrorCode.MNNC_NO_ERROR) {
     throw MNNException("MNN_ERROR: $code");
   }
   return completer.future;
