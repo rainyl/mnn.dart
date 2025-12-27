@@ -8,7 +8,6 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:mnn/src/base.dart';
 import 'package:mnn/src/expr/op.dart' as op;
-import 'package:mnn/src/expr/utils.dart';
 import 'package:mnn/src/g/mnn.g.dart' as C;
 import 'package:mnn/src/halide_runtime.dart';
 import 'package:mnn/src/tensor.dart';

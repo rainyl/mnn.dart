@@ -19,7 +19,6 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
   final packageName = input.packageName;
   final packagePath = Uri.directory(await getPackagePath(packageName));
   final sourceDir = packagePath.resolve('src/');
-  // final outDir = Uri.directory(packagePath).resolve('build/');
   final userDefines = input.userDefines;
   final defsOptions = userDefines["options"] as Map<String, dynamic>?;
 

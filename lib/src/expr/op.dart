@@ -13,83 +13,88 @@ import 'package:mnn/src/vec.dart';
 enum PaddingMode {
   CAFFE(0),
   VALID(1),
-  SAME(2);
+  SAME(2)
+  ;
 
   final int value;
 
   const PaddingMode(this.value);
 
   factory PaddingMode.fromValue(int value) => switch (value) {
-        0 => CAFFE,
-        1 => VALID,
-        2 => SAME,
-        _ => throw ArgumentError.value(value, 'value', 'Invalid PaddingMode value'),
-      };
+    0 => CAFFE,
+    1 => VALID,
+    2 => SAME,
+    _ => throw ArgumentError.value(value, 'value', 'Invalid PaddingMode value'),
+  };
 }
 
 enum PoolingMode {
   MAXPOOL(0),
-  AVEPOOL(1);
+  AVEPOOL(1)
+  ;
 
   final int value;
 
   const PoolingMode(this.value);
 
   factory PoolingMode.fromValue(int value) => switch (value) {
-        0 => MAXPOOL,
-        1 => AVEPOOL,
-        _ => throw ArgumentError.value(value, 'value', 'Invalid PoolingMode value'),
-      };
+    0 => MAXPOOL,
+    1 => AVEPOOL,
+    _ => throw ArgumentError.value(value, 'value', 'Invalid PoolingMode value'),
+  };
 }
 
 enum PadValueMode {
   CONSTANT(0),
   REFLECT(1),
   SYMMETRIC(2),
-  EDGE(3);
+  EDGE(3)
+  ;
 
   final int value;
 
   const PadValueMode(this.value);
 
   factory PadValueMode.fromValue(int value) => switch (value) {
-        0 => CONSTANT,
-        1 => REFLECT,
-        2 => SYMMETRIC,
-        3 => EDGE,
-        _ => throw ArgumentError.value(value, 'value', 'Invalid PadValueMode value'),
-      };
+    0 => CONSTANT,
+    1 => REFLECT,
+    2 => SYMMETRIC,
+    3 => EDGE,
+    _ => throw ArgumentError.value(value, 'value', 'Invalid PadValueMode value'),
+  };
 }
 
 enum InterpolationMethod {
   // BILINEAR, NEAREST
   BILINEAR(0),
-  NEAREST(1);
+  NEAREST(1)
+  ;
 
   final int value;
   const InterpolationMethod(this.value);
 
   factory InterpolationMethod.fromValue(int value) => switch (value) {
-        0 => BILINEAR,
-        1 => NEAREST,
-        _ => throw ArgumentError.value(value, 'value', 'Invalid InterpolationMethod value'),
-      };
+    0 => BILINEAR,
+    1 => NEAREST,
+    _ => throw ArgumentError.value(value, 'value', 'Invalid InterpolationMethod value'),
+  };
 }
 
 enum GridSamplePaddingMode {
   GRID_SAMPLE_PADDING_ZEROS(0),
   GRID_SAMPLE_PADDING_BORDER(1),
-  GRID_SAMPLE_PADDING_REFLECTION(2);
+  GRID_SAMPLE_PADDING_REFLECTION(2)
+  ;
 
   final int value;
   const GridSamplePaddingMode(this.value);
 
   factory GridSamplePaddingMode.fromValue(int value) => switch (value) {
-        0 => GRID_SAMPLE_PADDING_ZEROS,
-        1 => GRID_SAMPLE_PADDING_BORDER,
-        2 => GRID_SAMPLE_PADDING_REFLECTION,
-        _ => throw ArgumentError.value(value, 'value', 'Invalid GridSamplePaddingMode value'),
-      };
+    0 => GRID_SAMPLE_PADDING_ZEROS,
+    1 => GRID_SAMPLE_PADDING_BORDER,
+    2 => GRID_SAMPLE_PADDING_REFLECTION,
+    _ => throw ArgumentError.value(value, 'value', 'Invalid GridSamplePaddingMode value'),
+  };
 }
 
 // BinaryOPs
@@ -205,8 +210,10 @@ VARP max(VARP x, VARP y, List<double> coeff) {
 }
 
 VARP sub(VARP x, VARP y, List<double> coeff) {
-  final (p, size) = coeff.toNativeArrayF32();
-  final rval = VARP.fromPointer(C.mnn_expr_Sub(x.ptr, y.ptr, p, size));
+  // final (p, size) = coeff.toNativeArrayF32();
+  final p = calloc<ffi.Float>(coeff.length);
+  p.asTypedList(coeff.length).setAll(0, coeff);
+  final rval = VARP.fromPointer(C.mnn_expr_Sub(x.ptr, y.ptr, p, coeff.length));
   calloc.free(p);
   return rval;
 }
@@ -231,22 +238,23 @@ VARP batchMatMul(VARP x, VARP y, {bool adjX = false, bool adjY = false}) =>
     VARP.fromPointer(C.mnn_expr_BatchMatMul(x.ptr, y.ptr, adjX, adjY));
 VARP unravelIndex(VARP indices, VARP dims) =>
     VARP.fromPointer(C.mnn_expr_UnravelIndex(indices.ptr, dims.ptr));
-VARP scatterND(VARP indices, VARP updates, VARP shape, {VARP? input, int? reduction}) =>
-    switch ((input, reduction)) {
-      (null, null) => VARP.fromPointer(C.mnn_expr_ScatterNd(indices.ptr, updates.ptr, shape.ptr)),
-      (VARP(), null) =>
-        VARP.fromPointer(C.mnn_expr_ScatterNd_1(indices.ptr, updates.ptr, shape.ptr, input!.ptr)),
-      (null, int()) =>
-        VARP.fromPointer(C.mnn_expr_ScatterNd_2(indices.ptr, updates.ptr, shape.ptr, reduction!)),
-      (VARP(), int()) =>
-        VARP.fromPointer(C.mnn_expr_ScatterNd_3(indices.ptr, updates.ptr, shape.ptr, input!.ptr, reduction!)),
-    };
+VARP scatterND(VARP indices, VARP updates, VARP shape, {VARP? input, int? reduction}) => switch ((
+  input,
+  reduction,
+)) {
+  (null, null) => VARP.fromPointer(C.mnn_expr_ScatterNd(indices.ptr, updates.ptr, shape.ptr)),
+  (VARP(), null) => VARP.fromPointer(C.mnn_expr_ScatterNd_1(indices.ptr, updates.ptr, shape.ptr, input!.ptr)),
+  (null, int()) => VARP.fromPointer(C.mnn_expr_ScatterNd_2(indices.ptr, updates.ptr, shape.ptr, reduction!)),
+  (VARP(), int()) => VARP.fromPointer(
+    C.mnn_expr_ScatterNd_3(indices.ptr, updates.ptr, shape.ptr, input!.ptr, reduction!),
+  ),
+};
 VARP scatterElements(VARP data, VARP indices, VARP updates, {VARP? axis, int reduction = -1}) =>
     switch (axis) {
       null => VARP.fromPointer(C.mnn_expr_ScatterElements(data.ptr, indices.ptr, updates.ptr, reduction)),
       VARP() => VARP.fromPointer(
-          C.mnn_expr_ScatterElements_1(data.ptr, indices.ptr, updates.ptr, axis.ptr, reduction),
-        ),
+        C.mnn_expr_ScatterElements_1(data.ptr, indices.ptr, updates.ptr, axis.ptr, reduction),
+      ),
     };
 VARP oneHot(VARP indices, VARP depth, VARP onValue, VARP offValue, int axis) =>
     VARP.fromPointer(C.mnn_expr_OneHot(indices.ptr, depth.ptr, onValue.ptr, offValue.ptr, axis));
@@ -260,8 +268,7 @@ VARP randomUniform(
   double high = 1.0,
   int seed0 = 0,
   int seed1 = 0,
-}) =>
-    VARP.fromPointer(C.mnn_expr_RandomUniform(shape.ptr, dtype.native.ref, low, high, seed0, seed1));
+}) => VARP.fromPointer(C.mnn_expr_RandomUniform(shape.ptr, dtype.native.ref, low, high, seed0, seed1));
 VARP cumSum(VARP x, int axis, {bool exclusive = false, bool reverse = false}) =>
     VARP.fromPointer(C.mnn_expr_CumSum(x.ptr, axis, exclusive, reverse));
 VARP cumProd(VARP x, int axis) => VARP.fromPointer(C.mnn_expr_CumProd(x.ptr, axis));
@@ -405,8 +412,7 @@ VARP conv2d(
   List<int> dilatie = const [1, 1],
   int group = 1,
   List<int> pads = const [0, 0],
-}) =>
-    conv(weight, bias, x, pad: pad, stride: stride, dilatie: dilatie, group: group, pads: pads);
+}) => conv(weight, bias, x, pad: pad, stride: stride, dilatie: dilatie, group: group, pads: pads);
 
 VARP deconv(
   VARP weight,
@@ -451,8 +457,7 @@ VARP conv2dTranspose(
   List<int> dilatie = const [1, 1],
   int group = 1,
   List<int> pads = const [0, 0],
-}) =>
-    deconv(weight, bias, x, pad: pad, stride: stride, dilatie: dilatie, group: group, pads: pads);
+}) => deconv(weight, bias, x, pad: pad, stride: stride, dilatie: dilatie, group: group, pads: pads);
 
 VARP maxPool(
   VARP x,
@@ -579,20 +584,19 @@ VARP stridedSlice(
   int ellipsisMask,
   int newAxisMask,
   int shrinkAxisMask,
-) =>
-    VARP.fromPointer(
-      C.mnn_expr_StridedSlice(
-        input.ptr,
-        begin.ptr,
-        end.ptr,
-        strided.ptr,
-        beginMask,
-        endMask,
-        ellipsisMask,
-        newAxisMask,
-        shrinkAxisMask,
-      ),
-    );
+) => VARP.fromPointer(
+  C.mnn_expr_StridedSlice(
+    input.ptr,
+    begin.ptr,
+    end.ptr,
+    strided.ptr,
+    beginMask,
+    endMask,
+    ellipsisMask,
+    newAxisMask,
+    shrinkAxisMask,
+  ),
+);
 VARP stridedSliceWrite(
   VARP input,
   VARP begin,
@@ -604,21 +608,20 @@ VARP stridedSliceWrite(
   int ellipsisMask,
   int newAxisMask,
   int shrinkAxisMask,
-) =>
-    VARP.fromPointer(
-      C.mnn_expr_StridedSliceWrite(
-        input.ptr,
-        begin.ptr,
-        end.ptr,
-        strided.ptr,
-        write.ptr,
-        beginMask,
-        endMask,
-        ellipsisMask,
-        newAxisMask,
-        shrinkAxisMask,
-      ),
-    );
+) => VARP.fromPointer(
+  C.mnn_expr_StridedSliceWrite(
+    input.ptr,
+    begin.ptr,
+    end.ptr,
+    strided.ptr,
+    write.ptr,
+    beginMask,
+    endMask,
+    ellipsisMask,
+    newAxisMask,
+    shrinkAxisMask,
+  ),
+);
 
 VARP concat(List<VARP> values, int axis) {
   final pVec = values.toNativeVec();
@@ -681,17 +684,16 @@ VARP cropAndResize(
   VARP cropSize,
   InterpolationMethod method, {
   double extrapolationValue = 0.0,
-}) =>
-    VARP.fromPointer(
-      C.mnn_expr_CropAndResize(
-        image.ptr,
-        boxes.ptr,
-        boxInd.ptr,
-        cropSize.ptr,
-        method.value,
-        extrapolationValue,
-      ),
-    );
+}) => VARP.fromPointer(
+  C.mnn_expr_CropAndResize(
+    image.ptr,
+    boxes.ptr,
+    boxInd.ptr,
+    cropSize.ptr,
+    method.value,
+    extrapolationValue,
+  ),
+);
 
 VARP fill(VARP dims, VARP value) => VARP.fromPointer(C.mnn_expr_Fill(dims.ptr, value.ptr));
 VARP tile(VARP input, VARP multiples) => VARP.fromPointer(C.mnn_expr_Tile(input.ptr, multiples.ptr));
@@ -707,10 +709,10 @@ VARP batchToSpaceND(VARP input, VARP blockShape, VARP crops) =>
     VARP.fromPointer(C.mnn_expr_BatchToSpaceND(input.ptr, crops.ptr, blockShape.ptr));
 VARP gatherND(VARP params, VARP indices) => VARP.fromPointer(C.mnn_expr_GatherND(params.ptr, indices.ptr));
 VARP gatherElements(VARP params, VARP indices, {VARP? axis}) => VARP.fromPointer(
-      axis == null
-          ? C.mnn_expr_GatherElements(params.ptr, indices.ptr)
-          : C.mnn_expr_GatherElements_1(params.ptr, indices.ptr, axis.ptr),
-    );
+  axis == null
+      ? C.mnn_expr_GatherElements(params.ptr, indices.ptr)
+      : C.mnn_expr_GatherElements_1(params.ptr, indices.ptr, axis.ptr),
+);
 VARP selu(VARP features, double scale, double alpha) =>
     VARP.fromPointer(C.mnn_expr_Selu(features.ptr, scale, alpha));
 VARP size(VARP input) => VARP.fromPointer(C.mnn_expr_Size(input.ptr));
@@ -793,16 +795,16 @@ VARP GridSample(
     VARP.fromPointer(C.mnn_expr_GridSample(input.ptr, grid.ptr, mode.value, paddingMode.value, alignCorners));
 
 VARP floatToInt8(VARP x, VARP scale, int minvalue, int maxValue, {int? zeroPoint}) => VARP.fromPointer(
-      zeroPoint == null
-          ? C.mnn_expr_FloatToInt8(x.ptr, scale.ptr, minvalue, maxValue)
-          : C.mnn_expr_FloatToInt8_1(x.ptr, scale.ptr, minvalue, maxValue, zeroPoint),
-    );
+  zeroPoint == null
+      ? C.mnn_expr_FloatToInt8(x.ptr, scale.ptr, minvalue, maxValue)
+      : C.mnn_expr_FloatToInt8_1(x.ptr, scale.ptr, minvalue, maxValue, zeroPoint),
+);
 
 VARP int8ToFloat(VARP x, VARP scale, {int? zeroPoint}) => VARP.fromPointer(
-      zeroPoint == null
-          ? C.mnn_expr_Int8ToFloat(x.ptr, scale.ptr)
-          : C.mnn_expr_Int8ToFloat_1(x.ptr, scale.ptr, zeroPoint),
-    );
+  zeroPoint == null
+      ? C.mnn_expr_Int8ToFloat(x.ptr, scale.ptr)
+      : C.mnn_expr_Int8ToFloat_1(x.ptr, scale.ptr, zeroPoint),
+);
 
 VARP select(VARP select, VARP input0, VARP input1) =>
     VARP.fromPointer(C.mnn_expr_Select(select.ptr, input0.ptr, input1.ptr));

@@ -42,11 +42,11 @@ include(FetchContent)
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.28.0")
   FetchContent_Declare(
     MNN
-    # GIT_REPOSITORY "https://github.com/alibaba/MNN.git"
-    # GIT_TAG ${MNN_VERSION}
-    # GIT_SHALLOW TRUE
-    URL https://github.com/alibaba/MNN/archive/refs/tags/${MNN_VERSION}.tar.gz
-    DOWNLOAD_EXTRACT_TIMESTAMP OFF
+     GIT_REPOSITORY "https://github.com/alibaba/MNN.git"
+     GIT_TAG ${MNN_VERSION}
+     GIT_SHALLOW TRUE
+#    URL https://github.com/alibaba/MNN/archive/refs/tags/${MNN_VERSION}.tar.gz
+#    DOWNLOAD_EXTRACT_TIMESTAMP OFF
     EXCLUDE_FROM_ALL
   )
   FetchContent_MakeAvailable(MNN)
