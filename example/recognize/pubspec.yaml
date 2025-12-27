@@ -12,11 +12,7 @@ dependencies:
   args: ^2.5.0
   mnn:
     path: ../..
-  dartcv4:
-    git:
-      url: https://github.com/rainyl/opencv_dart.git
-      path: packages/dartcv
-      ref: 0c1d670
+  dartcv4: ^2.1.0+1
 
 dev_dependencies:
   lints: ^5.0.0

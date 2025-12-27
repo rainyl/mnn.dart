@@ -45,7 +45,7 @@ class Session with ComparableMixin {
     try {
       final res = c.mnn_interpreter_get_session_input_all(interpreter.ptr, ptr, pTensors, pNames, pCount);
       final rval = <String, Tensor>{};
-      if (res == c.ErrorCode.NO_ERROR) {
+      if (res == c.ErrorCode.MNNC_NO_ERROR) {
         final count = pCount.value;
         for (var i = 0; i < count; i++) {
           final name = pNames.value[i].cast<Utf8>().toDartString();
@@ -68,7 +68,7 @@ class Session with ComparableMixin {
     try {
       final res = c.mnn_interpreter_get_session_output_all(interpreter.ptr, ptr, pTensors, pNames, pCount);
       final rval = <String, Tensor>{};
-      if (res == c.ErrorCode.NO_ERROR) {
+      if (res == c.ErrorCode.MNNC_NO_ERROR) {
         final count = pCount.value;
         for (var i = 0; i < count; i++) {
           final name = pNames.value[i].cast<Utf8>().toDartString();
@@ -86,7 +86,7 @@ class Session with ComparableMixin {
 
   void run() {
     final code = c.mnn_interpreter_run_session(interpreter.ptr, ptr, ffi.nullptr);
-    if (code != c.ErrorCode.NO_ERROR) {
+    if (code != c.ErrorCode.MNNC_NO_ERROR) {
       throw MNNException("runSession failed: $code");
     }
   }
@@ -100,7 +100,7 @@ class Session with ComparableMixin {
 
   void resize() {
     final code = c.mnn_interpreter_resize_session(interpreter.ptr, ptr, ffi.nullptr);
-    if (code != c.ErrorCode.NO_ERROR) {
+    if (code != c.ErrorCode.MNNC_NO_ERROR) {
       throw MNNException("resizeSession failed: $code");
     }
   }
@@ -118,7 +118,7 @@ class Session with ComparableMixin {
     try {
       final code =
           c.mnn_interpreter_get_session_info(interpreter.ptr, ptr, SessionInfoCode.MEMORY.value, p.cast());
-      final rval = code == c.ErrorCode.NO_ERROR ? p.value : -1.0;
+      final rval = code == c.ErrorCode.MNNC_NO_ERROR ? p.value : -1.0;
       return rval;
     } finally {
       calloc.free(p);
@@ -130,7 +130,7 @@ class Session with ComparableMixin {
     try {
       final code =
           c.mnn_interpreter_get_session_info(interpreter.ptr, ptr, SessionInfoCode.FLOPS.value, p.cast());
-      final rval = code == c.ErrorCode.NO_ERROR ? p.value : -1.0;
+      final rval = code == c.ErrorCode.MNNC_NO_ERROR ? p.value : -1.0;
       return rval;
     } finally {
       calloc.free(p);
@@ -142,7 +142,7 @@ class Session with ComparableMixin {
     try {
       final code =
           c.mnn_interpreter_get_session_info(interpreter.ptr, ptr, SessionInfoCode.BACKENDS.value, p.cast());
-      final rval = code == c.ErrorCode.NO_ERROR ? [p[0], p[1]] : <int>[];
+      final rval = code == c.ErrorCode.MNNC_NO_ERROR ? [p[0], p[1]] : <int>[];
       return rval;
     } finally {
       calloc.free(p);

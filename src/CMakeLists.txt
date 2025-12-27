@@ -36,14 +36,17 @@ if(WIN32)
   set(MNN_WIN_RUNTIME_MT OFF CACHE BOOL "" FORCE)
 endif(WIN32)
 
+set(MNN_BUILD_SHARED_LIBS OFF)
 
 include(FetchContent)
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.28.0")
   FetchContent_Declare(
     MNN
-    # GIT_REPOSITORY "https://github.com/alibaba/MNN.git"
-    # GIT_TAG ${MNN_VERSION}
-    URL https://github.com/alibaba/MNN/archive/refs/tags/${MNN_VERSION}.tar.gz
+     GIT_REPOSITORY "https://github.com/alibaba/MNN.git"
+     GIT_TAG ${MNN_VERSION}
+     GIT_SHALLOW TRUE
+#    URL https://github.com/alibaba/MNN/archive/refs/tags/${MNN_VERSION}.tar.gz
+#    DOWNLOAD_EXTRACT_TIMESTAMP OFF
     EXCLUDE_FROM_ALL
   )
   FetchContent_MakeAvailable(MNN)
@@ -52,7 +55,9 @@ else()
     MNN
     # GIT_REPOSITORY "https://github.com/alibaba/MNN.git"
     # GIT_TAG ${MNN_VERSION}
+    # GIT_SHALLOW TRUE
     URL https://github.com/alibaba/MNN/archive/refs/tags/${MNN_VERSION}.tar.gz
+    DOWNLOAD_EXTRACT_TIMESTAMP OFF
   )
   FetchContent_GetProperties(MNN)
   if(NOT MNN_POPULATED)
@@ -61,7 +66,7 @@ else()
   endif()
 endif()
 
-set(MNNC_LINK_LIBS MNN)
+set(MNNC_LINK_LIBS MNN MNN_Express)
 if (ANDROID)
     set(MNNC_LINK_LIBS ${MNNC_LINK_LIBS} mediandk -landroid)
     if(MNN_OPENCL)
@@ -105,21 +110,31 @@ elseif (APPLE AND NOT IOS)
 endif ()
 
 set(SOURCES
-    autotime.cpp
-    interpreter.cpp
-    tensor.cpp
-    image_process.cpp
-    mnn_stb_image.cpp
+    "base.cpp"
+    "stdvec.cpp"
+    "expr.cpp"
+    "autotime.cpp"
+    "interpreter.cpp"
+    "tensor.cpp"
+    "image_process.cpp"
+    "mnn_stb_image.cpp"
+    "expr_op.cpp"
 )
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/MNN
+    ${MNN_SOURCE_DIR}/include
 )
 
 add_library(mnn_c_api SHARED ${SOURCES})
 
 target_link_libraries(mnn_c_api PUBLIC ${MNNC_LINK_LIBS})
+
+# The compilation error C2589 in Rect.h is caused by a conflict between std::min / std::max and the
+# min / max macros defined in the Windows headers.
+if(WIN32)
+  target_compile_definitions(mnn_c_api PRIVATE NOMINMAX)
+endif()
 
 if(MNNC_BUILD_TEST)
   add_executable(test_a test/test_interpreter.cpp)

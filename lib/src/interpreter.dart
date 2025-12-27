@@ -73,8 +73,8 @@ class Interpreter extends NativeObject {
   bool releaseSession(Session session) {
     final code = c.mnn_interpreter_release_session(ptr, session.ptr, ffi.nullptr);
     return switch (code) {
-      c.ErrorCode.BOOL_TRUE => true,
-      c.ErrorCode.BOOL_FALSE => false,
+      c.ErrorCode.MNNC_BOOL_TRUE => true,
+      c.ErrorCode.MNNC_BOOL_FALSE => false,
       _ => throw MNNException('releaseSession failed: $code'),
     };
   }
@@ -162,7 +162,7 @@ class Interpreter extends NativeObject {
     pDims.cast<i32>().asTypedList(dims.length).setAll(0, dims);
     try {
       final code = c.mnn_interpreter_resize_tensor(ptr, tensor.ptr, pDims, dims.length);
-      if (code != c.ErrorCode.NO_ERROR) {
+      if (code != c.ErrorCode.MNNC_NO_ERROR) {
         throw MNNException('resizeTensor failed, code=$code');
       }
     } finally {

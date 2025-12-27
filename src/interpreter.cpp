@@ -77,11 +77,11 @@ void mnn_interpreter_set_external_file(mnn_interpreter_t self, const char *file,
 
 mnn_error_code_t
 mnn_interpreter_update_cache_file(mnn_interpreter_t self, mnn_session_t session, int flag) {
-  if (!self || !session) return MNN_INVALID_PTR;
+  if (!self || !session) return MNNC_INVALID_PTR;
   try {
     return (mnn_error_code_t)((MNN::Interpreter *)self)
         ->updateCacheFile((MNN::Session *)session, flag);
-  } catch (...) { return UNKNOWN_ERROR; }
+  } catch (...) { return MNNC_UNKNOWN_ERROR; }
 }
 
 void mnn_interpreter_set_session_hint(mnn_interpreter_t self, int mode, int value) {
@@ -119,11 +119,11 @@ const char *mnn_interpreter_get_model_version(mnn_interpreter_t self) {
 
 mnn_error_code_t
 mnn_interpreter_update_session_to_model(mnn_interpreter_t self, mnn_session_t session) {
-  if (!self || !session) return MNN_INVALID_PTR;
+  if (!self || !session) return MNNC_INVALID_PTR;
   try {
     return (mnn_error_code_t)((MNN::Interpreter *)self)
         ->updateSessionToModel((MNN::Session *)session);
-  } catch (...) { return UNKNOWN_ERROR; }
+  } catch (...) { return MNNC_UNKNOWN_ERROR; }
 }
 
 // Runtime info management
@@ -216,15 +216,15 @@ mnn_error_code_t mnn_interpreter_release_session(
 ) {
   if (!self || !session) {
     if (callback) callback();
-    return MNN_INVALID_PTR;
+    return MNNC_INVALID_PTR;
   }
   try {
     auto r = ((MNN::Interpreter *)self)->releaseSession((MNN::Session *)session);
     if (callback) callback();
-    return r ? BOOL_TRUE : BOOL_FALSE;
+    return r ? MNNC_BOOL_TRUE : MNNC_BOOL_FALSE;
   } catch (...) {
     if (callback) callback();
-    return UNKNOWN_ERROR;
+    return MNNC_UNKNOWN_ERROR;
   }
 }
 
@@ -233,15 +233,15 @@ mnn_error_code_t mnn_interpreter_resize_session(
 ) {
   if (!self || !session) {
     if (callback) callback();
-    return MNN_INVALID_PTR;
+    return MNNC_INVALID_PTR;
   }
   try {
     ((MNN::Interpreter *)self)->resizeSession((MNN::Session *)session);
     if (callback) callback();
-    return NO_ERROR;
+    return MNNC_NO_ERROR;
   } catch (...) {
     if (callback) callback();
-    return UNKNOWN_ERROR;
+    return MNNC_UNKNOWN_ERROR;
   }
 }
 
@@ -250,7 +250,7 @@ mnn_error_code_t mnn_interpreter_run_session(
 ) {
   if (!self || !session) {
     if (callback) callback();
-    return MNN_INVALID_PTR;
+    return MNNC_INVALID_PTR;
   }
   try {
     auto code = ((MNN::Interpreter *)self)->runSession((MNN::Session *)session);
@@ -258,7 +258,7 @@ mnn_error_code_t mnn_interpreter_run_session(
     return (mnn_error_code_t)code;
   } catch (...) {
     if (callback) callback();
-    return UNKNOWN_ERROR;
+    return MNNC_UNKNOWN_ERROR;
   }
 }
 
@@ -298,15 +298,15 @@ const char *mnn_get_version() { return MNN::getVersion(); }
 mnn_error_code_t mnn_interpreter_get_session_info(
     mnn_interpreter_t self, mnn_session_t session, int session_info_code, void *info
 ) {
-  if (!self || !session || !info) return MNN_INVALID_PTR;
+  if (!self || !session || !info) return MNNC_INVALID_PTR;
   try {
     bool success =
         ((MNN::Interpreter *)self)
             ->getSessionInfo(
                 (MNN::Session *)session, (MNN::Interpreter::SessionInfoCode)session_info_code, info
             );
-    return success ? NO_ERROR : UNKNOWN_ERROR;
-  } catch (...) { return UNKNOWN_ERROR; }
+    return success ? MNNC_NO_ERROR : MNNC_UNKNOWN_ERROR;
+  } catch (...) { return MNNC_UNKNOWN_ERROR; }
 }
 
 mnn_error_code_t mnn_interpreter_get_session_output_all(
@@ -316,7 +316,7 @@ mnn_error_code_t mnn_interpreter_get_session_output_all(
     const char ***names,
     size_t *count
 ) {
-  if (!self || !session || !tensors || !names || !count) return MNN_INVALID_PTR;
+  if (!self || !session || !tensors || !names || !count) return MNNC_INVALID_PTR;
   try {
     auto outputs = ((MNN::Interpreter *)self)->getSessionOutputAll((MNN::Session *)session);
     *count = outputs.size();
@@ -328,8 +328,8 @@ mnn_error_code_t mnn_interpreter_get_session_output_all(
       (*names)[i] = strdup(pair.first.c_str());
       i++;
     }
-    return NO_ERROR;
-  } catch (...) { return UNKNOWN_ERROR; }
+    return MNNC_NO_ERROR;
+  } catch (...) { return MNNC_UNKNOWN_ERROR; }
 }
 
 mnn_error_code_t mnn_interpreter_get_session_input_all(
@@ -339,7 +339,7 @@ mnn_error_code_t mnn_interpreter_get_session_input_all(
     const char ***names,
     size_t *count
 ) {
-  if (!self || !session || !tensors || !names || !count) return MNN_INVALID_PTR;
+  if (!self || !session || !tensors || !names || !count) return MNNC_INVALID_PTR;
   try {
     auto inputs = ((MNN::Interpreter *)self)->getSessionInputAll((MNN::Session *)session);
     *count = inputs.size();
@@ -351,29 +351,29 @@ mnn_error_code_t mnn_interpreter_get_session_input_all(
       (*names)[i] = strdup(pair.first.c_str());
       i++;
     }
-    return NO_ERROR;
-  } catch (...) { return UNKNOWN_ERROR; }
+    return MNNC_NO_ERROR;
+  } catch (...) { return MNNC_UNKNOWN_ERROR; }
 }
 
 mnn_error_code_t mnn_interpreter_resize_tensor(
     mnn_interpreter_t self, mnn_tensor_t tensor, const int *dims, int dim_count
 ) {
-  if (!tensor || !dims || dim_count <= 0) return MNN_INVALID_PTR;
+  if (!tensor || !dims || dim_count <= 0) return MNNC_INVALID_PTR;
   try {
     std::vector<int> dims_vec(dims, dims + dim_count);
     ((MNN::Interpreter *)self)->resizeTensor((MNN::Tensor *)tensor, dims_vec);
-    return NO_ERROR;
-  } catch (...) { return UNKNOWN_ERROR; }
+    return MNNC_NO_ERROR;
+  } catch (...) { return MNNC_UNKNOWN_ERROR; }
 }
 
 mnn_error_code_t mnn_interpreter_resize_tensor_1(
     mnn_interpreter_t self, mnn_tensor_t tensor, int batch, int channel, int height, int width
 ) {
-  if (!self || !tensor) return MNN_INVALID_PTR;
+  if (!self || !tensor) return MNNC_INVALID_PTR;
   try {
     ((MNN::Interpreter *)self)->resizeTensor((MNN::Tensor *)tensor, batch, channel, height, width);
-    return NO_ERROR;
-  } catch (...) { return UNKNOWN_ERROR; }
+    return MNNC_NO_ERROR;
+  } catch (...) { return MNNC_UNKNOWN_ERROR; }
 }
 
 mnn_backend_t

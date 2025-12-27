@@ -285,9 +285,9 @@ mnn_cv_matrix_t mnn_cv_image_process_get_matrix(mnn_cv_image_process_t self) {
 
 mnn_error_code_t
 mnn_cv_image_process_set_matrix(mnn_cv_image_process_t self, mnn_cv_matrix_t matrix) {
-  if (!self || !matrix) return MNN_INVALID_PTR;
+  if (!self || !matrix) return MNNC_INVALID_PTR;
   self->get()->setMatrix(*matrix);
-  return NO_ERROR;
+  return MNNC_NO_ERROR;
 }
 
 mnn_error_code_t mnn_cv_image_process_convert(

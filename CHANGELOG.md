@@ -1,3 +1,8 @@
+## 0.1.0
+
+- bump MNN to 3.3.0
+- bump dart sdk to 3.10
+
 ## 0.0.3
 
 - new: support custom definations
