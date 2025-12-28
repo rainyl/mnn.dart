@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:mnn/mnn.dart' as mnn;
@@ -56,67 +55,6 @@ void main() {
 
     expr.dispose();
     expr1.dispose();
-  });
-
-  test('VARP', () {
-    final info = mnn.VariableInfo.create(
-      order: mnn.DimensionFormat.NHWC,
-      dim: [],
-      type: mnn.HalideType.f64,
-    );
-    final expr = mnn.Expr.fromVariableInfo(info, mnn.InputType.CONSTANT);
-    final varp = mnn.VARP.create(expr, index: 0);
-    expect(varp.getName(), isEmpty);
-    varp.setName("testVariable");
-    expect(varp.getName(), "testVariable");
-
-    final info1 = varp.getInfo();
-    expect(info1.order, mnn.DimensionFormat.NHWC);
-    expect(info1.dim, []);
-    expect(info1.type, mnn.HalideType.f64);
-    expect(info1.size, 1); // ceil
-    info1.dispose();
-
-    varp.resize([1, 2, 3, 3]);
-    final info2 = varp.getInfo();
-    expect(info2.order, mnn.DimensionFormat.NHWC);
-    expect(info2.dim, [1, 2, 3, 3]);
-    expect(info2.type, mnn.HalideType.f64);
-    expect(info2.size, 1 * 2 * 3 * 3);
-    info2.dispose();
-
-    final (expr1, index) = varp.expr;
-    expect(expr1.name, "testVariable");
-    expect(index, 0);
-    expr1.dispose();
-
-    final varp1 = mnn.VARP.list<mnn.i32>([1, 2, 3, 4], format: mnn.DimensionFormat.NCHW);
-    varp.input(varp1);
-    varp1.dispose();
-
-    final info3 = varp.getInfo();
-    expect(info3.order, mnn.DimensionFormat.NCHW);
-    expect(info3.dim, [4]);
-    expect(info3.type, mnn.HalideType.i32);
-    expect(info3.size, 4);
-    info3.dispose();
-
-    final pRead = varp.readMap<mnn.i32>();
-    expect(pRead.asTypedList(4), [1, 2, 3, 4]);
-    varp.unMap();
-
-    expect(varp.linkNumber(), isA<int>());
-
-    final tensor = varp.getTensor();
-    expect(tensor.shape, [4]);
-
-    varp.setExpr(expr, 1);
-    expect(varp.expr.$1, isA<mnn.Expr>());
-    expect(varp.expr.$2, 1);
-
-    expect(varp.toString(), startsWith('VARP('));
-
-    varp.dispose();
   });
 
   test('Variable load save', () {

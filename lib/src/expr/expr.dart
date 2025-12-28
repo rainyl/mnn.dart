@@ -13,6 +13,8 @@ import 'package:mnn/src/halide_runtime.dart';
 import 'package:mnn/src/tensor.dart';
 import 'package:mnn/src/vec.dart';
 
+import '../exception.dart';
+
 enum MemoryType {
   COPY(0),
   MOVE(1),
@@ -90,7 +92,8 @@ class VariableInfo extends NativeObject {
   }
 
   DimensionFormat get order => DimensionFormat.fromValue(ref.order);
-  List<int> get dim => ptr.cast<C.mnn_expr_Variable_Info>().ref.dim.asTypedList(ref.ndim);
+  List<int> get dim =>
+      ptr == ffi.nullptr ? [] : ptr.cast<C.mnn_expr_Variable_Info>().ref.dim.asTypedList(ref.ndim);
   int get size => ref.size;
   HalideType get type => HalideType.fromNative(ref.type);
   int get ndim => ref.ndim;
@@ -311,6 +314,34 @@ class VARP extends NativeObject {
 
   bool input(VARP src) => C.mnn_expr_VARP_input(ptr, src.ptr);
 
+  num item() {
+    if (getInfo().isEmpty) {
+      throw MNNException("$this is empty");
+    }
+    switch (dtype) {
+      case HalideType.f32:
+        return readMap<ffi.Float>().value;
+      case HalideType.f64:
+        return readMap<ffi.Double>().value;
+      case HalideType.i32:
+        return readMap<ffi.Int32>().value;
+      case HalideType.u8:
+        return readMap<ffi.Uint8>().value;
+      case HalideType.i8:
+        return readMap<ffi.Int8>().value;
+      case HalideType.i16:
+        return readMap<ffi.Int16>().value;
+      case HalideType.u16:
+        return readMap<ffi.Uint16>().value;
+      case HalideType.i64:
+        return readMap<ffi.Int64>().value;
+      case HalideType.u64:
+        return readMap<ffi.Uint64>().value;
+      default:
+        throw UnsupportedError('Data type $dtype not supported');
+    }
+  }
+
   static void replace(VARP dst, VARP src) => C.mnn_expr_VARP_static_replace(dst.ptr, src.ptr);
 
   // static std::vector<VARP> load(const char* fileName);
@@ -400,6 +431,7 @@ class VARP extends NativeObject {
 
   DimensionFormat get order => info.order;
   List<int> get dim => info.dim;
+  List<int> get shape => info.dim;
   int get ndim => info.ndim;
   HalideType get dtype => info.type;
   int get size => info.size;
@@ -450,13 +482,22 @@ class VARP extends NativeObject {
     return VARP.fromPointer(C.mnn_expr_VARP_sum(ptr, cdims.ptr));
   }
 
+  /// compare the two VARP whether they point to the same underlying expression
   @override
   bool operator ==(Object other) => other is VARP && C.mnn_expr_VARP_op_eqeq(ptr, other.ptr);
   @override
   int get hashCode => ptr.address.hashCode;
 
+  /// compare the objects by their underlying expression address
   bool operator <(VARP other) => C.mnn_expr_VARP_op_less(ptr, other.ptr);
+
+  /// compare the objects by their underlying expression address
   bool operator <=(VARP other) => C.mnn_expr_VARP_op_lessequal(ptr, other.ptr);
+
+List<num> operator [](int index) {
+    final dataList = data;
+    return [dataList[index]];
+  }
 
   bool fix(InputType type) => C.mnn_expr_VARP_fix(ptr, type.value);
 
