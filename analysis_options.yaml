@@ -27,7 +27,7 @@ analyzer:
 
     - '.dart_tool/**'
     - 'src/cmake-build*/**'
-    - '_deps/**'
+    - 'build/**'
 
   language:
     # We've seen errors tied to use of implicit operations similar to the ones described in
@@ -38,6 +38,7 @@ analyzer:
 
   errors:
     constant_identifier_names: ignore
+    library_prefixes: ignore
     missing_required_param: error
     missing_return: error
     non_constant_identifier_names: ignore

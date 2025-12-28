@@ -32,11 +32,11 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
   final defsDefines = userDefines["defines"] as Map<String, dynamic>?;
   final defsCommon = (defsDefines?['common'] as Map<String, dynamic>? ?? {}).cast<String, String>();
   final defsPlatform = switch (input.config.code.targetOS) {
-    OS.android => (defsDefines?["android"] as Map<String, String>? ?? {}).cast<String, String>(),
-    OS.iOS => (defsDefines?["ios"] as Map<String, String>? ?? {}).cast<String, String>(),
-    OS.linux => (defsDefines?["linux"] as Map<String, String>? ?? {}).cast<String, String>(),
-    OS.macOS => (defsDefines?["macos"] as Map<String, String>? ?? {}).cast<String, String>(),
-    OS.windows => (defsDefines?["windows"] as Map<String, String>? ?? {}).cast<String, String>(),
+    OS.android => (defsDefines?["android"] as Map<String, dynamic>? ?? {}).cast<String, String>(),
+    OS.iOS => (defsDefines?["ios"] as Map<String, dynamic>? ?? {}).cast<String, String>(),
+    OS.linux => (defsDefines?["linux"] as Map<String, dynamic>? ?? {}).cast<String, String>(),
+    OS.macOS => (defsDefines?["macos"] as Map<String, dynamic>? ?? {}).cast<String, String>(),
+    OS.windows => (defsDefines?["windows"] as Map<String, dynamic>? ?? {}).cast<String, String>(),
     _ => <String, String>{},
   };
   final defines = {...defsCommon, ...defsPlatform};
