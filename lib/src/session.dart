@@ -114,7 +114,7 @@ class Session with ComparableMixin {
   }
 
   double get memoryInfo {
-    final p = calloc<f32>();
+    final p = calloc<float32>();
     try {
       final code =
           c.mnn_interpreter_get_session_info(interpreter.ptr, ptr, SessionInfoCode.MEMORY.value, p.cast());
@@ -126,7 +126,7 @@ class Session with ComparableMixin {
   }
 
   double get flopsInfo {
-    final p = calloc<f32>();
+    final p = calloc<float32>();
     try {
       final code =
           c.mnn_interpreter_get_session_info(interpreter.ptr, ptr, SessionInfoCode.FLOPS.value, p.cast());
@@ -138,7 +138,7 @@ class Session with ComparableMixin {
   }
 
   List<int> get backendsInfo {
-    final p = calloc<i32>(2);
+    final p = calloc<int32>(2);
     try {
       final code =
           c.mnn_interpreter_get_session_info(interpreter.ptr, ptr, SessionInfoCode.BACKENDS.value, p.cast());

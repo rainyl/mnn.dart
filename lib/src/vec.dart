@@ -89,14 +89,14 @@ abstract class VecUnmodifible<N extends ffi.Struct, T> extends Vec<N, T> {
   void extend(Vec other) => throw UnsupportedError("Unmodifiable Vec");
 }
 
-class VecU8 extends Vec<C.VecUChar, int> {
+class VecU8 extends Vec<C.VecU8, int> {
   VecU8.fromPointer(super.ptr, {bool attach = true, int? length}) : super.fromPointer() {
     if (attach) {
       finalizer.attach(
         this,
         ptr.cast<ffi.Void>(),
         detach: this,
-        externalSize: length == null ? null : length * ffi.sizeOf<ffi.UnsignedChar>(),
+        externalSize: length == null ? null : length * ffi.sizeOf<ffi.Uint8>(),
       );
     }
   }
@@ -192,14 +192,14 @@ class VecU8Iterator extends VecIterator<int> {
   int operator [](int idx) => dataView[idx];
 }
 
-class VecI8 extends Vec<C.VecChar, int> {
+class VecI8 extends Vec<C.VecI8, int> {
   VecI8.fromPointer(super.ptr, {bool attach = true, int? length}) : super.fromPointer() {
     if (attach) {
       finalizer.attach(
         this,
         ptr.cast<ffi.Void>(),
         detach: this,
-        externalSize: length == null ? null : length * ffi.sizeOf<ffi.Char>(),
+        externalSize: length == null ? null : length * ffi.sizeOf<ffi.Int8>(),
       );
     }
   }

@@ -60,6 +60,43 @@ class HalideType with ComparableMixin {
     }
   }
 
+  ffi.Pointer<ffi.Void> pointerOf(Iterable<num> data) {
+    final ffi.Pointer pdata = switch ((code, bits)) {
+      (c.HalideTypeCode.halide_type_uint, 8) => calloc<uint8>(
+        data.length,
+      )..asTypedList(data.length).setAll(0, data.map((e) => e.toInt())),
+      (c.HalideTypeCode.halide_type_uint, 16) => calloc<uint16>(
+        data.length,
+      )..asTypedList(data.length).setAll(0, data.map((e) => e.toInt())),
+      (c.HalideTypeCode.halide_type_uint, 32) => calloc<uint32>(
+        data.length,
+      )..asTypedList(data.length).setAll(0, data.map((e) => e.toInt())),
+      (c.HalideTypeCode.halide_type_uint, 64) => calloc<uint64>(
+        data.length,
+      )..asTypedList(data.length).setAll(0, data.map((e) => e.toInt())),
+      (c.HalideTypeCode.halide_type_int, 8) => calloc<int8>(
+        data.length,
+      )..asTypedList(data.length).setAll(0, data.map((e) => e.toInt())),
+      (c.HalideTypeCode.halide_type_int, 16) => calloc<int16>(
+        data.length,
+      )..asTypedList(data.length).setAll(0, data.map((e) => e.toInt())),
+      (c.HalideTypeCode.halide_type_int, 32) => calloc<int32>(
+        data.length,
+      )..asTypedList(data.length).setAll(0, data.map((e) => e.toInt())),
+      (c.HalideTypeCode.halide_type_int, 64) => calloc<int64>(
+        data.length,
+      )..asTypedList(data.length).setAll(0, data.map((e) => e.toInt())),
+      (c.HalideTypeCode.halide_type_float, 32) => calloc<float32>(
+        data.length,
+      )..asTypedList(data.length).setAll(0, data.map((e) => e.toDouble())),
+      (c.HalideTypeCode.halide_type_float, 64) => calloc<float64>(
+        data.length,
+      )..asTypedList(data.length).setAll(0, data.map((e) => e.toDouble())),
+      _ => throw ArgumentError.value(this, 'T', 'Unsupported type'),
+    };
+    return pdata.cast<ffi.Void>();
+  }
+
   /// Size in bytes for a single element, even if width is not 1, of this type.
   int get bytes => (bits + 7) ~/ 8;
 
@@ -87,7 +124,7 @@ class HalideType with ComparableMixin {
       HalideType.i16 => 'int16',
       HalideType.i32 => 'int32',
       HalideType.i64 => 'int64',
-      _ => 'HalideType(code=$code, bits=$bits, lanes=$lanes)'
+      _ => 'HalideType(code=$code, bits=$bits, lanes=$lanes)',
     };
   }
 }
@@ -95,7 +132,7 @@ class HalideType with ComparableMixin {
 class _HalideTypeNative extends NativeObject {
   static final _finalizer = ffi.NativeFinalizer(calloc.nativeFree);
   _HalideTypeNative.fromPointer(ffi.Pointer<c.halide_type_c_t> ptr, {super.attach, super.externalSize})
-      : super(ptr.cast());
+    : super(ptr.cast());
 
   factory _HalideTypeNative(HalideType type) {
     final ptr = calloc<c.halide_type_c_t>()
@@ -123,7 +160,7 @@ class _HalideTypeNative extends NativeObject {
 class HalideBuffer extends NativeObject {
   static final _finalizer = ffi.NativeFinalizer(calloc.nativeFree);
   HalideBuffer.fromPointer(ffi.Pointer<c.halide_buffer_c_t> ptr, {super.attach, super.externalSize})
-      : super(ptr.cast());
+    : super(ptr.cast());
 
   int get devide => ref.device;
 
@@ -140,9 +177,9 @@ class HalideBuffer extends NativeObject {
   int get dimensions => ref.dimensions;
 
   List<HalideDimension> get dim => List<HalideDimension>.generate(
-        dimensions,
-        (index) => HalideDimension.fromPointer(ref.dim + index, attach: false),
-      );
+    dimensions,
+    (index) => HalideDimension.fromPointer(ref.dim + index, attach: false),
+  );
 
   // Not used
   // ffi.Pointer<ffi.Void> get padding => ref.padding;
@@ -175,7 +212,7 @@ class HalideDimension extends NativeObject {
   static final _finalizer = ffi.NativeFinalizer(calloc.nativeFree);
 
   HalideDimension.fromPointer(ffi.Pointer<c.halide_dimension_t> ptr, {super.attach, super.externalSize})
-      : super(ptr.cast());
+    : super(ptr.cast());
 
   c.halide_dimension_t get ref => ptr.cast<c.halide_dimension_t>().ref;
 

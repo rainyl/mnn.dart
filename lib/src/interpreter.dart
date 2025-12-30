@@ -159,7 +159,7 @@ class Interpreter extends NativeObject {
 
   void resizeTensor(Tensor tensor, List<int> dims) {
     final pDims = calloc<ffi.Int>(dims.length);
-    pDims.cast<i32>().asTypedList(dims.length).setAll(0, dims);
+    pDims.cast<int32>().asTypedList(dims.length).setAll(0, dims);
     try {
       final code = c.mnn_interpreter_resize_tensor(ptr, tensor.ptr, pDims, dims.length);
       if (code != c.ErrorCode.MNNC_NO_ERROR) {

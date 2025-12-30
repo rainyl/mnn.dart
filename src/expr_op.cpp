@@ -119,6 +119,11 @@ VARP_t mnn_expr_ReduceSum(VARP_t input_variable, VecI32 axis, bool keepDims) {
 VARP_t mnn_expr_ReduceMean(VARP_t input_variable, VecI32 axis, bool keepDims) {
   return new MNN::Express::VARP(MNN::Express::_ReduceMean(*input_variable, *axis, keepDims));
 }
+VARP_t mnn_expr_ReduceVariance(VARP_t input_variable, VecI32 axis, bool keepDims) {
+  auto mean = _ReduceMean(*input_variable, *axis, true); // to use broadcast of subtract
+  auto variance = _ReduceMean(_Square(_Subtract(*input_variable, mean)), *axis, keepDims);
+  return new MNN::Express::VARP(variance);
+}
 VARP_t mnn_expr_ReduceMax(VARP_t input_variable, VecI32 axis, bool keepDims) {
   return new MNN::Express::VARP(MNN::Express::_ReduceMax(*input_variable, *axis, keepDims));
 }

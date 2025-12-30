@@ -739,8 +739,8 @@ VARP reduceMean(VARP x, {List<int> axis = const [], bool keepDims = false}) =>
 ///
 /// Returns:
 /// - The reduced variable, of the same dtype as the input_variable.
-// VARP reduceVariance(VARP x, {List<int> axis = const [], bool keepDims = false}) =>
-//     VARP.fromPointer(C.mnn_expr_ReduceVariance(x.ptr, axis.i32.ptr, keepDims));
+VARP reduceVariance(VARP x, {List<int> axis = const [], bool keepDims = false}) =>
+    VARP.fromPointer(C.mnn_expr_ReduceVariance(x.ptr, axis.i32.ptr, keepDims));
 
 /// Computes the maximum of elements across dimensions of a variable.
 ///
@@ -849,49 +849,63 @@ VARP reduceAll(VARP x, {List<int> axis = const [], bool keepDims = false}) =>
 
 VARP reduceSumMutable(VARP x, {VARP? axis, bool keepDims = false}) {
   if (axis == null) {
-    return VARP.fromPointer(C.mnn_expr_ReduceSumMutable(reshape(x, [-1]).ptr, scalar<i32>(0).ptr, keepDims));
+    return VARP.fromPointer(
+      C.mnn_expr_ReduceSumMutable(reshape(x, [-1]).ptr, scalar<int32>(0).ptr, keepDims),
+    );
   }
   return VARP.fromPointer(C.mnn_expr_ReduceSumMutable(x.ptr, axis.ptr, keepDims));
 }
 
 VARP reduceMeanMutable(VARP x, {VARP? axis, bool keepDims = false}) {
   if (axis == null) {
-    return VARP.fromPointer(C.mnn_expr_ReduceMeanMutable(reshape(x, [-1]).ptr, scalar<i32>(0).ptr, keepDims));
+    return VARP.fromPointer(
+      C.mnn_expr_ReduceMeanMutable(reshape(x, [-1]).ptr, scalar<int32>(0).ptr, keepDims),
+    );
   }
   return VARP.fromPointer(C.mnn_expr_ReduceMeanMutable(x.ptr, axis.ptr, keepDims));
 }
 
 VARP reduceMaxMutable(VARP x, {VARP? axis, bool keepDims = false}) {
   if (axis == null) {
-    return VARP.fromPointer(C.mnn_expr_ReduceMaxMutable(reshape(x, [-1]).ptr, scalar<i32>(0).ptr, keepDims));
+    return VARP.fromPointer(
+      C.mnn_expr_ReduceMaxMutable(reshape(x, [-1]).ptr, scalar<int32>(0).ptr, keepDims),
+    );
   }
   return VARP.fromPointer(C.mnn_expr_ReduceMaxMutable(x.ptr, axis.ptr, keepDims));
 }
 
 VARP reduceMinMutable(VARP x, {VARP? axis, bool keepDims = false}) {
   if (axis == null) {
-    return VARP.fromPointer(C.mnn_expr_ReduceMinMutable(reshape(x, [-1]).ptr, scalar<i32>(0).ptr, keepDims));
+    return VARP.fromPointer(
+      C.mnn_expr_ReduceMinMutable(reshape(x, [-1]).ptr, scalar<int32>(0).ptr, keepDims),
+    );
   }
   return VARP.fromPointer(C.mnn_expr_ReduceMinMutable(x.ptr, axis.ptr, keepDims));
 }
 
 VARP reduceProdMutable(VARP x, {VARP? axis, bool keepDims = false}) {
   if (axis == null) {
-    return VARP.fromPointer(C.mnn_expr_ReduceProdMutable(reshape(x, [-1]).ptr, scalar<i32>(0).ptr, keepDims));
+    return VARP.fromPointer(
+      C.mnn_expr_ReduceProdMutable(reshape(x, [-1]).ptr, scalar<int32>(0).ptr, keepDims),
+    );
   }
   return VARP.fromPointer(C.mnn_expr_ReduceProdMutable(x.ptr, axis.ptr, keepDims));
 }
 
 VARP reduceAnyMutable(VARP x, {VARP? axis, bool keepDims = false}) {
   if (axis == null) {
-    return VARP.fromPointer(C.mnn_expr_ReduceAnyMutable(reshape(x, [-1]).ptr, scalar<i32>(0).ptr, keepDims));
+    return VARP.fromPointer(
+      C.mnn_expr_ReduceAnyMutable(reshape(x, [-1]).ptr, scalar<int32>(0).ptr, keepDims),
+    );
   }
   return VARP.fromPointer(C.mnn_expr_ReduceAnyMutable(x.ptr, axis.ptr, keepDims));
 }
 
 VARP reduceAllMutable(VARP x, {VARP? axis, bool keepDims = false}) {
   if (axis == null) {
-    return VARP.fromPointer(C.mnn_expr_ReduceAllMutable(reshape(x, [-1]).ptr, scalar<i32>(0).ptr, keepDims));
+    return VARP.fromPointer(
+      C.mnn_expr_ReduceAllMutable(reshape(x, [-1]).ptr, scalar<int32>(0).ptr, keepDims),
+    );
   }
   return VARP.fromPointer(C.mnn_expr_ReduceAllMutable(x.ptr, axis.ptr, keepDims));
 }
@@ -974,8 +988,14 @@ VARP mod(VARP x, VARP y) => VARP.fromPointer(C.mnn_expr_Mod(x.ptr, y.ptr));
 ///
 /// Returns:
 /// - A variable with same shape as x and same type as dtype.
-VARP cast<T extends ffi.SizedNativeType>(VARP x) =>
-    VARP.fromPointer(C.mnn_expr_Cast(x.ptr, HalideType.of<T>().native.ref));
+VARP cast<T extends ffi.SizedNativeType>(VARP x, {HalideType? dtype}) {
+  MnnAssert(
+    T != ffi.SizedNativeType || dtype != null,
+    "You must specify the generic type T or dtype. e.g., mnn.float32",
+  );
+  dtype ??= HalideType.of<T>();
+  return x.dtype == dtype ? x : VARP.fromPointer(C.mnn_expr_Cast(x.ptr, dtype.native.ref));
+}
 
 /// Multiply the matrix "a" by the matrix "b".
 ///
@@ -1071,19 +1091,31 @@ VARP scatterElements(VARP data, VARP indices, VARP updates, {VARP? axis, int red
         C.mnn_expr_ScatterElements_1(data.ptr, indices.ptr, updates.ptr, axis.ptr, reduction),
       ),
     };
-VARP oneHot(VARP indices, VARP depth, VARP onValue, VARP offValue, int axis) =>
-    VARP.fromPointer(C.mnn_expr_OneHot(indices.ptr, depth.ptr, onValue.ptr, offValue.ptr, axis));
+VARP oneHot(VARP indices, VARP depth, {VARP? onValue, VARP? offValue, int axis = -1}) => VARP.fromPointer(
+  C.mnn_expr_OneHot(
+    indices.ptr,
+    depth.ptr,
+    (onValue ?? scalar<float32>(1.0)).ptr,
+    (offValue ?? scalar<float32>(0.0)).ptr,
+    axis,
+  ),
+);
 VARP broadcastTo(VARP x, VARP shape) => VARP.fromPointer(C.mnn_expr_BroadcastTo(x.ptr, shape.ptr));
 VARP linSpace(VARP start, VARP stop, VARP num) =>
     VARP.fromPointer(C.mnn_expr_LinSpace(start.ptr, stop.ptr, num.ptr));
-VARP randomUniform(
-  VARP shape,
-  HalideType dtype, {
+VARP randomUniform<T extends ffi.SizedNativeType>(
+  VARP shape, {
   double low = 0.0,
   double high = 1.0,
   int seed0 = 0,
   int seed1 = 0,
-}) => VARP.fromPointer(C.mnn_expr_RandomUniform(shape.ptr, dtype.native.ref, low, high, seed0, seed1));
+}) {
+  MnnAssert(T != ffi.SizedNativeType, "You must specify the generic type T. e.g., mnn.float32");
+  return VARP.fromPointer(
+    C.mnn_expr_RandomUniform(shape.ptr, HalideType.of<T>().native.ref, low, high, seed0, seed1),
+  );
+}
+
 VARP cumSum(VARP x, int axis, {bool exclusive = false, bool reverse = false}) =>
     VARP.fromPointer(C.mnn_expr_CumSum(x.ptr, axis, exclusive, reverse));
 VARP cumProd(VARP x, int axis) => VARP.fromPointer(C.mnn_expr_CumProd(x.ptr, axis));
@@ -1095,7 +1127,7 @@ List<VARP> svd(VARP x) {
   return rval;
 }
 
-VARP histogram(VARP x, int bin, int min, int max, int channel) =>
+VARP histogram(VARP x, int bin, int min, int max, {int channel = -1}) =>
     VARP.fromPointer(C.mnn_expr_Histogram(x.ptr, bin, min, max, channel));
 
 // Neural Network Ops
@@ -1105,61 +1137,23 @@ VARP histogram(VARP x, int bin, int min, int max, int channel) =>
 /// Args:
 /// - shape: A vector, the shape of the variable.
 /// - data_format: A enum, NCHW/NHWC/NC4HW4 is allowed.
-/// - dtype: The type of the elements of the resulting variable.
 ///
 /// Returns:
 /// - output: A variable.
-VARP input(
+VARP input<T extends ffi.SizedNativeType>(
   List<int> shape, {
   DimensionFormat dataFormat = DimensionFormat.NC4HW4,
-  HalideType dtype = HalideType.f32,
 }) {
+  MnnAssert(T != ffi.SizedNativeType, "You must specify the generic type T. e.g., mnn.float32");
   final (p, size) = shape.toNativeArrayI32();
-  final rval = VARP.fromPointer(C.mnn_expr_Input(p.cast(), size, dataFormat.value, dtype.native.ref));
+  final rval = VARP.fromPointer(
+    C.mnn_expr_Input(p.cast(), size, dataFormat.value, HalideType.of<T>().native.ref),
+  );
   calloc.free(p);
   return rval;
 }
 
 VARP clone(VARP x, {bool deepCopy = false}) => VARP.fromPointer(C.mnn_expr_Clone(x.ptr, deepCopy));
-
-typedef uint8 = ffi.Uint8;
-typedef uint16 = ffi.Uint16;
-typedef uint32 = ffi.Uint32;
-typedef uint64 = ffi.Uint64;
-typedef int8 = ffi.Int8;
-typedef int16 = ffi.Int16;
-typedef int32 = ffi.Int32;
-typedef int64 = ffi.Int64;
-typedef float32 = ffi.Float;
-typedef float64 = ffi.Double;
-
-ffi.Pointer<T> _pointerOf<T extends ffi.SizedNativeType>(Iterable<num> data) {
-  ffi.Pointer pdata;
-  if (T == uint8) {
-    pdata = calloc<uint8>(data.length)..asTypedList(data.length).setAll(0, data.map((e) => e.toInt()));
-  } else if (T == uint16) {
-    pdata = calloc<uint16>(data.length)..asTypedList(data.length).setAll(0, data.map((e) => e.toInt()));
-  } else if (T == uint32) {
-    pdata = calloc<uint32>(data.length)..asTypedList(data.length).setAll(0, data.map((e) => e.toInt()));
-  } else if (T == uint64) {
-    pdata = calloc<uint64>(data.length)..asTypedList(data.length).setAll(0, data.map((e) => e.toInt()));
-  } else if (T == int8) {
-    pdata = calloc<int8>(data.length)..asTypedList(data.length).setAll(0, data.map((e) => e.toInt()));
-  } else if (T == int16) {
-    pdata = calloc<int16>(data.length)..asTypedList(data.length).setAll(0, data.map((e) => e.toInt()));
-  } else if (T == int32) {
-    pdata = calloc<int32>(data.length)..asTypedList(data.length).setAll(0, data.map((e) => e.toInt()));
-  } else if (T == int64) {
-    pdata = calloc<int64>(data.length)..asTypedList(data.length).setAll(0, data.map((e) => e.toInt()));
-  } else if (T == float32) {
-    pdata = calloc<float32>(data.length)..asTypedList(data.length).setAll(0, data.map((e) => e.toDouble()));
-  } else if (T == float64) {
-    pdata = calloc<float64>(data.length)..asTypedList(data.length).setAll(0, data.map((e) => e.toDouble()));
-  } else {
-    throw ArgumentError.value(T, 'T', 'Unsupported type');
-  }
-  return pdata.cast<T>();
-}
 
 /// create a constant variable.
 ///
@@ -1182,8 +1176,8 @@ VARP constant<T extends ffi.SizedNativeType>(
     'data.length=${data.length} must be equal to the dot product of shape=$nElem',
   );
 
-  final pdata = _pointerOf<T>(data);
-  final pshape = _pointerOf<int32>(shape);
+  final pdata = HalideType.of<T>().pointerOf(data);
+  final pshape = HalideType.of<int32>().pointerOf(shape);
   final pvar = C.mnn_expr_Const(
     pdata.cast(),
     pshape.cast(),
@@ -1197,9 +1191,14 @@ VARP constant<T extends ffi.SizedNativeType>(
   return VARP.fromPointer(pvar);
 }
 
-VARP scalar<T extends ffi.SizedNativeType>(num value) {
-  final pdata = _pointerOf<T>([value]);
-  final pvar = C.mnn_expr_Scalar(pdata.cast(), HalideType.of<T>().native.ref);
+VARP scalar<T extends ffi.SizedNativeType>(num value, {HalideType? dtype}) {
+  MnnAssert(
+    T != ffi.SizedNativeType || dtype != null,
+    "You must specify the generic type T or dtype. e.g., mnn.float32",
+  );
+  dtype ??= HalideType.of<T>();
+  final pdata = dtype.pointerOf([value]);
+  final pvar = C.mnn_expr_Scalar(pdata.cast(), dtype.native.ref);
   calloc.free(pdata);
   return VARP.fromPointer(pvar);
 }
@@ -1409,8 +1408,8 @@ VARP ReLU(VARP x, {double slope = 0.0}) => VARP.fromPointer(C.mnn_expr_Relu(x.pt
 ///
 /// Returns:
 /// - output: A variable with the same type as `x`.
-VARP ReLU6(VARP x, {double slope = 0.0, double maxValue = 6.0}) =>
-    VARP.fromPointer(C.mnn_expr_Relu6(x.ptr, slope, maxValue));
+VARP ReLU6(VARP x, {double minValue = 0.0, double maxValue = 6.0}) =>
+    VARP.fromPointer(C.mnn_expr_Relu6(x.ptr, minValue, maxValue));
 
 /// Given an input value x, it computes the output as x if x > 0 and slopes * x if x <= 0.
 ///
@@ -1772,6 +1771,13 @@ VARP gatherV2(VARP input, VARP indices, VARP axis) =>
 VARP squeeze(VARP input, {List<int> axis = const []}) {
   final (axisPtr, axisSize) = axis.toNativeArrayI32();
   final rval = VARP.fromPointer(C.mnn_expr_Squeeze(input.ptr, axisPtr.cast(), axisSize));
+  calloc.free(axisPtr);
+  return rval;
+}
+
+VARP unsqueeze(VARP input, {List<int> axis = const []}) {
+  final (axisPtr, axisSize) = axis.toNativeArrayI32();
+  final rval = VARP.fromPointer(C.mnn_expr_Unsqueeze(input.ptr, axisPtr.cast(), axisSize));
   calloc.free(axisPtr);
   return rval;
 }

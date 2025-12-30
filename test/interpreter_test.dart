@@ -88,7 +88,7 @@ Future<void> testInferenceMnistCopy(
   expect(output.copyToHost(outputTensor), true);
   expect(outputTensor.shape, [1, 10]);
   expect(outputTensor.type, mnn.HalideType.f32);
-  final logits = outputTensor.host.cast<mnn.f32>().asTypedList(10);
+  final logits = outputTensor.host.cast<mnn.float32>().asTypedList(10);
   expect(logits.indexOf(logits.reduce(max)), target);
 }
 
@@ -111,7 +111,7 @@ Future<void> testInferenceMnistMapping(
 
   final host = input.map(mnn.MapType.MNN_MAP_TENSOR_WRITE, input.dimensionType);
   expect(host.address, isNonZero);
-  host.cast<mnn.f32>().asTypedList(input.count).setAll(0, pixData);
+  host.cast<mnn.float32>().asTypedList(input.count).setAll(0, pixData);
   input.unmap(mnn.MapType.MNN_MAP_TENSOR_WRITE, input.dimensionType, host);
 
   if (runAsync) {
@@ -123,7 +123,7 @@ Future<void> testInferenceMnistMapping(
   final output = session.getOutput();
   final hostOut = output!.map(mnn.MapType.MNN_MAP_TENSOR_READ, output.dimensionType);
   expect(hostOut.address, isNonZero);
-  final logits = hostOut.cast<mnn.f32>().asTypedList(output.count);
+  final logits = hostOut.cast<mnn.float32>().asTypedList(output.count);
   expect(logits.indexOf(logits.reduce(max)), target);
   output.unmap(mnn.MapType.MNN_MAP_TENSOR_READ, output.dimensionType, hostOut);
 }

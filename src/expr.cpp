@@ -43,8 +43,8 @@ MNN_C_API size_t mnn_expr_VecWeakEXPRP_size(VecWeakEXPRP_t self) { return self->
 void mnn_expr_Variable_Info_free(void *self) {
   auto p = static_cast<mnn_expr_Variable_Info *>(self);
   if (p != nullptr) {
-    free(p->dim);
-    free(p);
+    delete [] p->dim;
+    delete p;
   }
 }
 
@@ -112,13 +112,15 @@ void mnn_expr_VARP_setOrder(VARP_t self, int format) {
 }
 
 struct mnn_expr_Variable_Info *mnn_expr_VARP_getInfo(VARP_t self) {
+  if (self==nullptr) return nullptr;
   auto _info = (*self)->getInfo();
   if (_info == nullptr) { return nullptr; }
-  auto info = static_cast<mnn_expr_Variable_Info *>(dart_malloc(sizeof(mnn_expr_Variable_Info)));
+
+  auto info = new mnn_expr_Variable_Info();
   info->order = static_cast<int>(_info->order);
   info->ndim = _info->dim.size();
-  auto pdim = static_cast<int32_t *>(dart_malloc(info->ndim * sizeof(int32_t)));
-  for (int i = 0; i < info->ndim; i++) { pdim[i] = _info->dim[i]; }
+  auto pdim = new int[_info->dim.size()];
+  memcpy(pdim, _info->dim.data(), sizeof(int) * _info->dim.size());
   info->dim = pdim;
   info->type = {static_cast<uint8_t>(_info->type.code), _info->type.bits, _info->type.lanes};
   info->size = _info->size;

@@ -11,6 +11,7 @@ class PrintOptions {
   final int edgeitems;
   final int linewidth;
   final bool suppress;
+
   const PrintOptions({
     this.precision = 6,
     this.threshold = 1000,
@@ -67,7 +68,7 @@ String array2string(
   List<num> data,
   List<int> shape, {
   PrintOptions options = const PrintOptions(),
-  String separator = ' ',
+  String separator = ', ',
   String prefix = '',
   String suffix = '',
 }) {
@@ -141,11 +142,11 @@ extension VARPFormatting on VARP {
   /// Convert VARP to formatted string
   String formatString([PrintOptions? options]) {
     return array2string(
-      data,
-      dim,
+      data ?? [],
+      shape ?? [],
       options: options ?? const PrintOptions(),
       prefix: 'VARP(',
-      suffix: ', dtype=$dtype)',
+      suffix: ', shape=${shape ?? []}, dtype=${dtype ?? ""})',
     );
   }
 

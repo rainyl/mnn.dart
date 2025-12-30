@@ -94,7 +94,6 @@ MNN_C_API void mnn_expr_VARP_setOrder(VARP_t self, int format); // Dimensionform
 MNN_C_API struct mnn_expr_Variable_Info *mnn_expr_VARP_getInfo(VARP_t self);
 MNN_C_API const void *mnn_expr_VARP_readMap(VARP_t self);
 MNN_C_API void *mnn_expr_VARP_writeMap(VARP_t self);
-MNN_C_API void mnn_expr_VARP_unMap(VARP_t self);
 
 // MNN::Express::Variable
 MNN_C_API void mnn_expr_VARP_setName(VARP_t self, char *name);

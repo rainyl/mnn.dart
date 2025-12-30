@@ -92,8 +92,7 @@ class VariableInfo extends NativeObject {
   }
 
   DimensionFormat get order => DimensionFormat.fromValue(ref.order);
-  List<int> get dim =>
-      ptr == ffi.nullptr ? [] : ptr.cast<C.mnn_expr_Variable_Info>().ref.dim.asTypedList(ref.ndim);
+  List<int> get dim => ref.dim.asTypedList(ref.ndim);
   int get size => ref.size;
   HalideType get type => HalideType.fromNative(ref.type);
   int get ndim => ref.ndim;
@@ -296,10 +295,6 @@ class VARP extends NativeObject {
     return rval;
   }
 
-  VariableInfo getInfo() {
-    return VariableInfo.fromPointer(C.mnn_expr_VARP_getInfo(ptr));
-  }
-
   bool resize(List<int> dims) {
     final cdims = dims.i32;
     final rval = C.mnn_expr_VARP_resize(ptr, cdims.ptr);
@@ -310,37 +305,7 @@ class VARP extends NativeObject {
   ffi.Pointer<T> readMap<T extends ffi.NativeType>() => C.mnn_expr_VARP_readMap(ptr).cast<T>();
   ffi.Pointer<T> writeMap<T extends ffi.NativeType>() => C.mnn_expr_VARP_writeMap(ptr).cast<T>();
 
-  void unMap() => C.mnn_expr_VARP_unMap(ptr);
-
   bool input(VARP src) => C.mnn_expr_VARP_input(ptr, src.ptr);
-
-  num item() {
-    if (getInfo().isEmpty) {
-      throw MNNException("$this is empty");
-    }
-    switch (dtype) {
-      case HalideType.f32:
-        return readMap<ffi.Float>().value;
-      case HalideType.f64:
-        return readMap<ffi.Double>().value;
-      case HalideType.i32:
-        return readMap<ffi.Int32>().value;
-      case HalideType.u8:
-        return readMap<ffi.Uint8>().value;
-      case HalideType.i8:
-        return readMap<ffi.Int8>().value;
-      case HalideType.i16:
-        return readMap<ffi.Int16>().value;
-      case HalideType.u16:
-        return readMap<ffi.Uint16>().value;
-      case HalideType.i64:
-        return readMap<ffi.Int64>().value;
-      case HalideType.u64:
-        return readMap<ffi.Uint64>().value;
-      default:
-        throw UnsupportedError('Data type $dtype not supported');
-    }
-  }
 
   static void replace(VARP dst, VARP src) => C.mnn_expr_VARP_static_replace(dst.ptr, src.ptr);
 
@@ -427,26 +392,66 @@ class VARP extends NativeObject {
 
   Tensor getTensor() => Tensor.fromPointer(C.mnn_expr_VARP_getTensor(ptr), attach: false);
 
-  VariableInfo get info => VariableInfo.fromPointer(C.mnn_expr_VARP_getInfo(ptr));
+  VariableInfo? get info {
+    final p = C.mnn_expr_VARP_getInfo(ptr);
+    return p == ffi.nullptr ? null : VariableInfo.fromPointer(p);
+  }
 
-  DimensionFormat get order => info.order;
-  List<int> get dim => info.dim;
-  List<int> get shape => info.dim;
-  int get ndim => info.ndim;
-  HalideType get dtype => info.type;
-  int get size => info.size;
+  VariableInfo? getInfo() => info;
 
-  List<num> get data {
+  DimensionFormat? get order {
+    final p = C.mnn_expr_VARP_getInfo(ptr);
+    final rval = p == ffi.nullptr ? null : DimensionFormat.fromValue(p.ref.order);
+    C.mnn_expr_Variable_Info_free(p.cast());
+    return rval;
+  }
+
+  DimensionFormat? get dataFormat => order;
+
+  List<int>? get dim {
+    final p = C.mnn_expr_VARP_getInfo(ptr);
+    final rval = p == ffi.nullptr ? null : p.ref.dim.asTypedList(p.ref.ndim).toList();
+    C.mnn_expr_Variable_Info_free(p.cast());
+    return rval;
+  }
+
+  List<int>? get shape => dim;
+  int? get ndim {
+    final p = C.mnn_expr_VARP_getInfo(ptr);
+    final rval = p == ffi.nullptr ? null : p.ref.ndim;
+    C.mnn_expr_Variable_Info_free(p.cast());
+    return rval;
+  }
+
+  HalideType? get dtype {
+    final p = C.mnn_expr_VARP_getInfo(ptr);
+    final rval = p == ffi.nullptr ? null : HalideType.fromNative(p.ref.type);
+    C.mnn_expr_Variable_Info_free(p.cast());
+    return rval;
+  }
+
+  int? get size {
+    final p = C.mnn_expr_VARP_getInfo(ptr);
+    final rval = p == ffi.nullptr ? null : p.ref.size;
+    C.mnn_expr_Variable_Info_free(p.cast());
+    return rval;
+  }
+
+  List<num>? get data {
+    final info = this.info;
+    if (info == null || (info.isEmpty) || info.size <= 0) {
+      return null;
+    }
     final List<num> dataList = switch (dtype) {
-      HalideType.f32 => readMap().cast<ffi.Float>().asTypedList(size),
-      HalideType.f64 => readMap().cast<ffi.Double>().asTypedList(size),
-      HalideType.i32 => readMap().cast<ffi.Int32>().asTypedList(size),
-      HalideType.u8 => readMap().cast<ffi.Uint8>().asTypedList(size),
-      HalideType.i8 => readMap().cast<ffi.Int8>().asTypedList(size),
-      HalideType.i16 => readMap().cast<ffi.Int16>().asTypedList(size),
-      HalideType.u16 => readMap().cast<ffi.Uint16>().asTypedList(size),
-      HalideType.i64 => readMap().cast<ffi.Int64>().asTypedList(size),
-      HalideType.u64 => readMap().cast<ffi.Uint64>().asTypedList(size),
+      HalideType.f32 => readMap().cast<ffi.Float>().asTypedList(info.size),
+      HalideType.f64 => readMap().cast<ffi.Double>().asTypedList(info.size),
+      HalideType.i32 => readMap().cast<ffi.Int32>().asTypedList(info.size),
+      HalideType.u8 => readMap().cast<ffi.Uint8>().asTypedList(info.size),
+      HalideType.i8 => readMap().cast<ffi.Int8>().asTypedList(info.size),
+      HalideType.i16 => readMap().cast<ffi.Int16>().asTypedList(info.size),
+      HalideType.u16 => readMap().cast<ffi.Uint16>().asTypedList(info.size),
+      HalideType.i64 => readMap().cast<ffi.Int64>().asTypedList(info.size),
+      HalideType.u64 => readMap().cast<ffi.Uint64>().asTypedList(info.size),
       _ => throw UnimplementedError('Data type $dtype not supported'),
     };
     return dataList;
@@ -494,10 +499,180 @@ class VARP extends NativeObject {
   /// compare the objects by their underlying expression address
   bool operator <=(VARP other) => C.mnn_expr_VARP_op_lessequal(ptr, other.ptr);
 
-List<num> operator [](int index) {
-    final dataList = data;
-    return [dataList[index]];
+  ({VARP begin, VARP end, VARP strides, int beginMask, int endMask, int shrinkAxisMask}) _parseSliceParams(
+    String index,
+  ) {
+    final parts = index.split(',').map((e) => e.trim()).toList();
+    final begins = <int>[];
+    final ends = <int>[];
+    final strides = <int>[];
+    var beginMask = 0;
+    var endMask = 0;
+    var shrinkAxisMask = 0;
+
+    for (int i = 0; i < parts.length; i++) {
+      final part = parts[i];
+      if (part.contains(':')) {
+        final slices = part.split(':');
+
+        if (slices[0].isEmpty) {
+          beginMask |= 1 << i;
+          begins.add(0);
+        } else {
+          begins.add(int.parse(slices[0]));
+        }
+
+        if (slices.length > 1) {
+          if (slices[1].isEmpty) {
+            endMask |= 1 << i;
+            ends.add(0);
+          } else {
+            ends.add(int.parse(slices[1]));
+          }
+        } else {
+          // Should not happen for valid slice syntax with ':'
+        }
+
+        if (slices.length > 2) {
+          if (slices[2].isEmpty) {
+            strides.add(1);
+          } else {
+            strides.add(int.parse(slices[2]));
+          }
+        } else {
+          strides.add(1);
+        }
+      } else {
+        shrinkAxisMask |= 1 << i;
+        final idx = int.parse(part);
+        begins.add(idx);
+        ends.add(idx + 1);
+        strides.add(1);
+      }
+    }
+
+    return (
+      begin: VARP.list<ffi.Int32>(begins),
+      end: VARP.list<ffi.Int32>(ends),
+      strides: VARP.list<ffi.Int32>(strides),
+      beginMask: beginMask,
+      endMask: endMask,
+      shrinkAxisMask: shrinkAxisMask,
+    );
   }
+
+  VARP operator [](dynamic index) {
+    if (index is int) {
+      return op.gather(this, VARP.scalar<ffi.Int32>(index));
+    } else if (index is String) {
+      final params = _parseSliceParams(index);
+      return op.stridedSlice(
+        this,
+        params.begin,
+        params.end,
+        params.strides,
+        params.beginMask,
+        params.endMask,
+        0,
+        0,
+        params.shrinkAxisMask,
+      );
+    }
+    throw ArgumentError.value(index, 'index', 'Index must be int or String');
+  }
+
+  void operator []=(String index, VARP value) {
+    final params = _parseSliceParams(index);
+
+    final target = op.stridedSlice(
+      this,
+      params.begin,
+      params.end,
+      params.strides,
+      params.beginMask,
+      params.endMask,
+      0,
+      0,
+      params.shrinkAxisMask,
+    );
+    final tShape = target.shape;
+    final vShape = value.shape;
+    target.release();
+
+    bool shapeMatch = tShape != null && vShape != null && tShape.length == vShape.length;
+    if (shapeMatch) {
+      for (int i = 0; i < tShape.length; i++) {
+        if (tShape[i] != vShape[i]) {
+          shapeMatch = false;
+          break;
+        }
+      }
+    }
+    MnnAssert(
+      shapeMatch,
+      "value shape $vShape is not equal to target slice shape $tShape",
+    );
+
+    final newPtr = C.mnn_expr_StridedSliceWrite(
+      ptr,
+      params.begin.ptr,
+      params.end.ptr,
+      params.strides.ptr,
+      value.ptr,
+      params.beginMask,
+      params.endMask,
+      0,
+      0,
+      params.shrinkAxisMask,
+    );
+    // replace this.ptr with newPtr
+    reattach(newPtr);
+  }
+
+  dynamic toList() {
+    final info = this.info;
+    final data = this.data;
+    if (info == null || info.isEmpty || data == null) {
+      return data?[0];
+    }
+    if (info.ndim == 1) {
+      return data;
+    }
+    return _reshape(data, info.dim);
+  }
+
+  dynamic _reshape(List<num> flat, List<int> shape) {
+    if (shape.length == 1) {
+      return flat;
+    }
+    final int size = shape[0];
+    final int blockSize = flat.length ~/ size;
+    final List<dynamic> res = [];
+    final List<int> subShape = shape.sublist(1);
+    for (int i = 0; i < size; i++) {
+      res.add(_reshape(flat.sublist(i * blockSize, (i + 1) * blockSize), subShape));
+    }
+    return res;
+  }
+
+  num get value {
+    final info = this.info;
+    if (info == null || info.isEmpty) {
+      throw MNNException("$this is empty");
+    }
+    if (info.size != 1) {
+      throw StateError(
+        'VARP.value can only be called on scalar or size-1 tensors. Current size: ${info.size}',
+      );
+    }
+    final data = this.data;
+    if (data == null || data.isEmpty) {
+      throw MNNException("$this is empty");
+    }
+    return data[0];
+  }
+
+  num item() => value;
 
   bool fix(InputType type) => C.mnn_expr_VARP_fix(ptr, type.value);
 
@@ -505,7 +680,14 @@ List<num> operator [](int index) {
 
   @override
   String toString() {
-    return 'VARP(address=0x${ptr.address.toRadixString(16)})';
+    final s = StringBuffer('VARP(address=0x${ptr.address.toRadixString(16)}');
+    if (!(info?.isEmpty ?? true)) {
+      s.write(', shape=$shape, dtype=$dtype, size=$size');
+    } else {
+      s.write(', shape=(), dtype=(), size=0');
+    }
+    s.write(')');
+    return s.toString();
   }
 }
 

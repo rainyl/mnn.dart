@@ -75,6 +75,7 @@ MNN_C_API VARP_t mnn_expr_Silu(VARP_t x);
 // ReduceOPs
 MNN_C_API VARP_t mnn_expr_ReduceSum(VARP_t input_variable, VecI32 axis, bool keepDims);
 MNN_C_API VARP_t mnn_expr_ReduceMean(VARP_t input_variable, VecI32 axis, bool keepDims);
+MNN_C_API VARP_t mnn_expr_ReduceVariance(VARP_t input_variable, VecI32 axis, bool keepDims);
 MNN_C_API VARP_t mnn_expr_ReduceMax(VARP_t input_variable, VecI32 axis, bool keepDims);
 MNN_C_API VARP_t mnn_expr_ReduceMin(VARP_t input_variable, VecI32 axis, bool keepDims);
 MNN_C_API VARP_t mnn_expr_ReduceProd(VARP_t input_variable, VecI32 axis, bool keepDims);

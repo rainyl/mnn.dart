@@ -26,7 +26,7 @@ mixin ComparableMixin {
 /// Base class for wrapping C++ objects in Dart
 abstract class NativeObject with ComparableMixin implements ffi.Finalizable {
   /// Pointer to the underlying C++ object
-  final ffi.Pointer<ffi.Void> _ptr;
+  ffi.Pointer<ffi.Void> _ptr;
 
   ffi.NativeFinalizer get finalizer;
 
@@ -55,6 +55,14 @@ abstract class NativeObject with ComparableMixin implements ffi.Finalizable {
   /// Subclasses must implement specific release logic
   @protected
   void release();
+
+  void reattach(ffi.Pointer<ffi.Void> ptr) {
+    dispose();
+    _ptr = ptr;
+    if (attach) {
+      finalizer.attach(this, _ptr, detach: this);
+    }
+  }
 
   @mustCallSuper
   void dispose() {
@@ -97,13 +105,13 @@ void MnnAssert(bool condition, String message) {
   }
 }
 
-typedef u8 = ffi.Uint8;
-typedef u16 = ffi.Uint16;
-typedef u32 = ffi.Uint32;
-typedef u64 = ffi.Uint64;
-typedef i8 = ffi.Int8;
-typedef i16 = ffi.Int16;
-typedef i32 = ffi.Int32;
-typedef i64 = ffi.Int64;
-typedef f32 = ffi.Float;
-typedef f64 = ffi.Double;
+typedef uint8 = ffi.Uint8;
+typedef uint16 = ffi.Uint16;
+typedef uint32 = ffi.Uint32;
+typedef uint64 = ffi.Uint64;
+typedef int8 = ffi.Int8;
+typedef int16 = ffi.Int16;
+typedef int32 = ffi.Int32;
+typedef int64 = ffi.Int64;
+typedef float32 = ffi.Float;
+typedef float64 = ffi.Double;

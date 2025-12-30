@@ -86,19 +86,19 @@ List<List<(int, double)>> inference(
     final size = outputUser.getStride(0);
     final tempValues = <(int, double)>[];
     if (type.code == mnn.HalideTypeCode.halide_type_float) {
-      final values = outputUser.cast<mnn.f32>() + batch * size;
+      final values = outputUser.cast<mnn.float32>() + batch * size;
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i]));
       }
     } else if (type.code == mnn.HalideTypeCode.halide_type_uint &&
         type.bytes == 1) {
-      final values = outputUser.cast<mnn.u8>() + batch * size;
+      final values = outputUser.cast<mnn.uint8>() + batch * size;
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i].toDouble()));
       }
     } else if (type.code == mnn.HalideTypeCode.halide_type_int &&
         type.bytes == 1) {
-      final values = outputUser.cast<mnn.i8>() + batch * size;
+      final values = outputUser.cast<mnn.int8>() + batch * size;
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i].toDouble()));
       }

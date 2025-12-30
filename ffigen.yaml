@@ -85,7 +85,7 @@ enums:
     'stbir_datatype': 'StbirDataType'
 
 preamble: |
-  // dart format off
+  // coverage:ignore-file
   // Copyright (c) 2025, rainyl.  Please see the AUTHORS file
   // for details. All rights reserved. Use of this source code is governed by a
   // BSD-style license that can be found in the LICENSE file.
