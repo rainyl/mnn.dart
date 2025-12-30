@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 //
 // Created by rainy on 2025/9/10.
 //
@@ -7,9 +8,7 @@
 #include "MNN/expr/Expr.hpp"
 #include "base.h"
 #include <cstdlib>
-#include <iostream>
-#include <ostream>
-#include <vector>
+#include <cstring>
 
 VecVARP_t mnn_expr_VecVARP_create(size_t length, VARP_t value) {
   if (value) return new std::vector<MNN::Express::VARP>(length, *value);
