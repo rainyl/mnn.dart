@@ -1373,23 +1373,23 @@ VARP reshape(VARP x, List<int> shape, {DimensionFormat format = DimensionFormat.
   return rval;
 }
 
-VARP scale(VARP x, int channels, List<double> scales, List<double> biases) {
-  final (scalesPtr, scalesSize) = scales.toNativeArrayF32();
-  final (biasesPtr, biasesSize) = biases.toNativeArrayF32();
-  final rval = VARP.fromPointer(
-    C.mnn_expr_Scale(
-      x.ptr,
-      channels,
-      scalesPtr.cast(),
-      scalesSize,
-      biasesPtr.cast(),
-      biasesSize,
-    ),
-  );
-  calloc.free(scalesPtr);
-  calloc.free(biasesPtr);
-  return rval;
-}
+// VARP scale(VARP x, int channels, List<double> scales, List<double> biases) {
+//   final (scalesPtr, scalesSize) = scales.toNativeArrayF32();
+//   final (biasesPtr, biasesSize) = biases.toNativeArrayF32();
+//   final rval = VARP.fromPointer(
+//     C.mnn_expr_Scale(
+//       x.ptr,
+//       channels,
+//       scalesPtr.cast(),
+//       scalesSize,
+//       biasesPtr.cast(),
+//       biasesSize,
+//     ),
+//   );
+//   calloc.free(scalesPtr);
+//   calloc.free(biasesPtr);
+//   return rval;
+// }
 
 /// Given an input value x, it computes the output as x if x > 0 and slope * x if x <= 0.
 ///
@@ -2091,11 +2091,12 @@ VARP GridSample(
 }) =>
     VARP.fromPointer(C.mnn_expr_GridSample(input.ptr, grid.ptr, mode.value, paddingMode.value, alignCorners));
 
-VARP floatToInt8(VARP x, VARP scale, int minvalue, int maxValue, {int? zeroPoint}) => VARP.fromPointer(
-  zeroPoint == null
-      ? C.mnn_expr_FloatToInt8(x.ptr, scale.ptr, minvalue, maxValue)
-      : C.mnn_expr_FloatToInt8_1(x.ptr, scale.ptr, minvalue, maxValue, zeroPoint),
-);
+VARP floatToInt8(VARP x, VARP scale, {int minvalue = -127, int maxValue = 127, int? zeroPoint}) =>
+    VARP.fromPointer(
+      zeroPoint == null
+          ? C.mnn_expr_FloatToInt8(x.ptr, scale.ptr, minvalue, maxValue)
+          : C.mnn_expr_FloatToInt8_1(x.ptr, scale.ptr, minvalue, maxValue, zeroPoint),
+    );
 
 VARP int8ToFloat(VARP x, VARP scale, {int? zeroPoint}) => VARP.fromPointer(
   zeroPoint == null

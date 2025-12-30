@@ -4,6 +4,8 @@ import 'package:mnn/mnn.dart' as mnn;
 import 'package:mnn/numpy.dart' as np;
 import 'package:test/test.dart';
 
+import '../list_element_equals.dart';
+
 void main() {
   group('VARP creation', () {
     test('VARP.create', () {
@@ -266,12 +268,13 @@ void main() {
     test('mean, sum instance methods', () {
       final data = [1.0, 2.0, 3.0, 4.0];
       final x = mnn.VARP.listND<mnn.float32>(data, [2, 2]);
+      expect(x.data, listCloseTo([1.0, 2.0, 3.0, 4.0], 0.001));
 
       final m = x.mean([0]); // [2, 3]
-      expect(m.data, [2.0, 3.0]);
+      expect(m.data, listCloseTo([2.0, 3.0], 0.001));
 
       final s = x.sum([1]); // [3, 7]
-      expect(s.data, [3.0, 7.0]);
+      expect(s.data, listCloseTo([3.0, 7.0], 0.001));
 
       x.dispose();
       m.dispose();

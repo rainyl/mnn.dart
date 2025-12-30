@@ -55,6 +55,7 @@ void main() {
 
     expr.dispose();
     expr1.dispose();
+    tensor.dispose();
   });
 
   test('Variable load save', () {
@@ -63,7 +64,7 @@ void main() {
       outFile.parent.createSync(recursive: true);
     }
     final varp = mnn.VARP.list<mnn.int32>([1, 2, 3, 4], format: mnn.DimensionFormat.NCHW);
-    print(varp.getInfo());
+    // print(varp.getInfo());
 
     mnn.VARP.saveToFile([varp], outFile.path);
 
@@ -75,6 +76,15 @@ void main() {
     final varpLoadedFile = mnn.VARP.loadFromFile(outFile.path);
     expect(varpLoaded[0].data, varp.data);
     expect(varpLoadedFile[0].data, varp.data);
+
+    varp.dispose();
+    for (var v in varpLoaded) {
+      v.dispose();
+    }
+    for (var v in varpLoadedFile) {
+      v.dispose();
+    }
+    bufOut.dispose();
 
     // final varpMap = mnn.VARP.loadMapFromFile("test/data/mnist-8.mnn");
     // print(varpMap["Plus214_Output_0"]?.data);

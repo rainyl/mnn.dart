@@ -11,5 +11,6 @@ void main() async {
     final end = timer.current();
     final duration = end - start;
     expect(duration, greaterThan(0));
+    timer.dispose();
   });
 }

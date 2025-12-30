@@ -53,7 +53,7 @@ MNN_C_API VARMAP_t mnn_expr_VARMAP_create() {
 MNN_C_API void mnn_expr_VARMAP_free(void *self) { delete static_cast<VARMAP_t>(self); }
 MNN_C_API size_t mnn_expr_VARMAP_size(VARMAP_t self) { return self->size(); }
 MNN_C_API char **mnn_expr_VARMAP_keys(VARMAP_t self) {
-  char **keys = static_cast<char **>(dart_malloc(self->size() * sizeof(char *)));
+  char **keys = static_cast<char **>(malloc(self->size() * sizeof(char *)));
   int idx = 0;
   for (const auto &pair : *self) {
     keys[idx] = strdup(pair.first.c_str());
@@ -142,7 +142,7 @@ bool mnn_expr_VARP_copyToDevicePtr(VARP_t self, void *devicePtr, int memoryType)
 
 struct Variable_expr_pair *mnn_expr_VARP_getExpr(VARP_t self) {
   auto _expr = (*self)->expr();
-  auto pair = static_cast<Variable_expr_pair *>(dart_malloc(sizeof(Variable_expr_pair)));
+  auto pair = static_cast<Variable_expr_pair *>(malloc(sizeof(Variable_expr_pair)));
   pair->index = _expr.second;
   pair->expr = new MNN::Express::EXPRP{_expr.first};
   return pair;
@@ -262,10 +262,10 @@ int mnn_expr_Expr_inputType(EXPRP_t self) { return static_cast<int>(self->get()-
 
 struct mnn_expr_Variable_Info *mnn_expr_Expr_outputInfo(EXPRP_t self, int index) {
   auto _info = self->get()->outputInfo(index);
-  auto info = static_cast<mnn_expr_Variable_Info *>(dart_malloc(sizeof(mnn_expr_Variable_Info)));
+  auto info = new mnn_expr_Variable_Info();
   info->order = static_cast<int>(_info->order);
   info->ndim = _info->dim.size();
-  auto pdim = static_cast<int32_t *>(dart_malloc(info->ndim * sizeof(int32_t)));
+  auto pdim = new int32_t[info->ndim];
   for (int i = 0; i < info->ndim; i++) { pdim[i] = _info->dim[i]; }
   info->dim = pdim;
   info->type = {static_cast<uint8_t>(_info->type.code), _info->type.bits, _info->type.lanes};

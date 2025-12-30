@@ -17,10 +17,6 @@
 extern "C" {
 #endif
 
-MNN_C_API void *dart_malloc(size_t size);
-
-MNN_C_API void dart_free(void *ptr);
-
 #ifdef __cplusplus
 }
 #endif
