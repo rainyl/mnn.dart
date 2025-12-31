@@ -1,3 +1,16 @@
+## 0.1.0
+
+- Note: breaking change
+- bump MNN to 3.3.0
+- bump dart sdk to 3.10
+- new: add support of `MNN::Expr` module
+- new: add numpy-like interfaces, e.g., `np.array()`, `np.argmax()`
+- breaking change: move `mnn.f32`, `mnn.i32` etc. to `mnn.float32`, `mnn.int32` etc.
+- new: add more functions to `VARP`
+- new: support numpy-style slicing for `VARP.operator []`, e.g., `x[0]` `x["0, 1, :"]`
+- new: support numpy-style slicing assignment for `VARP.operator []=`, e.g., `x[0]=...` `x["0, 1, :"]=...`
+- breaking change: rename `VARP.list`, `VARP.list2D`, `VARP.list3D`, `VARP.list4D`, `VARP.listND` to `VARP.fromList1D`, `VARP.fromList2D`, `VARP.fromList3D`, `VARP.fromList4D`, `VARP.fromListND`
+
 ## 0.0.3
 
 - new: support custom definations

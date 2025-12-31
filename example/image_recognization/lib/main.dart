@@ -177,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
       pixData.addAll(pixB);
 
       final host = input.map(mnn.MapType.MNN_MAP_TENSOR_WRITE, input.dimensionType);
-      host.cast<mnn.f32>().asTypedList(pixData.length).setAll(0, pixData);
+      host.cast<mnn.float32>().asTypedList(pixData.length).setAll(0, pixData);
       input.unmap(mnn.MapType.MNN_MAP_TENSOR_WRITE, input.dimensionType, host);
 
       _net!.runSession(_session!);
@@ -194,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final type = outputUser.type;
 
       if (type.code == mnn.HalideTypeCode.halide_type_float) {
-        final values = outputUser.host.cast<mnn.f32>();
+        final values = outputUser.host.cast<mnn.float32>();
         for (var i = 0; i < size; i++) {
           tempValues.add((i, values[i]));
         }

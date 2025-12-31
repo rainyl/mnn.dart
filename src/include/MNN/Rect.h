@@ -451,10 +451,10 @@ struct MNN_PUBLIC Rect {
 
 private:
     static bool Intersects(float al, float at, float ar, float ab, float bl, float bt, float br, float bb) {
-        float L = std::max(al, bl);
-        float R = std::min(ar, br);
-        float T = std::max(at, bt);
-        float B = std::min(ab, bb);
+        float L = (std::max)(al, bl);
+        float R = (std::min)(ar, br);
+        float T = (std::max)(at, bt);
+        float B = (std::min)(ab, bb);
         return L < R && T < B;
     }
 
@@ -522,10 +522,10 @@ public:
         @param r  expansion Rect
     */
     void joinPossiblyEmptyRect(const Rect& r) {
-        fLeft   = std::min(fLeft, r.left());
-        fTop    = std::min(fTop, r.top());
-        fRight  = std::max(fRight, r.right());
-        fBottom = std::max(fBottom, r.bottom());
+        fLeft   = (std::min)(fLeft, r.left());
+        fTop    = (std::min)(fTop, r.top());
+        fRight  = (std::max)(fRight, r.right());
+        fBottom = (std::max)(fBottom, r.bottom());
     }
 
     /** Returns true if: fLeft <= x < fRight && fTop <= y < fBottom.
@@ -561,8 +561,12 @@ public:
         @return  sorted Rect
     */
     Rect makeSorted() const {
-        return MakeLTRB(std::min(fLeft, fRight), std::min(fTop, fBottom), std::max(fLeft, fRight),
-                        std::max(fTop, fBottom));
+      return MakeLTRB(
+          (std::min)(fLeft, fRight),
+          (std::min)(fTop, fBottom),
+          (std::max)(fLeft, fRight),
+          (std::max)(fTop, fBottom)
+      );
     }
 
     /** Returns pointer to first scalar in Rect, to treat it as an array with four

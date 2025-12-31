@@ -168,7 +168,8 @@ class ImageProcess extends NativeObject {
     Image? image,
   }) {
     final pImage = image == null ? ffi.nullptr : image.ptr;
-    final ptr = c.mnn_cv_image_process_create_image_tensor(type.ref, width, height, bytesPerChannel, pImage);
+    final ptr =
+        c.mnn_cv_image_process_create_image_tensor(type.native.ref, width, height, bytesPerChannel, pImage);
     return Tensor.fromPointer(ptr);
   }
 
@@ -208,7 +209,7 @@ class ImageProcess extends NativeObject {
 
   set matrix(Matrix value) {
     final code = c.mnn_cv_image_process_set_matrix(ptr, value.ptr.cast());
-    if (code != c.ErrorCode.NO_ERROR) {
+    if (code != c.ErrorCode.MNNC_NO_ERROR) {
       throw MNNException('set matrix failed');
     }
   }
@@ -218,7 +219,7 @@ class ImageProcess extends NativeObject {
     pSrc.asTypedList(src.length).setAll(0, src);
     final code = c.mnn_cv_image_process_convert(ptr, pSrc, iw, ih, stride, dst.ptr);
     calloc.free(pSrc);
-    if (code != c.ErrorCode.NO_ERROR) {
+    if (code != c.ErrorCode.MNNC_NO_ERROR) {
       throw MNNException('convert failed');
     }
     return dst;
@@ -226,7 +227,7 @@ class ImageProcess extends NativeObject {
 
   Tensor convertImage(Image src, Tensor dst) {
     final code = c.mnn_cv_image_process_convert(ptr, src.ptr.cast(), src.width, src.height, 0, dst.ptr);
-    if (code != c.ErrorCode.NO_ERROR) {
+    if (code != c.ErrorCode.MNNC_NO_ERROR) {
       throw MNNException('convert failed');
     }
     return dst;

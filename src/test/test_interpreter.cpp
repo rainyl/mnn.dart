@@ -7,6 +7,8 @@
 #include "../interpreter.h"
 #include "MNN/ImageProcess.hpp"
 #include "MNN/Matrix.h"
+#include "MNN/expr/Expr.hpp"
+#include "expr.h"
 #include <iostream>
 #include <memory>
 #include <stdio.h>
@@ -15,6 +17,16 @@
 int main(int argc, char *argv[]) {
   if (argc != 2) {
     printf("Usage: %s <model_path>\n", argv[0]);
+    return 1;
+  }
+
+  // auto varp = MNN::Express::Variable::load(argv[1]);
+  auto varp = mnn_expr_VARP_static_load(argv[1]);
+  mnn_expr_VARP_static_save(varp, "model.bin");
+  auto _info = mnn_expr_VARP_getInfo(&varp->at(0));
+
+  if (_info == nullptr) {
+    std::cout << "getInfo.info is nullptr" << std::endl;
     return 1;
   }
 

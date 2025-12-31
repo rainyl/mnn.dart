@@ -163,23 +163,23 @@ mnn_tensor_t mnn_tensor_clone(mnn_tensor_t src, bool deep_copy) {
 }
 
 mnn_error_code_t mnn_tensor_copy_from_host(mnn_tensor_t self, mnn_tensor_t host_tensor) {
-  if (!self || !host_tensor) return INVALID_VALUE;
+  if (!self || !host_tensor) return MNNC_INVALID_VALUE;
   try {
     MNN::Tensor *dst = (MNN::Tensor *)self;
     MNN::Tensor *src = (MNN::Tensor *)host_tensor;
     auto r = dst->copyFromHostTensor(src);
-    return r ? BOOL_TRUE : BOOL_FALSE;
-  } catch (...) { return UNKNOWN_ERROR; }
+    return r ? MNNC_BOOL_TRUE : MNNC_BOOL_FALSE;
+  } catch (...) { return MNNC_UNKNOWN_ERROR; }
 }
 
 mnn_error_code_t mnn_tensor_copy_to_host(mnn_tensor_t self, mnn_tensor_t host_tensor) {
-  if (!self || !host_tensor) return INVALID_VALUE;
+  if (!self || !host_tensor) return MNNC_INVALID_VALUE;
   try {
     MNN::Tensor *src = (MNN::Tensor *)self;
     MNN::Tensor *dst = (MNN::Tensor *)host_tensor;
     auto r = src->copyToHostTensor(dst);
-    return r ? BOOL_TRUE : BOOL_FALSE;
-  } catch (...) { return UNKNOWN_ERROR; }
+    return r ? MNNC_BOOL_TRUE : MNNC_BOOL_FALSE;
+  } catch (...) { return MNNC_UNKNOWN_ERROR; }
 }
 
 // MNN::Tensor properties
@@ -189,12 +189,12 @@ int mnn_tensor_dimensions(mnn_tensor_t self) {
 }
 
 mnn_error_code_t mnn_tensor_shape(mnn_tensor_t self, int *shape, int shape_size) {
-  if (!self || !shape) return INVALID_VALUE;
+  if (!self || !shape) return MNNC_INVALID_VALUE;
   MNN::Tensor *t = (MNN::Tensor *)self;
-  if (shape_size < t->dimensions()) return INVALID_VALUE;
+  if (shape_size < t->dimensions()) return MNNC_INVALID_VALUE;
 
   for (int i = 0; i < t->dimensions(); i++) { shape[i] = t->length(i); }
-  return NO_ERROR;
+  return MNNC_NO_ERROR;
 }
 
 int mnn_tensor_size(mnn_tensor_t self) {
@@ -318,20 +318,20 @@ void mnn_tensor_unmap(
 }
 
 mnn_error_code_t mnn_tensor_wait(mnn_tensor_t self, mnn_map_type_t mtype, bool finish) {
-  if (!self) return MNN_INVALID_PTR;
+  if (!self) return MNNC_INVALID_PTR;
   try {
     ((MNN::Tensor *)self)->wait((MNN::Tensor::MapType)mtype, finish);
-    return NO_ERROR;
-  } catch (...) { return UNKNOWN_ERROR; }
+    return MNNC_NO_ERROR;
+  } catch (...) { return MNNC_UNKNOWN_ERROR; }
 }
 
 mnn_error_code_t
 mnn_tensor_set_device_ptr(mnn_tensor_t self, const void *device_ptr, int memory_type) {
-  if (!self || !device_ptr) return MNN_INVALID_PTR;
+  if (!self || !device_ptr) return MNNC_INVALID_PTR;
   try {
     ((MNN::Tensor *)self)->setDevicePtr(device_ptr, memory_type);
-    return NO_ERROR;
-  } catch (...) { return UNKNOWN_ERROR; }
+    return MNNC_NO_ERROR;
+  } catch (...) { return MNNC_UNKNOWN_ERROR; }
 }
 
 void mnn_tensor_print(mnn_tensor_t self) {
@@ -347,10 +347,10 @@ void mnn_tensor_print_shape(mnn_tensor_t self) {
 MNN_C_API mnn_error_code_t mnn_tensor_set_image_f32(
     mnn_tensor_t self, int index, float *data, int width, int height, int channel
 ) {
-  if (!self || !data) return MNN_INVALID_PTR;
+  if (!self || !data) return MNNC_INVALID_PTR;
   if (self->width() != width || self->height() != height || self->channel() != channel)
-    return INVALID_VALUE;
+    return MNNC_INVALID_VALUE;
   auto host = self->host<float>() + index * width * height * channel;
   memcpy(host, data, width * height * channel * sizeof(float));
-  return NO_ERROR;
+  return MNNC_NO_ERROR;
 }

@@ -58,8 +58,8 @@ List<List<(int, double)>> inference(
     cv.cvtColor(img, cv.COLOR_BGR2RGB, dst: img);
     cv.resize(img, (W, H), dst: img, interpolation: cv.INTER_LINEAR);
     img.convertTo(cv.MatType.CV_32FC3, alpha: 1 / 255.0, inplace: true);
-    img.subtractScalar(cv.Scalar(mean[0], mean[1], mean[2]), inplace: true);
-    img.divideScalar(cv.Scalar(std[0], std[1], std[2]), inplace: true);
+    // img.subtract(cv.Scalar(mean[0], mean[1], mean[2]), inplace: true);
+    // img.divideScalar(cv.Scalar(std[0], std[1], std[2]), inplace: true);
     final temp = img.data.buffer.asFloat32List();
     final pixData = Float32List.fromList(List.filled(temp.length, 0));
     final frameSize = W * H;
@@ -86,19 +86,19 @@ List<List<(int, double)>> inference(
     final size = outputUser.getStride(0);
     final tempValues = <(int, double)>[];
     if (type.code == mnn.HalideTypeCode.halide_type_float) {
-      final values = outputUser.cast<mnn.f32>() + batch * size;
+      final values = outputUser.cast<mnn.float32>() + batch * size;
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i]));
       }
     } else if (type.code == mnn.HalideTypeCode.halide_type_uint &&
         type.bytes == 1) {
-      final values = outputUser.cast<mnn.u8>() + batch * size;
+      final values = outputUser.cast<mnn.uint8>() + batch * size;
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i].toDouble()));
       }
     } else if (type.code == mnn.HalideTypeCode.halide_type_int &&
         type.bytes == 1) {
-      final values = outputUser.cast<mnn.i8>() + batch * size;
+      final values = outputUser.cast<mnn.int8>() + batch * size;
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i].toDouble()));
       }

@@ -73,7 +73,7 @@ void main(List<String> args) async {
     print("image: ${im1.values.sublist(0, 7)}");
 
     nchwTensor.setImage(i - 1, im1);
-    print(nchwTensor.cast<mnn.f32>().asTypedList(7));
+    print(nchwTensor.cast<mnn.float32>().asTypedList(7));
   }
   input.copyFromHost(nchwTensor);
   nchwTensor.dispose();
@@ -91,17 +91,17 @@ void main(List<String> args) async {
     final size = outputUser.getStride(0);
     final tempValues = <(int, double)>[];
     if (type.code == mnn.HalideTypeCode.halide_type_float) {
-      final values = outputUser.host.cast<mnn.f32>() + batch * size;
+      final values = outputUser.host.cast<mnn.float32>() + batch * size;
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i]));
       }
     } else if (type.code == mnn.HalideTypeCode.halide_type_uint && type.bytes == 1) {
-      final values = outputUser.host.cast<mnn.u8>() + batch * size;
+      final values = outputUser.host.cast<mnn.uint8>() + batch * size;
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i].toDouble()));
       }
     } else if (type.code == mnn.HalideTypeCode.halide_type_int && type.bytes == 1) {
-      final values = outputUser.host.cast<mnn.i8>() + batch * size;
+      final values = outputUser.host.cast<mnn.int8>() + batch * size;
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i].toDouble()));
       }

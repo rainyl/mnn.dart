@@ -26,7 +26,7 @@ mixin ComparableMixin {
 /// Base class for wrapping C++ objects in Dart
 abstract class NativeObject with ComparableMixin implements ffi.Finalizable {
   /// Pointer to the underlying C++ object
-  final ffi.Pointer<ffi.Void> _ptr;
+  ffi.Pointer<ffi.Void> _ptr;
 
   ffi.NativeFinalizer get finalizer;
 
@@ -56,6 +56,14 @@ abstract class NativeObject with ComparableMixin implements ffi.Finalizable {
   @protected
   void release();
 
+  void reattach(ffi.Pointer<ffi.Void> ptr) {
+    dispose();
+    _ptr = ptr;
+    if (attach) {
+      finalizer.attach(this, _ptr, detach: this);
+    }
+  }
+
   @mustCallSuper
   void dispose() {
     if (attach) {
@@ -67,7 +75,7 @@ abstract class NativeObject with ComparableMixin implements ffi.Finalizable {
 
 void mnnRun(c.ErrorCode Function() func) {
   final code = func();
-  if (code != c.ErrorCode.NO_ERROR) {
+  if (code != c.ErrorCode.MNNC_NO_ERROR) {
     throw MNNException("MNN_ERROR: $code");
   }
 }
@@ -85,19 +93,25 @@ Future<T> mnnRunAsync0<T>(
 
   ccallback = ffi.NativeCallable.listener(onResponse);
   final code = func(ccallback.nativeFunction);
-  if (code != c.ErrorCode.NO_ERROR) {
+  if (code != c.ErrorCode.MNNC_NO_ERROR) {
     throw MNNException("MNN_ERROR: $code");
   }
   return completer.future;
 }
 
-typedef u8 = ffi.Uint8;
-typedef u16 = ffi.Uint16;
-typedef u32 = ffi.Uint32;
-typedef u64 = ffi.Uint64;
-typedef i8 = ffi.Int8;
-typedef i16 = ffi.Int16;
-typedef i32 = ffi.Int32;
-typedef i64 = ffi.Int64;
-typedef f32 = ffi.Float;
-typedef f64 = ffi.Double;
+void MnnAssert(bool condition, String message) {
+  if (!condition) {
+    throw MNNException(message);
+  }
+}
+
+typedef uint8 = ffi.Uint8;
+typedef uint16 = ffi.Uint16;
+typedef uint32 = ffi.Uint32;
+typedef uint64 = ffi.Uint64;
+typedef int8 = ffi.Int8;
+typedef int16 = ffi.Int16;
+typedef int32 = ffi.Int32;
+typedef int64 = ffi.Int64;
+typedef float32 = ffi.Float;
+typedef float64 = ffi.Double;

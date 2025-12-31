@@ -10,7 +10,7 @@ A Dart wapper for [MNN](https://github.com/alibaba/MNN).
 ## Getting started
 
 ```
-dart --enable-experiment=native-assets run example/main.dart
+dart run example/main.dart
 ```
 
 ## Usage

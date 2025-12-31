@@ -9,11 +9,8 @@ import 'dart:io';
 import 'package:code_assets/code_assets.dart';
 import 'package:hooks/hooks.dart';
 import 'package:logging/logging.dart';
-import 'package:mnn/src/hook_helpers/parse_user_define.dart';
 import 'package:native_toolchain_cmake/native_toolchain_cmake.dart';
 
-/// Implements the protocol from `package:native_assets_cli` by building
-/// the C code in `src/` and reporting what native assets it built.
 void main(List<String> args) async {
   await build(args, _builder);
 }
@@ -22,37 +19,35 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
   final packageName = input.packageName;
   final packagePath = Uri.directory(await getPackagePath(packageName));
   final sourceDir = packagePath.resolve('src/');
-  // final outDir = Uri.directory(packagePath).resolve('build/');
+  final userDefines = input.userDefines;
+  final defsOptions = userDefines["options"] as Map<String, dynamic>?;
+
+  final debugMode = defsOptions?['debug'] as bool? ?? false;
+  final buildLocal = defsOptions?['build_local'] as bool? ?? false;
+
   final logger = Logger("")
     ..level = Level.ALL
-    ..onRecord.listen((record) => stderr.writeln(record.message));
-  // ..onRecord.listen((record) => print(record.message));
+    ..onRecord.listen((record) => debugMode ? stderr.writeln(record.message) : print(record.message));
 
-  final defsDefault = parseUserDefinedOptions(packagePath.resolve("pubspec.yaml").toFilePath());
-  final defsUser = parseUserDefinedOptions(
-    Platform.script.resolve('../../../../pubspec.yaml').toFilePath(),
-  );
-  final defsFinal = {...defsDefault, ...defsUser};
-  final defines = (defsFinal["defines"]! as Map<String, Object>)["common"]! as Map<String, String>;
-  final definesPlatform = switch (input.config.code.targetOS) {
-    OS.android => ((defsFinal["defines"]! as Map<String, Object>)["android"]! as Map<String, String>),
-    OS.iOS => ((defsFinal["defines"]! as Map<String, Object>)["ios"]! as Map<String, String>),
-    OS.linux => ((defsFinal["defines"]! as Map<String, Object>)["linux"]! as Map<String, String>),
-    OS.macOS => ((defsFinal["defines"]! as Map<String, Object>)["macos"]! as Map<String, String>),
-    OS.windows => ((defsFinal["defines"]! as Map<String, Object>)["windows"]! as Map<String, String>),
+  final defsDefines = userDefines["defines"] as Map<String, dynamic>?;
+  final defsCommon = (defsDefines?['common'] as Map<String, dynamic>? ?? {}).cast<String, String>();
+  final defsPlatform = switch (input.config.code.targetOS) {
+    OS.android => (defsDefines?["android"] as Map<String, dynamic>? ?? {}).cast<String, String>(),
+    OS.iOS => (defsDefines?["ios"] as Map<String, dynamic>? ?? {}).cast<String, String>(),
+    OS.linux => (defsDefines?["linux"] as Map<String, dynamic>? ?? {}).cast<String, String>(),
+    OS.macOS => (defsDefines?["macos"] as Map<String, dynamic>? ?? {}).cast<String, String>(),
+    OS.windows => (defsDefines?["windows"] as Map<String, dynamic>? ?? {}).cast<String, String>(),
     _ => <String, String>{},
   };
-  defines.addAll(definesPlatform);
-  final options = (defsFinal["options"] as Map<String, Object>?) ?? {};
+  final defines = {...defsCommon, ...defsPlatform};
 
   logger.info("defines: $defines");
-  logger.info("options: $options");
 
   final builder = CMakeBuilder.create(
     name: packageName,
     sourceDir: sourceDir,
-    // outDir: outDir,
     generator: Generator.ninja,
+    buildLocal: buildLocal,
     targets: ['install'],
     defines: {
       'CMAKE_INSTALL_PREFIX': input.outputDirectory.resolve('install').toFilePath(),
@@ -71,9 +66,9 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
       'MNN_BUILD_CODEGEN': 'OFF',
       'MNN_ENABLE_COVERAGE': 'OFF',
       'MNN_JNI': 'OFF',
+      "MNN_KLEIDIAI": 'OFF',
       ...defines,
     },
-    buildLocal: options["build_local"] as bool? ?? false,
   );
 
   await builder.run(input: input, output: output, logger: logger);
@@ -82,5 +77,6 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
     input,
     outDir: input.outputDirectory.resolve('install'),
     names: {"mnn_c_api": "mnn.dart"},
+    logger: logger,
   );
 }
