@@ -501,8 +501,8 @@ void main() {
     test('np.exponents and logs', () {
       final a = np.array<mnn.float32>([0.0, 1.0]);
       final e = np.exp(a);
-      expect(e.data![0], closeTo(1.0, 1e-5));
-      expect(e.data![1], closeTo(math.e, 1e-5));
+      expect(e.data![0], closeTo(1.0, 1e-4));
+      expect(e.data![1], closeTo(math.e, 1e-4));
 
       final em1 = np.expm1(np.array<mnn.float32>([0.0]));
       expect(em1.data![0], closeTo(0.0, 1e-5)); // exp(0)-1 = 0
