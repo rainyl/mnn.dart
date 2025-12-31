@@ -238,17 +238,17 @@ class VARP extends NativeObject {
 
   static VARP scalar<T extends ffi.SizedNativeType>(num value) => op.scalar<T>(value);
 
-  static VARP list<T extends ffi.SizedNativeType>(
+  static VARP fromList1D<T extends ffi.SizedNativeType>(
     Iterable<num> data, {
     DimensionFormat format = DimensionFormat.NHWC,
   }) => op.constant<T>(data, [data.length], format: format);
 
-  static VARP list2D<T extends ffi.SizedNativeType>(
+  static VARP fromList2D<T extends ffi.SizedNativeType>(
     Iterable<Iterable<num>> data, {
     DimensionFormat format = DimensionFormat.NHWC,
   }) => op.constant<T>(data.expand((e) => e), [data.length, data.first.length], format: format);
 
-  static VARP list3D<T extends ffi.SizedNativeType>(
+  static VARP fromList3D<T extends ffi.SizedNativeType>(
     Iterable<Iterable<Iterable<num>>> data, {
     DimensionFormat format = DimensionFormat.NHWC,
   }) => op.constant<T>(
@@ -257,7 +257,7 @@ class VARP extends NativeObject {
     format: format,
   );
 
-  static VARP list4D<T extends ffi.SizedNativeType>(
+  static VARP fromList4D<T extends ffi.SizedNativeType>(
     Iterable<Iterable<Iterable<Iterable<num>>>> data, {
     DimensionFormat format = DimensionFormat.NHWC,
   }) => op.constant<T>(
@@ -266,13 +266,13 @@ class VARP extends NativeObject {
     format: format,
   );
 
-  static VARP listND<T extends ffi.SizedNativeType>(
+  static VARP fromListND<T extends ffi.SizedNativeType>(
     Iterable<num> data,
     Iterable<int> shape, {
     DimensionFormat format = DimensionFormat.NHWC,
   }) => op.constant<T>(data, shape, format: format);
 
-  VARP astype<T extends ffi.SizedNativeType>() => op.cast<T>(this);
+  VARP astype<T extends ffi.SizedNativeType>({HalideType? dtype}) => op.cast<T>(this, dtype: dtype);
 
   String getName() => C.mnn_expr_VARP_getName(ptr).cast<Utf8>().toDartString();
   void setName(String name) {
@@ -552,9 +552,9 @@ class VARP extends NativeObject {
     }
 
     return (
-      begin: VARP.list<ffi.Int32>(begins),
-      end: VARP.list<ffi.Int32>(ends),
-      strides: VARP.list<ffi.Int32>(strides),
+      begin: VARP.fromList1D<ffi.Int32>(begins),
+      end: VARP.fromList1D<ffi.Int32>(ends),
+      strides: VARP.fromList1D<ffi.Int32>(strides),
       beginMask: beginMask,
       endMask: endMask,
       shrinkAxisMask: shrinkAxisMask,
@@ -581,8 +581,11 @@ class VARP extends NativeObject {
     throw ArgumentError.value(index, 'index', 'Index must be int or String');
   }
 
-  void operator []=(String index, VARP value) {
-    final params = _parseSliceParams(index);
+  void operator []=(dynamic index, VARP value) {
+    if (!(index is int || index is String)) {
+      throw ArgumentError.value(index, 'index', 'Index must be int or String');
+    }
+    final params = _parseSliceParams(index is int ? index.toString() : index as String);
 
     final target = op.stridedSlice(
       this,

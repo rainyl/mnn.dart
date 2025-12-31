@@ -89,15 +89,15 @@ void main() {
     });
 
     test('GridSample, CosineSimilarity', () {
-      final x = mnn.VARP.listND<mnn.float32>([1, 2, 3, 4], [1, 1, 2, 2]);
-      final grid = mnn.VARP.listND<mnn.float32>([0, 0], [1, 1, 1, 2]); // 1x1x1x2 grid
+      final x = mnn.VARP.fromListND<mnn.float32>([1, 2, 3, 4], [1, 1, 2, 2]);
+      final grid = mnn.VARP.fromListND<mnn.float32>([0, 0], [1, 1, 1, 2]); // 1x1x1x2 grid
       final gs = op.GridSample(x, grid);
       expect(gs.dim, [1, 1, 1, 1]);
       gs.dispose();
       grid.dispose();
 
-      final x1 = mnn.VARP.listND<mnn.float32>([1, 0], [2]);
-      final x2 = mnn.VARP.listND<mnn.float32>([1, 0], [2]);
+      final x1 = mnn.VARP.fromListND<mnn.float32>([1, 0], [2]);
+      final x2 = mnn.VARP.fromListND<mnn.float32>([1, 0], [2]);
       final dim = mnn.VARP.scalar<mnn.int32>(0);
       final cs = op.CosineSimilarity(x1, x2, dim);
       expect(cs.value, closeTo(1.0, 0.001));
@@ -207,7 +207,7 @@ void main() {
       final shape = [2, 2];
       // [[1, 2],
       //  [3, 4]]
-      final x = mnn.VARP.listND<mnn.float32>(data, shape, format: mnn.DimensionFormat.NCHW);
+      final x = mnn.VARP.fromListND<mnn.float32>(data, shape, format: mnn.DimensionFormat.NCHW);
 
       // Reduce along axis 0 (columns): [1+3, 2+4] = [4, 6]
       final sum0 = op.reduceSum(x, axis: [0]);
@@ -242,7 +242,7 @@ void main() {
     test('reduceMutable', () {
       final data = [1.0, 2.0, 3.0, 4.0];
       final shape = [2, 2];
-      final x = mnn.VARP.listND<mnn.float32>(data, shape, format: mnn.DimensionFormat.NCHW);
+      final x = mnn.VARP.fromListND<mnn.float32>(data, shape, format: mnn.DimensionFormat.NCHW);
 
       expect(op.reduceSumMutable(x).data, [10.0]);
       final sum = op.reduceSumMutable(x, axis: op.scalar<mnn.int32>(0));
@@ -275,7 +275,7 @@ void main() {
     test('reduceAnyMutable, reduceAllMutable', () {
       final data = [0, 1, 1, 1];
       final shape = [2, 2]; // [[0, 1], [1, 1]]
-      final x = mnn.VARP.listND<mnn.int32>(data, shape);
+      final x = mnn.VARP.fromListND<mnn.int32>(data, shape);
 
       final any = op.reduceAnyMutable(x, axis: op.scalar<mnn.int32>(1)); // [1, 1]
       expect(any.data, [1, 1]);
@@ -291,7 +291,7 @@ void main() {
     test('reduceProd', () {
       final data = [1.0, 2.0, 3.0, 4.0];
       final shape = [4];
-      final x = mnn.VARP.listND<mnn.float32>(data, shape, format: mnn.DimensionFormat.NCHW);
+      final x = mnn.VARP.fromListND<mnn.float32>(data, shape, format: mnn.DimensionFormat.NCHW);
 
       final prod = op.reduceProd(x, axis: [0]);
       expect(prod.value, closeTo(24.0, 0.001));
@@ -304,7 +304,7 @@ void main() {
       // 0 = false, 1 = true
       final data = [0, 1, 1, 1];
       final shape = [4];
-      final x = mnn.VARP.listND<mnn.int32>(data, shape, format: mnn.DimensionFormat.NCHW);
+      final x = mnn.VARP.fromListND<mnn.int32>(data, shape, format: mnn.DimensionFormat.NCHW);
 
       final any = op.reduceAny(x, axis: [0]);
       expect(any.readMap<mnn.int32>().value, 1);
@@ -320,8 +320,8 @@ void main() {
 
   group('EltwiseOPs', () {
     test('prod, sum, max, sub', () {
-      final a = mnn.VARP.list<mnn.float32>([1.0, 2.0, 3.0, 4.0], format: mnn.DimensionFormat.NCHW);
-      final b = mnn.VARP.list<mnn.float32>([2.0, 3.0, 4.0, 5.0], format: mnn.DimensionFormat.NCHW);
+      final a = mnn.VARP.fromList1D<mnn.float32>([1.0, 2.0, 3.0, 4.0], format: mnn.DimensionFormat.NCHW);
+      final b = mnn.VARP.fromList1D<mnn.float32>([2.0, 3.0, 4.0, 5.0], format: mnn.DimensionFormat.NCHW);
 
       // prod: x * y element-wise
       expect(op.prod(a, b).data, [2.0, 6.0, 12.0, 20.0]);
@@ -351,8 +351,8 @@ void main() {
     });
 
     test('concat', () {
-      final v1 = mnn.VARP.list<mnn.float32>([1, 2]);
-      final v2 = mnn.VARP.list<mnn.float32>([3, 4]);
+      final v1 = mnn.VARP.fromList1D<mnn.float32>([1, 2]);
+      final v2 = mnn.VARP.fromList1D<mnn.float32>([3, 4]);
 
       // concat along axis 0: [1, 2, 3, 4]
       final c = op.concat([v1, v2], 0);
@@ -369,7 +369,7 @@ void main() {
       final shape = [2, 2];
       // [[1, 2],
       //  [3, 4]]
-      final x = mnn.VARP.listND<mnn.float32>(data, shape, format: mnn.DimensionFormat.NCHW);
+      final x = mnn.VARP.fromListND<mnn.float32>(data, shape, format: mnn.DimensionFormat.NCHW);
 
       // Transpose to [[1, 3], [2, 4]]
       final y = op.transpose(x, [1, 0]);
@@ -385,10 +385,10 @@ void main() {
     test('slice', () {
       final data = [1.0, 2.0, 3.0, 4.0];
       final shape = [4];
-      final x = mnn.VARP.listND<mnn.float32>(data, shape, format: mnn.DimensionFormat.NCHW);
+      final x = mnn.VARP.fromListND<mnn.float32>(data, shape, format: mnn.DimensionFormat.NCHW);
 
-      final starts = mnn.VARP.list<mnn.int32>([1], format: mnn.DimensionFormat.NCHW);
-      final sizes = mnn.VARP.list<mnn.int32>([2], format: mnn.DimensionFormat.NCHW);
+      final starts = mnn.VARP.fromList1D<mnn.int32>([1], format: mnn.DimensionFormat.NCHW);
+      final sizes = mnn.VARP.fromList1D<mnn.int32>([2], format: mnn.DimensionFormat.NCHW);
 
       final y = op.slice(x, starts, sizes);
       expect(y.dim, [2]);
@@ -402,7 +402,7 @@ void main() {
     });
 
     test('fill, shape', () {
-      final dims = mnn.VARP.list<mnn.int32>([2, 2], format: mnn.DimensionFormat.NCHW);
+      final dims = mnn.VARP.fromList1D<mnn.int32>([2, 2], format: mnn.DimensionFormat.NCHW);
       final value = mnn.VARP.scalar<mnn.float32>(5.0);
 
       final filled = op.fill(dims, value);
@@ -420,7 +420,7 @@ void main() {
     });
 
     test('reshape', () {
-      final a = mnn.VARP.listND<mnn.float32>([1, 2, 3, 4], [2, 2]);
+      final a = mnn.VARP.fromListND<mnn.float32>([1, 2, 3, 4], [2, 2]);
       final b = op.reshape(a, [4]);
       expect(b.dim, [4]);
 
@@ -429,7 +429,7 @@ void main() {
     });
 
     test('OtherOps Bulk 1', () {
-      final x = mnn.VARP.listND<mnn.float32>([1, 2, 3, 4], [1, 1, 2, 2]);
+      final x = mnn.VARP.fromListND<mnn.float32>([1, 2, 3, 4], [1, 1, 2, 2]);
 
       // normalize
       final norm = op.normalize(x, 0, 0, 0.0, [0.5, 0.5]);
@@ -442,8 +442,8 @@ void main() {
       am.dispose();
 
       // batchMatMul
-      final a = mnn.VARP.listND<mnn.float32>([1, 2, 3, 4], [1, 2, 2]);
-      final b = mnn.VARP.listND<mnn.float32>([1, 0, 0, 1], [1, 2, 2]);
+      final a = mnn.VARP.fromListND<mnn.float32>([1, 2, 3, 4], [1, 2, 2]);
+      final b = mnn.VARP.fromListND<mnn.float32>([1, 0, 0, 1], [1, 2, 2]);
       final bmm = op.batchMatMul(a, b);
       expect(bmm.dim, [1, 2, 2]);
       bmm.dispose();
@@ -452,7 +452,7 @@ void main() {
 
       // unravelIndex
       final indices = mnn.VARP.scalar<mnn.int32>(5);
-      final dims = mnn.VARP.list<mnn.int32>([2, 3]);
+      final dims = mnn.VARP.fromList1D<mnn.int32>([2, 3]);
       final ui = op.unravelIndex(indices, dims);
       // 5 in [2, 3] -> (1, 2)
       expect(ui.readMap<mnn.int32>().asTypedList(2), [1, 2]);
@@ -472,17 +472,17 @@ void main() {
       ls.dispose();
 
       // randomUniform
-      final shape = mnn.VARP.list<mnn.int32>([2, 2]);
+      final shape = mnn.VARP.fromList1D<mnn.int32>([2, 2]);
       final rnd = op.randomUniform<mnn.float32>(shape);
       expect(rnd.dim, [2, 2]);
       shape.dispose();
       rnd.dispose();
 
       // cumSum, cumProd
-      final cs = op.cumSum(mnn.VARP.list<mnn.float32>([1.0, 2.0, 3.0, 4.0]), 0);
+      final cs = op.cumSum(mnn.VARP.fromList1D<mnn.float32>([1.0, 2.0, 3.0, 4.0]), 0);
       expect(cs.data, [1.0, 3.0, 6.0, 10.0]);
 
-      final cp = op.cumProd(mnn.VARP.list<mnn.float32>([1.0, 2.0, 3.0, 4.0]), 0);
+      final cp = op.cumProd(mnn.VARP.fromList1D<mnn.float32>([1.0, 2.0, 3.0, 4.0]), 0);
       expect(cp.data, [1.0, 2.0, 6.0, 24.0]);
       cs.dispose();
       cp.dispose();
@@ -500,7 +500,7 @@ void main() {
     });
 
     test('svd', () {
-      final x = mnn.VARP.listND<mnn.float32>([1, 0, 0, 1], [2, 2]);
+      final x = mnn.VARP.fromListND<mnn.float32>([1, 0, 0, 1], [2, 2]);
       final res = op.svd(x); // returns [S, U, V] or similar
       expect(res.length, 3);
       for (final v in res) {
@@ -511,9 +511,9 @@ void main() {
 
     test('scatterND, scatterElements', () {
       // scatterND
-      final indices = mnn.VARP.listND<mnn.int32>([0, 1], [2, 1]);
-      final updates = mnn.VARP.listND<mnn.float32>([10, 20], [2]);
-      final shape = mnn.VARP.list<mnn.int32>([4]);
+      final indices = mnn.VARP.fromListND<mnn.int32>([0, 1], [2, 1]);
+      final updates = mnn.VARP.fromListND<mnn.float32>([10, 20], [2]);
+      final shape = mnn.VARP.fromList1D<mnn.int32>([4]);
       final sc = op.scatterND(indices, updates, shape);
       expect(sc.readMap<mnn.float32>().asTypedList(4), [10.0, 20.0, 0.0, 0.0]);
       indices.dispose();
@@ -522,9 +522,9 @@ void main() {
       sc.dispose();
 
       // scatterElements
-      final data = mnn.VARP.listND<mnn.float32>([0, 0, 0], [3]);
-      final idx = mnn.VARP.listND<mnn.int32>([1], [1]);
-      final upd = mnn.VARP.listND<mnn.float32>([5], [1]);
+      final data = mnn.VARP.fromListND<mnn.float32>([0, 0, 0], [3]);
+      final idx = mnn.VARP.fromListND<mnn.int32>([1], [1]);
+      final upd = mnn.VARP.fromListND<mnn.float32>([5], [1]);
       final se = op.scatterElements(data, idx, upd);
       expect(se.readMap<mnn.float32>().asTypedList(3), [0.0, 5.0, 0.0]);
       data.dispose();
@@ -536,7 +536,7 @@ void main() {
 
   group('Neural Network Ops', () {
     test('NN Bulk 1', () {
-      final x = mnn.VARP.listND<mnn.float32>([1, 2, 3, 4], [1, 1, 2, 2]);
+      final x = mnn.VARP.fromListND<mnn.float32>([1, 2, 3, 4], [1, 1, 2, 2]);
 
       // input
       final inp = op.input<mnn.float32>([1, 3, 224, 224]);
@@ -550,7 +550,7 @@ void main() {
       cl.dispose();
 
       // deconv, conv2dTranspose
-      final w = mnn.VARP.listND<mnn.float32>([1, 1, 1, 1], [1, 1, 2, 2]);
+      final w = mnn.VARP.fromListND<mnn.float32>([1, 1, 1, 1], [1, 1, 2, 2]);
       final b = mnn.VARP.scalar<mnn.float32>(0);
       final dec = op.deconv(w, b, x);
       expect(dec.ndim, 4);
@@ -571,7 +571,7 @@ void main() {
 
       // ReLU6, PReLU, softMax, softPlus, softSign
       expect(
-        op.ReLU(mnn.VARP.list<mnn.float32>([-1.0, 2.0, 3.0, 4.0])).data,
+        op.ReLU(mnn.VARP.fromList1D<mnn.float32>([-1.0, 2.0, 3.0, 4.0])).data,
         listCloseTo([0.0, 2.0, 3.0, 4.0], 0.001),
       );
       expect(op.ReLU6(x).data, listCloseTo([1.0, 2.0, 3.0, 4.0], 0.001));
@@ -594,12 +594,12 @@ void main() {
     });
 
     test('NN Bulk 2', () {
-      final x = mnn.VARP.listND<mnn.float32>([1, 2, 3, 4], [1, 1, 2, 2]);
+      final x = mnn.VARP.fromListND<mnn.float32>([1, 2, 3, 4], [1, 1, 2, 2]);
 
       // stridedSlice
-      final begin = mnn.VARP.list<mnn.int32>([0, 0, 0, 0]);
-      final end = mnn.VARP.list<mnn.int32>([1, 1, 1, 1]);
-      final stride = mnn.VARP.list<mnn.int32>([1, 1, 1, 1]);
+      final begin = mnn.VARP.fromList1D<mnn.int32>([0, 0, 0, 0]);
+      final end = mnn.VARP.fromList1D<mnn.int32>([1, 1, 1, 1]);
+      final stride = mnn.VARP.fromList1D<mnn.int32>([1, 1, 1, 1]);
       final ss = op.stridedSlice(x, begin, end, stride, 0, 0, 0, 0, 0);
       expect(ss.dim, [1, 1, 1, 1]);
       ss.dispose();
@@ -613,7 +613,7 @@ void main() {
         listCloseTo([1.0, 2.0, 0.0, 0.0, 3.0, 4.0, 0.0, 0.0], 0.001),
       );
       // transpose1 takes VARP perm
-      final perm = mnn.VARP.list<mnn.int32>([0, 1, 3, 2]);
+      final perm = mnn.VARP.fromList1D<mnn.int32>([0, 1, 3, 2]);
       expect(op.transpose1(x, perm).dim, [1, 1, 2, 2]);
       perm.dispose();
 
@@ -627,13 +627,13 @@ void main() {
       expect(op.reverse(x, axis).data, [2.0, 1.0, 4.0, 3.0]);
       axis.dispose();
 
-      final seqLen = mnn.VARP.list<mnn.int32>([1]);
+      final seqLen = mnn.VARP.fromList1D<mnn.int32>([1]);
       expect(op.reverseSequence(x, seqLen, 0, 1).data, listCloseTo([1.0, 2.0, 3.0, 4.0], 0.001));
       seqLen.dispose();
 
       // crop, resize, cropAndResize
       // crop
-      final cropSize = mnn.VARP.listND<mnn.int32>([1, 1], [2]);
+      final cropSize = mnn.VARP.fromListND<mnn.int32>([1, 1], [2]);
       // offset is List<int>
       final cr = op.crop(x, cropSize, 2, [0, 0]);
       expect(cr.dim, [1]);
@@ -667,7 +667,7 @@ void main() {
     });
 
     test('NN Bulk 3', () {
-      final x = mnn.VARP.listND<mnn.float32>([1, 2, 3, 4], [4]);
+      final x = mnn.VARP.fromListND<mnn.float32>([1, 2, 3, 4], [4]);
 
       // selu, elu, threshold
       expect(op.selu(x, 1.0, 1.0).data, listCloseTo([1.0, 2.0, 3.0, 4.0], 0.001));
@@ -715,7 +715,7 @@ void main() {
       r.dispose();
 
       // Permute
-      final x2 = mnn.VARP.listND<mnn.float32>([1, 2, 3, 4], [2, 2]);
+      final x2 = mnn.VARP.fromListND<mnn.float32>([1, 2, 3, 4], [2, 2]);
       final p = op.Permute(x2, [1, 0]);
       expect(p.dim, [2, 2]);
       x2.dispose();
@@ -745,7 +745,7 @@ void main() {
 
     test('maxPool', () {
       // Input: 1x1x4x4
-      final input = mnn.VARP.listND<mnn.float32>(
+      final input = mnn.VARP.fromListND<mnn.float32>(
         List.generate(16, (i) => i.toDouble()),
         [1, 1, 4, 4],
         format: mnn.DimensionFormat.NCHW,
@@ -769,7 +769,7 @@ void main() {
     });
 
     test('avgPool', () {
-      final input = mnn.VARP.listND<mnn.float32>(
+      final input = mnn.VARP.fromListND<mnn.float32>(
         [1, 2, 3, 4],
         [1, 1, 2, 2],
         format: mnn.DimensionFormat.NCHW,
@@ -783,9 +783,9 @@ void main() {
     });
 
     test('pad', () {
-      final input = mnn.VARP.listND<mnn.float32>([1], [1, 1]);
+      final input = mnn.VARP.fromListND<mnn.float32>([1], [1, 1]);
       // Pad 1 on all sides: [[0, 0, 0], [0, 1, 0], [0, 0, 0]]
-      final paddings = mnn.VARP.listND<mnn.int32>([1, 1, 1, 1], [2, 2]);
+      final paddings = mnn.VARP.fromListND<mnn.int32>([1, 1, 1, 1], [2, 2]);
       final output = op.pad(input, paddings);
       expect(output.dim, [3, 3]);
 
@@ -848,8 +848,8 @@ void main() {
     });
 
     test('matrix: matMul', () {
-      final a = mnn.VARP.listND<mnn.float32>([1, 2, 3, 4], [2, 2]);
-      final b = mnn.VARP.listND<mnn.float32>([1, 0, 0, 1], [2, 2]); // Identity
+      final a = mnn.VARP.fromListND<mnn.float32>([1, 2, 3, 4], [2, 2]);
+      final b = mnn.VARP.fromListND<mnn.float32>([1, 0, 0, 1], [2, 2]); // Identity
       final c = op.matMul(a, b);
 
       expect(c.readMap<mnn.float32>().asTypedList(4), [1.0, 2.0, 3.0, 4.0]);
@@ -873,11 +873,11 @@ void main() {
 
       // Tile expects input to have same rank as multiples usually, or broadcast rules apply?
       // Using rank-1 input to be safe and explicit
-      final vRank1 = mnn.VARP.listND<mnn.float32>([1.0], [1]);
-      final t = op.tile(vRank1, mnn.VARP.list<mnn.int32>([3]));
+      final vRank1 = mnn.VARP.fromListND<mnn.float32>([1.0], [1]);
+      final t = op.tile(vRank1, mnn.VARP.fromList1D<mnn.int32>([3]));
       expect(t.dim, [3]);
 
-      final b = op.broadcastTo(v1, mnn.VARP.list<mnn.int32>([2, 2]));
+      final b = op.broadcastTo(v1, mnn.VARP.fromList1D<mnn.int32>([2, 2]));
       expect(b.dim, [2, 2]);
 
       v1.dispose();
@@ -889,8 +889,8 @@ void main() {
     });
 
     test('gather, scatter (basic check)', () {
-      final params = mnn.VARP.listND<mnn.float32>([10, 20, 30, 40], [4]);
-      final indices = mnn.VARP.listND<mnn.int32>([1, 3], [2]);
+      final params = mnn.VARP.fromListND<mnn.float32>([10, 20, 30, 40], [4]);
+      final indices = mnn.VARP.fromListND<mnn.int32>([1, 3], [2]);
 
       final g = op.gather(params, indices);
       expect(g.readMap<mnn.float32>().asTypedList(2), [20.0, 40.0]);
@@ -898,7 +898,7 @@ void main() {
       final depth = mnn.VARP.scalar<mnn.int32>(3);
       final on = mnn.VARP.scalar<mnn.float32>(1.0);
       final off = mnn.VARP.scalar<mnn.float32>(0.0);
-      final ind = mnn.VARP.list<mnn.int32>([0, 2]);
+      final ind = mnn.VARP.fromList1D<mnn.int32>([0, 2]);
       final oh = op.oneHot(ind, depth, onValue: on, offValue: off, axis: -1);
 
       expect(oh.dim, [2, 3]);
@@ -917,9 +917,9 @@ void main() {
     });
 
     test('where, select, sort, argMax', () {
-      final cond = mnn.VARP.list<mnn.int32>([1, 0]);
-      final x = mnn.VARP.list<mnn.float32>([10, 10]);
-      final y = mnn.VARP.list<mnn.float32>([20, 20]);
+      final cond = mnn.VARP.fromList1D<mnn.int32>([1, 0]);
+      final x = mnn.VARP.fromList1D<mnn.float32>([10, 10]);
+      final y = mnn.VARP.fromList1D<mnn.float32>([20, 20]);
 
       // select: cond ? x : y -> [10, 20]
       final sel = op.select(cond, x, y);
@@ -932,7 +932,7 @@ void main() {
       wh.dispose();
 
       // argMax
-      final v = mnn.VARP.list<mnn.float32>([1, 5, 2]);
+      final v = mnn.VARP.fromList1D<mnn.float32>([1, 5, 2]);
       final am = op.argMax(v, 0);
       expect(am.readMap<mnn.int32>().value, 1); // Index of 5 is 1
 

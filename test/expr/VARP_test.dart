@@ -40,7 +40,7 @@ void main() {
       expect(index, 0);
       expr1.dispose();
 
-      final varp1 = mnn.VARP.list<mnn.int32>([1, 2, 3, 4], format: mnn.DimensionFormat.NCHW);
+      final varp1 = mnn.VARP.fromList1D<mnn.int32>([1, 2, 3, 4], format: mnn.DimensionFormat.NCHW);
       varp.input(varp1);
       varp1.dispose();
 
@@ -64,7 +64,7 @@ void main() {
     });
 
     test('VARP.list', () {
-      final varp = mnn.VARP.list<mnn.float32>([1.0, 2.0, 3.0], format: mnn.DimensionFormat.NCHW);
+      final varp = mnn.VARP.fromList1D<mnn.float32>([1.0, 2.0, 3.0], format: mnn.DimensionFormat.NCHW);
       final info = varp.getInfo();
       expect(info?.order, mnn.DimensionFormat.NCHW);
       expect(info?.dim, [3]);
@@ -132,7 +132,7 @@ void main() {
       final a = mnn.VARP.scalar<mnn.float32>(10.0);
       final b = mnn.VARP.scalar<mnn.float32>(2.0);
       final c = mnn.VARP.scalar<mnn.float32>(10.0);
-      final d = mnn.VARP.list<mnn.float32>([10.0, 2.0, 10.0]);
+      final d = mnn.VARP.fromList1D<mnn.float32>([10.0, 2.0, 10.0]);
 
       final less = np.less(a, b);
       expect(less.item(), 0); // false
@@ -208,14 +208,14 @@ void main() {
 
   group('VARP Extra', () {
     test('list2D, list3D, list4D', () {
-      final l2 = mnn.VARP.list2D<mnn.float32>([
+      final l2 = mnn.VARP.fromList2D<mnn.float32>([
         [1, 2],
         [3, 4],
       ]);
       expect(l2.dim, [2, 2]);
       l2.dispose();
 
-      final l3 = mnn.VARP.list3D<mnn.float32>([
+      final l3 = mnn.VARP.fromList3D<mnn.float32>([
         [
           [1],
           [2],
@@ -228,7 +228,7 @@ void main() {
       expect(l3.dim, [2, 2, 1]);
       l3.dispose();
 
-      final l4 = mnn.VARP.list4D<mnn.float32>([
+      final l4 = mnn.VARP.fromList4D<mnn.float32>([
         [
           [
             [1],
@@ -267,7 +267,7 @@ void main() {
 
     test('mean, sum instance methods', () {
       final data = [1.0, 2.0, 3.0, 4.0];
-      final x = mnn.VARP.listND<mnn.float32>(data, [2, 2]);
+      final x = mnn.VARP.fromListND<mnn.float32>(data, [2, 2]);
       expect(x.data, listCloseTo([1.0, 2.0, 3.0, 4.0], 0.001));
 
       final m = x.mean([0]); // [2, 3]
@@ -301,7 +301,7 @@ void main() {
 
   group('Slicing Operators', () {
     test('1D Slicing', () {
-      final v = mnn.VARP.listND<mnn.float32>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [10]);
+      final v = mnn.VARP.fromListND<mnn.float32>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], [10]);
 
       // Full slice
       final all = v[':'];
@@ -340,7 +340,7 @@ void main() {
       // 2x3 matrix
       // [[1, 2, 3],
       //  [4, 5, 6]]
-      final v = mnn.VARP.listND<mnn.float32>([1, 2, 3, 4, 5, 6], [2, 3]);
+      final v = mnn.VARP.fromListND<mnn.float32>([1, 2, 3, 4, 5, 6], [2, 3]);
 
       // Row 0
       final row0 = v['0, :'];
@@ -368,8 +368,8 @@ void main() {
 
     test('Assignment', () {
       {
-        final v = mnn.VARP.listND<mnn.float32>([0, 0, 0, 0], [4]);
-        final ones = mnn.VARP.listND<mnn.float32>([1, 1], [2]);
+        final v = mnn.VARP.fromListND<mnn.float32>([0, 0, 0, 0], [4]);
+        final ones = mnn.VARP.fromListND<mnn.float32>([1, 1], [2]);
 
         // Assign to slice
         v['1:3'] = ones; // indices 1, 2
@@ -381,8 +381,8 @@ void main() {
       }
 
       {
-        final v = mnn.VARP.listND<mnn.float32>(List.generate(4 * 4, (i) => 0.0), [4, 4]);
-        final ones = mnn.VARP.listND<mnn.float32>([1, 1, 1, 1], [2, 2]);
+        final v = mnn.VARP.fromListND<mnn.float32>(List.generate(4 * 4, (i) => 0.0), [4, 4]);
+        final ones = mnn.VARP.fromListND<mnn.float32>([1, 1, 1, 1], [2, 2]);
 
         // Assign to slice
         v['1:3, 1:3'] = ones; // indices 1, 2
@@ -398,12 +398,31 @@ void main() {
         v.dispose();
         ones.dispose();
       }
+
+      {
+        final v = mnn.VARP.fromListND<mnn.float32>(List.generate(4 * 4, (i) => 0.0), [4, 4]);
+        final ones = mnn.VARP.fromListND<mnn.float32>([1, 1, 1, 1], [4]);
+
+        // Assign to slice
+        v[0] = ones; // indices 1, 2
+
+        const expected = [
+          [1.0, 1.0, 1.0, 1.0],
+          [0.0, 0.0, 0.0, 0.0],
+          [0.0, 0.0, 0.0, 0.0],
+          [0.0, 0.0, 0.0, 0.0],
+        ];
+        expect(v.toList(), expected);
+
+        v.dispose();
+        ones.dispose();
+      }
     });
 
     test('High Dimensional Slicing (3D, 4D, 5D)', () {
       // 3D: 2x2x2
       // [[[0, 1], [2, 3]], [[4, 5], [6, 7]]]
-      final v3 = mnn.VARP.listND<mnn.float32>(List.generate(8, (i) => i.toDouble()), [2, 2, 2]);
+      final v3 = mnn.VARP.fromListND<mnn.float32>(List.generate(8, (i) => i.toDouble()), [2, 2, 2]);
 
       // Slice: [:, :, 1] -> 2x2 matrix of second elements
       // [[1, 3], [5, 7]]
@@ -418,7 +437,7 @@ void main() {
 
       // 4D: 2x1x2x1
       // [[[[0], [1]]], [[[2], [3]]]]
-      final v4 = mnn.VARP.listND<mnn.float32>(List.generate(4, (i) => i.toDouble()), [2, 1, 2, 1]);
+      final v4 = mnn.VARP.fromListND<mnn.float32>(List.generate(4, (i) => i.toDouble()), [2, 1, 2, 1]);
 
       // Slice: [1, 0, :, 0] -> 1D array of length 2: [2, 3]
       final slice4 = v4['1, 0, :, 0'];
@@ -428,7 +447,7 @@ void main() {
       v4.dispose();
 
       // 5D: 1x1x1x1x1 scalar-like
-      final v5 = mnn.VARP.listND<mnn.float32>([42.0], [1, 1, 1, 1, 1]);
+      final v5 = mnn.VARP.fromListND<mnn.float32>([42.0], [1, 1, 1, 1, 1]);
 
       // Slice: [0, 0, 0, 0, 0] -> scalar 42.0
       final slice5 = v5['0, 0, 0, 0, 0'];
@@ -441,14 +460,14 @@ void main() {
     test('fmtString', () {
       // 1D
       {
-        final v1 = mnn.VARP.listND<mnn.float32>([1, 2, 3], [3]);
+        final v1 = mnn.VARP.fromListND<mnn.float32>([1, 2, 3], [3]);
         expect(v1.formatString(), "VARP([1, 2, 3], shape=[3], dtype=float32)");
         v1.dispose();
       }
 
       // 2D
       {
-        final v2 = mnn.VARP.listND<mnn.float32>([1.1, 2.2, 3.3, 4.4], [2, 2]);
+        final v2 = mnn.VARP.fromListND<mnn.float32>([1.1, 2.2, 3.3, 4.4], [2, 2]);
         // Expected output format:
         // VARP([[1.100000, 2.200000],
         //  [3.300000, 4.400000]], dtype=float32)
@@ -461,7 +480,7 @@ void main() {
 
       // 3D
       {
-        final v3 = mnn.VARP.listND<mnn.float32>([1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8], [2, 2, 2]);
+        final v3 = mnn.VARP.fromListND<mnn.float32>([1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8], [2, 2, 2]);
         // VARP([[[1.100000, 2.200000],
         //        [3.300000, 4.400000]],
         //       [[5.500000, 6.600000],
@@ -480,12 +499,12 @@ void main() {
   group('NumPy-like Data Access', () {
     test('toList', () {
       // 1D
-      final v1 = mnn.VARP.listND<mnn.float32>([1, 2, 3], [3]);
+      final v1 = mnn.VARP.fromListND<mnn.float32>([1, 2, 3], [3]);
       expect(v1.toList(), [1.0, 2.0, 3.0]);
       v1.dispose();
 
       // 2D
-      final v2 = mnn.VARP.listND<mnn.float32>([1, 2, 3, 4], [2, 2]);
+      final v2 = mnn.VARP.fromListND<mnn.float32>([1, 2, 3, 4], [2, 2]);
       expect(v2.toList(), [
         [1.0, 2.0],
         [3.0, 4.0],
@@ -498,13 +517,13 @@ void main() {
       expect(s.value, closeTo(42.0, 0.001));
       s.dispose();
 
-      final v1 = mnn.VARP.listND<mnn.float32>([10.0], [1]);
+      final v1 = mnn.VARP.fromListND<mnn.float32>([10.0], [1]);
       expect(v1.value, 10.0);
       v1.dispose();
     });
 
     test('operator []', () {
-      final v = mnn.VARP.listND<mnn.float32>([1, 2, 3, 4, 5, 6], [2, 3]);
+      final v = mnn.VARP.fromListND<mnn.float32>([1, 2, 3, 4, 5, 6], [2, 3]);
       // [[1, 2, 3], [4, 5, 6]]
 
       final row0 = v[0];

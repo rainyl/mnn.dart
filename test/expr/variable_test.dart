@@ -63,7 +63,7 @@ void main() {
     if (!outFile.parent.existsSync()) {
       outFile.parent.createSync(recursive: true);
     }
-    final varp = mnn.VARP.list<mnn.int32>([1, 2, 3, 4], format: mnn.DimensionFormat.NCHW);
+    final varp = mnn.VARP.fromList1D<mnn.int32>([1, 2, 3, 4], format: mnn.DimensionFormat.NCHW);
     // print(varp.getInfo());
 
     mnn.VARP.saveToFile([varp], outFile.path);
