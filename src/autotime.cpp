@@ -15,7 +15,11 @@ extern "C" {
 
 mnn_timer_t mnn_timer_create() { return new MNN::Timer(); }
 
-void mnn_timer_destroy(mnn_timer_t timer) { delete static_cast<MNN::Timer *>(timer); }
+void mnn_timer_destroy(mnn_timer_t timer) {
+  if (timer == nullptr) return;
+  delete static_cast<MNN::Timer *>(timer);
+  timer = nullptr;
+}
 
 void mnn_timer_reset(mnn_timer_t timer) { static_cast<MNN::Timer *>(timer)->reset(); }
 
@@ -32,7 +36,9 @@ mnn_auto_time_t mnn_auto_time_create(int line, const char *func) {
 }
 
 void mnn_auto_time_destroy(mnn_auto_time_t auto_time) {
+  if (auto_time == nullptr) return;
   delete static_cast<MNN::AutoTime *>(auto_time);
+  auto_time = nullptr;
 }
 
 } // extern "C"

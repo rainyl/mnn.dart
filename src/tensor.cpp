@@ -150,7 +150,7 @@ mnn_tensor_t mnn_tensor_create_with_data(
 
 // MNN::Tensor destruction
 void mnn_tensor_destroy(mnn_tensor_t self) {
-  if (self) { MNN::Tensor::destroy((MNN::Tensor *)self); }
+  if (self) { MNN::Tensor::destroy((MNN::Tensor *)self); self=nullptr; }
 }
 
 // MNN::Tensor operations

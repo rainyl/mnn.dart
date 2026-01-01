@@ -28,7 +28,7 @@ extern "C" {
   TYPE std_##TYPE##_clone(TYPE self) { return new std::vector<ELEM>(*(self)); }
 
 #define CVD_STD_VEC_FUNC_IMPL_COMMON(TYPE)                                                         \
-  void std_##TYPE##_free(TYPE self) { delete self; }                                               \
+  void std_##TYPE##_free(TYPE self) { if (self){delete self; self = nullptr;} }                                               \
   size_t std_##TYPE##_length(TYPE self) { return self->size(); }                                   \
   void std_##TYPE##_resize(TYPE self, size_t new_len) { self->resize(new_len); }                   \
   void std_##TYPE##_reserve(TYPE self, size_t new_len) { self->reserve(new_len); }                 \
