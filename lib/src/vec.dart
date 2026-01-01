@@ -9,12 +9,11 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 
+import 'base.dart';
 import 'g/mnn.g.dart' as C;
 
-abstract class Vec<N extends ffi.NativeType, T> with IterableMixin<T> implements ffi.Finalizable {
-  Vec.fromPointer(this.ptr);
-
-  N ptr;
+abstract class Vec<N extends ffi.Pointer, T> extends NativeObject with IterableMixin<T> {
+  Vec.fromPointer(N ptr, {super.attach, super.externalSize}) : super(ptr.cast());
 
   @override
   int get length;
@@ -22,7 +21,6 @@ abstract class Vec<N extends ffi.NativeType, T> with IterableMixin<T> implements
   T operator [](int idx);
   void operator []=(int idx, T value);
 
-  void dispose();
   Vec clone();
   int size();
   void add(T element);
@@ -35,15 +33,7 @@ abstract class Vec<N extends ffi.NativeType, T> with IterableMixin<T> implements
   ffi.Pointer<ffi.Void> asVoid();
 
   @override
-  bool operator ==(Object other) {
-    if (other is! Vec) return false;
-    if (identical(this, other)) return true;
-    if (length != other.length) return false;
-    return hashCode == other.hashCode;
-  }
-
-  @override
-  int get hashCode => ptr.hashCode;
+  List<Object?> get props => [ptr.address, length];
 }
 
 abstract class VecIterator<T> implements Iterator<T> {
@@ -69,7 +59,7 @@ abstract class VecIterator<T> implements Iterator<T> {
   }
 }
 
-abstract class VecUnmodifible<N extends ffi.Struct, T> extends Vec<N, T> {
+abstract class VecUnmodifible<N extends ffi.Pointer, T> extends Vec<N, T> {
   VecUnmodifible.fromPointer(super.ptr) : super.fromPointer();
 
   @override
@@ -90,16 +80,10 @@ abstract class VecUnmodifible<N extends ffi.Struct, T> extends Vec<N, T> {
 }
 
 class VecU8 extends Vec<C.VecU8, int> {
-  VecU8.fromPointer(super.ptr, {bool attach = true, int? length}) : super.fromPointer() {
-    if (attach) {
-      finalizer.attach(
-        this,
-        ptr.cast<ffi.Void>(),
-        detach: this,
-        externalSize: length == null ? null : length * ffi.sizeOf<ffi.Uint8>(),
-      );
-    }
-  }
+  static final _finalizer = ffi.NativeFinalizer(C.addresses.std_VecU8_free);
+
+  VecU8.fromPointer(super.ptr, {super.attach = true, int? length})
+    : super.fromPointer(externalSize: length == null ? null : length * ffi.sizeOf<ffi.Uint8>());
 
   factory VecU8([int length = 0, int value = 0]) =>
       VecU8.fromPointer(C.std_VecU8_new_1(length, value), length: length);
@@ -120,7 +104,8 @@ class VecU8 extends Vec<C.VecU8, int> {
     return VecU8.fromPointer(p, length: length);
   }
 
-  static final finalizer = ffi.NativeFinalizer(C.addresses.std_VecU8_free);
+  @override
+  ffi.NativeFinalizer get finalizer => _finalizer;
 
   @override
   int get length => C.std_VecU8_length(ptr);
@@ -145,8 +130,7 @@ class VecU8 extends Vec<C.VecU8, int> {
   Iterator<int> get iterator => VecU8Iterator(dataView);
 
   @override
-  void dispose() {
-    finalizer.detach(this);
+  void release() {
     C.std_VecU8_free(ptr);
   }
 
@@ -193,16 +177,10 @@ class VecU8Iterator extends VecIterator<int> {
 }
 
 class VecI8 extends Vec<C.VecI8, int> {
-  VecI8.fromPointer(super.ptr, {bool attach = true, int? length}) : super.fromPointer() {
-    if (attach) {
-      finalizer.attach(
-        this,
-        ptr.cast<ffi.Void>(),
-        detach: this,
-        externalSize: length == null ? null : length * ffi.sizeOf<ffi.Int8>(),
-      );
-    }
-  }
+  static final _finalizer = ffi.NativeFinalizer(C.addresses.std_VecI8_free);
+
+  VecI8.fromPointer(super.ptr, {super.attach = true, int? length})
+    : super.fromPointer(externalSize: length == null ? null : length * ffi.sizeOf<ffi.Int8>());
 
   factory VecI8([int length = 0, int value = 0]) =>
       VecI8.fromPointer(C.std_VecI8_new_1(length, value), length: length);
@@ -222,7 +200,8 @@ class VecI8 extends Vec<C.VecI8, int> {
     return VecI8.fromPointer(p, length: length);
   }
 
-  static final finalizer = ffi.NativeFinalizer(C.addresses.std_VecI8_free);
+  @override
+  ffi.NativeFinalizer get finalizer => _finalizer;
 
   @override
   int get length => C.std_VecI8_length(ptr);
@@ -241,8 +220,7 @@ class VecI8 extends Vec<C.VecI8, int> {
   Iterator<int> get iterator => VecI8Iterator(dataView);
 
   @override
-  void dispose() {
-    finalizer.detach(this);
+  void release() {
     C.std_VecI8_free(ptr);
   }
 
@@ -289,16 +267,8 @@ class VecI8Iterator extends VecIterator<int> {
 }
 
 class VecU16 extends Vec<C.VecU16, int> {
-  VecU16.fromPointer(super.ptr, {bool attach = true, int? length}) : super.fromPointer() {
-    if (attach) {
-      finalizer.attach(
-        this,
-        ptr.cast<ffi.Void>(),
-        detach: this,
-        externalSize: length == null ? null : length * ffi.sizeOf<ffi.Uint16>(),
-      );
-    }
-  }
+  VecU16.fromPointer(super.ptr, {super.attach = true, int? length})
+    : super.fromPointer(externalSize: length == null ? null : length * ffi.sizeOf<ffi.Uint16>());
 
   factory VecU16([int length = 0, int value = 0]) =>
       VecU16.fromPointer(C.std_VecU16_new_1(length, value), length: length);
@@ -319,7 +289,10 @@ class VecU16 extends Vec<C.VecU16, int> {
     return VecU16.fromPointer(p, length: length);
   }
 
-  static final finalizer = ffi.NativeFinalizer(C.addresses.std_VecU16_free);
+  static final _finalizer = ffi.NativeFinalizer(C.addresses.std_VecU16_free);
+
+  @override
+  ffi.NativeFinalizer get finalizer => _finalizer;
 
   @override
   VecU16 clone() => VecU16.fromPointer(C.std_VecU16_clone(ptr));
@@ -335,8 +308,7 @@ class VecU16 extends Vec<C.VecU16, int> {
   Iterator<int> get iterator => VecU16Iterator(data);
 
   @override
-  void dispose() {
-    finalizer.detach(this);
+  void release() {
     C.std_VecU16_free(ptr);
   }
 
@@ -383,16 +355,8 @@ class VecU16Iterator extends VecIterator<int> {
 }
 
 class VecI16 extends Vec<C.VecI16, int> {
-  VecI16.fromPointer(super.ptr, {bool attach = true, int? length}) : super.fromPointer() {
-    if (attach) {
-      finalizer.attach(
-        this,
-        ptr.cast<ffi.Void>(),
-        detach: this,
-        externalSize: length == null ? null : length * ffi.sizeOf<ffi.Int16>(),
-      );
-    }
-  }
+  VecI16.fromPointer(super.ptr, {super.attach = true, int? length})
+    : super.fromPointer(externalSize: length == null ? null : length * ffi.sizeOf<ffi.Int16>());
 
   factory VecI16([int length = 0, int value = 0]) =>
       VecI16.fromPointer(C.std_VecI16_new_1(length, value), length: length);
@@ -413,7 +377,9 @@ class VecI16 extends Vec<C.VecI16, int> {
     return VecI16.fromPointer(p, length: length);
   }
 
-  static final finalizer = ffi.NativeFinalizer(C.addresses.std_VecI16_free);
+  static final _finalizer = ffi.NativeFinalizer(C.addresses.std_VecI16_free);
+  @override
+  ffi.NativeFinalizer get finalizer => _finalizer;
 
   @override
   VecI16 clone() => VecI16.fromPointer(C.std_VecI16_clone(ptr));
@@ -428,8 +394,7 @@ class VecI16 extends Vec<C.VecI16, int> {
   Iterator<int> get iterator => VecI16Iterator(data);
 
   @override
-  void dispose() {
-    finalizer.detach(this);
+  void release() {
     C.std_VecI16_free(ptr);
   }
 
@@ -476,16 +441,8 @@ class VecI16Iterator extends VecIterator<int> {
 }
 
 class VecI32 extends Vec<C.VecI32, int> {
-  VecI32.fromPointer(super.ptr, {bool attach = true, int? length}) : super.fromPointer() {
-    if (attach) {
-      finalizer.attach(
-        this,
-        ptr.cast<ffi.Void>(),
-        detach: this,
-        externalSize: length == null ? null : length * ffi.sizeOf<ffi.Int32>(),
-      );
-    }
-  }
+  VecI32.fromPointer(super.ptr, {super.attach = true, int? length})
+    : super.fromPointer(externalSize: length == null ? null : length * ffi.sizeOf<ffi.Int32>());
 
   factory VecI32([int length = 0, int value = 0]) =>
       VecI32.fromPointer(C.std_VecI32_new_1(length, value), length: length);
@@ -506,7 +463,10 @@ class VecI32 extends Vec<C.VecI32, int> {
     return VecI32.fromPointer(p, length: length);
   }
 
-  static final finalizer = ffi.NativeFinalizer(C.addresses.std_VecI32_free);
+  static final _finalizer = ffi.NativeFinalizer(C.addresses.std_VecI32_free);
+
+  @override
+  ffi.NativeFinalizer get finalizer => _finalizer;
 
   @override
   VecI32 clone() => VecI32.fromPointer(C.std_VecI32_clone(ptr));
@@ -522,8 +482,7 @@ class VecI32 extends Vec<C.VecI32, int> {
   Iterator<int> get iterator => VecI32Iterator(data);
 
   @override
-  void dispose() {
-    finalizer.detach(this);
+  void release() {
     C.std_VecI32_free(ptr);
   }
 
@@ -570,16 +529,8 @@ class VecI32Iterator extends VecIterator<int> {
 }
 
 class VecF32 extends Vec<C.VecF32, double> {
-  VecF32.fromPointer(super.ptr, {bool attach = true, int? length}) : super.fromPointer() {
-    if (attach) {
-      finalizer.attach(
-        this,
-        ptr.cast<ffi.Void>(),
-        detach: this,
-        externalSize: length == null ? null : length * ffi.sizeOf<ffi.Float>(),
-      );
-    }
-  }
+  VecF32.fromPointer(super.ptr, {super.attach = true, int? length})
+    : super.fromPointer(externalSize: length == null ? null : length * ffi.sizeOf<ffi.Float>());
 
   factory VecF32([int length = 0, double value = 0.0]) =>
       VecF32.fromPointer(C.std_VecF32_new_1(length, value), length: length);
@@ -599,7 +550,10 @@ class VecF32 extends Vec<C.VecF32, double> {
     return VecF32.fromPointer(p, length: length);
   }
 
-  static final finalizer = ffi.NativeFinalizer(C.addresses.std_VecF32_free);
+  static final _finalizer = ffi.NativeFinalizer(C.addresses.std_VecF32_free);
+
+  @override
+  ffi.NativeFinalizer get finalizer => _finalizer;
 
   @override
   VecF32 clone() => VecF32.fromPointer(C.std_VecF32_clone(ptr));
@@ -614,8 +568,7 @@ class VecF32 extends Vec<C.VecF32, double> {
   Iterator<double> get iterator => VecF32Iterator(data);
 
   @override
-  void dispose() {
-    finalizer.detach(this);
+  void release() {
     C.std_VecF32_free(ptr);
   }
 
@@ -662,16 +615,8 @@ class VecF32Iterator extends VecIterator<double> {
 }
 
 class VecF64 extends Vec<C.VecF64, double> {
-  VecF64.fromPointer(super.ptr, {bool attach = true, int? length}) : super.fromPointer() {
-    if (attach) {
-      finalizer.attach(
-        this,
-        ptr.cast<ffi.Void>(),
-        detach: this,
-        externalSize: length == null ? null : length * ffi.sizeOf<ffi.Double>(),
-      );
-    }
-  }
+  VecF64.fromPointer(super.ptr, {super.attach = true, int? length})
+    : super.fromPointer(externalSize: length == null ? null : length * ffi.sizeOf<ffi.Double>());
 
   factory VecF64([int length = 0, double value = 0.0]) =>
       VecF64.fromPointer(C.std_VecF64_new_1(length, value), length: length);
@@ -691,7 +636,10 @@ class VecF64 extends Vec<C.VecF64, double> {
     return VecF64.fromPointer(p, length: length);
   }
 
-  static final finalizer = ffi.NativeFinalizer(C.addresses.std_VecF64_free);
+  static final _finalizer = ffi.NativeFinalizer(C.addresses.std_VecF64_free);
+
+  @override
+  ffi.NativeFinalizer get finalizer => _finalizer;
 
   @override
   VecF64 clone() => VecF64.fromPointer(C.std_VecF64_clone(ptr));
@@ -707,8 +655,7 @@ class VecF64 extends Vec<C.VecF64, double> {
   Iterator<double> get iterator => VecF64Iterator(data);
 
   @override
-  void dispose() {
-    finalizer.detach(this);
+  void release() {
     C.std_VecF64_free(ptr);
   }
 

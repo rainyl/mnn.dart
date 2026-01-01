@@ -539,40 +539,46 @@ void main() {
     });
   });
 
-  // group('VarMap', () {
-  //   test('Creation and Manipulation', () {
-  //     final map = mnn.VarMap.create();
-  //     expect(map.size(), 0);
+  group('VarMap', () {
+    test('Creation and Manipulation', () {
+      final map = mnn.VarMap.create();
+      expect(map.size(), 0);
 
-  //     final v1 = mnn.VARP.scalar<mnn.i32>(100);
-  //     map.set("key1", v1);
-  //     expect(map.size(), 1);
+      final v1 = mnn.VARP.scalar<mnn.int32>(100);
 
-  //     final v_retrieved = map.at("key1");
-  //     expect(v_retrieved.readMap<mnn.i32>().value, 100);
+      // by assignment, map owns the reference of v1.
+      map["key1"] = v1;
+      expect(map.size(), 1);
 
-  //     final dartMap = map.toMap();
-  //     expect(dartMap.length, 1);
-  //     expect(dartMap.containsKey("key1"), isTrue);
-  //     expect(dartMap["key1"]!.readMap<mnn.i32>().value, 100);
+      // v_retrieved is v1, so do not free manually.
+      final v_retrieved = map["key1"];
+      expect(v_retrieved, v1);
+      expect(v_retrieved.value, 100);
+      v_retrieved.data![0] = 2541;
+      expect(v1.value, 2541);
 
-  //     map.dispose();
-  //     v1.dispose();
-  //   });
+      final dartMap = map.toMap();
+      expect(dartMap.length, 1);
+      expect(dartMap.containsKey("key1"), isTrue);
+      expect(dartMap["key1"]!.value, 2541);
 
-  //   test('From Map', () {
-  //     final v1 = mnn.VARP.scalar<mnn.i32>(1);
-  //     final v2 = mnn.VARP.scalar<mnn.i32>(2);
-  //     final dartMap = {"a": v1, "b": v2};
+      map.dispose();
+      v1.dispose();
+    });
 
-  //     final map = mnn.VarMap.of(dartMap);
-  //     expect(map.size(), 2);
-  //     expect(map.at("a").readMap<mnn.i32>().value, 1);
-  //     expect(map.at("b").readMap<mnn.i32>().value, 2);
+    test('From Map', () {
+      final v1 = mnn.VARP.scalar<mnn.int32>(25);
+      final v2 = mnn.VARP.scalar<mnn.int32>(41);
+      final dartMap = {"a": v1, "b": v2};
 
-  //     map.dispose();
-  //     v1.dispose();
-  //     v2.dispose();
-  //   });
-  // });
+      final map = mnn.VarMap.of(dartMap);
+      expect(map.size(), 2);
+      expect(map.at("a").value, 25);
+      expect(map.at("b").value, 41);
+
+      map.dispose();
+      v1.dispose();
+      v2.dispose();
+    });
+  });
 }

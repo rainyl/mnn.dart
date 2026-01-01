@@ -1,5 +1,3 @@
-import 'dart:ffi' as ffi;
-
 import 'package:mnn/mnn.dart' as mnn;
 import 'package:mnn/src/expr/op.dart' as op;
 import 'package:test/test.dart';
@@ -62,27 +60,27 @@ void main() {
       final b = mnn.VARP.scalar<mnn.float32>(0.0);
 
       // greater
-      expect(op.greater(a, b).readMap<mnn.int32>().value, 1);
-      expect(op.greater(b, a).readMap<mnn.int32>().value, 0);
+      expect(op.greater(a, b).value, 1);
+      expect(op.greater(b, a).value, 0);
 
       // greaterEqual
-      expect(op.greaterEqual(a, b).readMap<mnn.int32>().value, 1);
-      expect(op.greaterEqual(a, a).readMap<mnn.int32>().value, 1);
+      expect(op.greaterEqual(a, b).value, 1);
+      expect(op.greaterEqual(a, a).value, 1);
 
       // less
-      expect(op.less(b, a).readMap<mnn.int32>().value, 1);
+      expect(op.less(b, a).value, 1);
 
       // lessEqual
-      expect(op.lessEqual(b, a).readMap<mnn.int32>().value, 1);
-      expect(op.lessEqual(a, a).readMap<mnn.int32>().value, 1);
+      expect(op.lessEqual(b, a).value, 1);
+      expect(op.lessEqual(a, a).value, 1);
 
       // equal
-      expect(op.equal(a, a).readMap<mnn.int32>().value, 1);
-      expect(op.equal(a, b).readMap<mnn.int32>().value, 0);
+      expect(op.equal(a, a).value, 1);
+      expect(op.equal(a, b).value, 0);
 
       // notEqual
-      expect(op.notEqual(a, b).readMap<mnn.int32>().value, 1);
-      expect(op.notEqual(a, a).readMap<mnn.int32>().value, 0);
+      expect(op.notEqual(a, b).value, 1);
+      expect(op.notEqual(a, a).value, 0);
 
       a.dispose();
       b.dispose();
@@ -211,13 +209,11 @@ void main() {
 
       // Reduce along axis 0 (columns): [1+3, 2+4] = [4, 6]
       final sum0 = op.reduceSum(x, axis: [0]);
-      final sum0Data = sum0.readMap<mnn.float32>().asTypedList(2);
-      expect(sum0Data, [4.0, 6.0]);
+      expect(sum0.data, [4.0, 6.0]);
 
       // Reduce along axis 1 (rows): [1+2, 3+4] = [3, 7]
       final sum1 = op.reduceSum(x, axis: [1]);
-      final sum1Data = sum1.readMap<mnn.float32>().asTypedList(2);
-      expect(sum1Data, [3.0, 7.0]);
+      expect(sum1.data, [3.0, 7.0]);
 
       final mean = op.reduceMean(x, axis: [0, 1]); // scalar 2.5
       expect(mean.value, closeTo(2.5, 0.001));
@@ -307,10 +303,10 @@ void main() {
       final x = mnn.VARP.fromListND<mnn.int32>(data, shape, format: mnn.DimensionFormat.NCHW);
 
       final any = op.reduceAny(x, axis: [0]);
-      expect(any.readMap<mnn.int32>().value, 1);
+      expect(any.value, 1);
 
       final all = op.reduceAll(x, axis: [0]);
-      expect(all.readMap<mnn.int32>().value, 0);
+      expect(all.value, 0);
 
       x.dispose();
       any.dispose();
@@ -344,7 +340,7 @@ void main() {
     test('cast', () {
       final a = mnn.VARP.scalar<mnn.float32>(3.14);
       final b = op.cast<mnn.int32>(a);
-      expect(b.readMap<mnn.int32>().value, 3);
+      expect(b.value, 3);
 
       a.dispose();
       b.dispose();
@@ -357,7 +353,7 @@ void main() {
       // concat along axis 0: [1, 2, 3, 4]
       final c = op.concat([v1, v2], 0);
       expect(c.size, 4);
-      expect(c.readMap<mnn.float32>().asTypedList(4), [1.0, 2.0, 3.0, 4.0]);
+      expect(c.data, [1.0, 2.0, 3.0, 4.0]);
 
       v1.dispose();
       v2.dispose();
@@ -375,8 +371,7 @@ void main() {
       final y = op.transpose(x, [1, 0]);
 
       expect(y.dim, [2, 2]);
-      final yData = y.readMap<mnn.float32>().asTypedList(4);
-      expect(yData, [1.0, 3.0, 2.0, 4.0]);
+      expect(y.data, [1.0, 3.0, 2.0, 4.0]);
 
       x.dispose();
       y.dispose();
@@ -392,8 +387,7 @@ void main() {
 
       final y = op.slice(x, starts, sizes);
       expect(y.dim, [2]);
-      final yData = y.readMap<mnn.float32>().asTypedList(2);
-      expect(yData, [2.0, 3.0]);
+      expect(y.data, [2.0, 3.0]);
 
       x.dispose();
       starts.dispose();
@@ -407,11 +401,10 @@ void main() {
 
       final filled = op.fill(dims, value);
       expect(filled.dim, [2, 2]);
-      final filledData = filled.readMap<mnn.float32>().asTypedList(4);
-      expect(filledData, [5.0, 5.0, 5.0, 5.0]);
+      expect(filled.data, [5.0, 5.0, 5.0, 5.0]);
 
       final shapeVar = op.shape(filled);
-      expect(shapeVar.readMap<mnn.int32>().asTypedList(2), [2, 2]);
+      expect(shapeVar.data, [2, 2]);
 
       dims.dispose();
       value.dispose();
@@ -438,7 +431,7 @@ void main() {
 
       // argMin
       final am = op.argMin(x, 0);
-      expect(am.readMap<mnn.int32>().value, 0);
+      expect(am.data, listCloseTo([0, 0, 0, 0], 0.001));
       am.dispose();
 
       // batchMatMul
@@ -455,7 +448,7 @@ void main() {
       final dims = mnn.VARP.fromList1D<mnn.int32>([2, 3]);
       final ui = op.unravelIndex(indices, dims);
       // 5 in [2, 3] -> (1, 2)
-      expect(ui.readMap<mnn.int32>().asTypedList(2), [1, 2]);
+      expect(ui.data, [1, 2]);
       indices.dispose();
       dims.dispose();
       ui.dispose();
@@ -515,7 +508,7 @@ void main() {
       final updates = mnn.VARP.fromListND<mnn.float32>([10, 20], [2]);
       final shape = mnn.VARP.fromList1D<mnn.int32>([4]);
       final sc = op.scatterND(indices, updates, shape);
-      expect(sc.readMap<mnn.float32>().asTypedList(4), [10.0, 20.0, 0.0, 0.0]);
+      expect(sc.data, [10.0, 20.0, 0.0, 0.0]);
       indices.dispose();
       updates.dispose();
       shape.dispose();
@@ -526,7 +519,7 @@ void main() {
       final idx = mnn.VARP.fromListND<mnn.int32>([1], [1]);
       final upd = mnn.VARP.fromListND<mnn.float32>([5], [1]);
       final se = op.scatterElements(data, idx, upd);
-      expect(se.readMap<mnn.float32>().asTypedList(3), [0.0, 5.0, 0.0]);
+      expect(se.data, [0.0, 5.0, 0.0]);
       data.dispose();
       idx.dispose();
       upd.dispose();
@@ -675,13 +668,13 @@ void main() {
       expect(op.threshold(x).data, listCloseTo([1.0, 2.0, 3.0, 4.0], 0.001));
 
       // size, rank
-      expect(op.size(x).readMap<mnn.int32>().value, 4);
-      expect(op.rank(x).readMap<mnn.int32>().value, 1);
+      expect(op.size(x).value, 4);
+      expect(op.rank(x).value, 1);
 
       // matrixBandPart
       // TODO: fails
       // final mbp = op.matrixBandPart(x, mnn.VARP.scalar<mnn.i32>(0), mnn.VARP.scalar<mnn.i32>(0));
-      // expect(mbp.readMap<mnn.f32>().value, isNotNull);
+      // expect(mbp.value, isNotNull);
       // mbp.dispose();
 
       // moments
@@ -693,16 +686,15 @@ void main() {
       }
 
       // setDiff1D
-      // TODO: fails
-      // final y = mnn.VARP.listND<mnn.f32>([1, 2], [2]);
-      // final sd = op.setDiff1D(x, y); // Should return 3, 4
-      // expect(sd.readMap<mnn.f32>().asTypedList(2), [3.0, 4.0]);
-      // sd.dispose();
-      // y.dispose();
+      final y = mnn.VARP.fromList1D<mnn.int32>([1, 2]);
+      final sd = op.setDiff1D(mnn.VARP.fromList1D<mnn.int32>([1, 2, 3, 4]), y); // Should return 3, 4
+      expect(sd.data, [3.0, 4.0]);
+      sd.dispose();
+      y.dispose();
 
       // zerosLike
       final zl = op.zerosLike(x);
-      expect(zl.readMap<mnn.float32>().asTypedList(4), [0.0, 0.0, 0.0, 0.0]);
+      expect(zl.data, [0.0, 0.0, 0.0, 0.0]);
       zl.dispose();
 
       // range
@@ -711,7 +703,7 @@ void main() {
         mnn.VARP.scalar<mnn.float32>(5),
         mnn.VARP.scalar<mnn.float32>(1),
       );
-      expect(r.readMap<mnn.float32>().asTypedList(5), [0.0, 1.0, 2.0, 3.0, 4.0]);
+      expect(r.data, [0.0, 1.0, 2.0, 3.0, 4.0]);
       r.dispose();
 
       // Permute
@@ -761,8 +753,7 @@ void main() {
 
       // Output should be 2x2
       expect(output.dim, [1, 1, 2, 2]);
-      final outData = output.readMap<mnn.float32>().asTypedList(4);
-      expect(outData, [5.0, 7.0, 13.0, 15.0]);
+      expect(output.data, [5.0, 7.0, 13.0, 15.0]);
 
       input.dispose();
       output.dispose();
@@ -815,16 +806,16 @@ void main() {
       final b = mnn.VARP.scalar<mnn.int32>(3); // 11
 
       // bitwiseAnd: 1 & 3 = 1
-      expect(op.bitwiseAnd(a, b).readMap<mnn.int32>().value, 1);
+      expect(op.bitwiseAnd(a, b).value, 1);
       // bitwiseOr: 1 | 3 = 3
-      expect(op.bitwiseOr(a, b).readMap<mnn.int32>().value, 3);
+      expect(op.bitwiseOr(a, b).value, 3);
       // bitwiseXor: 1 ^ 3 = 2
-      expect(op.bitwiseXor(a, b).readMap<mnn.int32>().value, 2);
+      expect(op.bitwiseXor(a, b).value, 2);
 
       // logicalOr
       final t = mnn.VARP.scalar<mnn.int32>(1);
       final f = mnn.VARP.scalar<mnn.int32>(0);
-      expect(op.logicalOr(t, f).readMap<mnn.int32>().value, 1);
+      expect(op.logicalOr(t, f).value, 1);
 
       a.dispose();
       b.dispose();
@@ -852,7 +843,7 @@ void main() {
       final b = mnn.VARP.fromListND<mnn.float32>([1, 0, 0, 1], [2, 2]); // Identity
       final c = op.matMul(a, b);
 
-      expect(c.readMap<mnn.float32>().asTypedList(4), [1.0, 2.0, 3.0, 4.0]);
+      expect(c.data, [1.0, 2.0, 3.0, 4.0]);
 
       a.dispose();
       b.dispose();
@@ -865,7 +856,7 @@ void main() {
 
       final s = op.stack([v1, v2]);
       expect(s.dim, [2]);
-      expect(s.readMap<mnn.float32>().asTypedList(2), [1.0, 2.0]);
+      expect(s.data, [1.0, 2.0]);
 
       final u = op.unstack(s);
       expect(u.length, 2);
@@ -893,7 +884,7 @@ void main() {
       final indices = mnn.VARP.fromListND<mnn.int32>([1, 3], [2]);
 
       final g = op.gather(params, indices);
-      expect(g.readMap<mnn.float32>().asTypedList(2), [20.0, 40.0]);
+      expect(g.data, [20.0, 40.0]);
 
       final depth = mnn.VARP.scalar<mnn.int32>(3);
       final on = mnn.VARP.scalar<mnn.float32>(1.0);
@@ -902,9 +893,8 @@ void main() {
       final oh = op.oneHot(ind, depth, onValue: on, offValue: off, axis: -1);
 
       expect(oh.dim, [2, 3]);
-      final ohData = oh.readMap<mnn.float32>().asTypedList(6);
-      expect(ohData[0], 1.0);
-      expect(ohData[5], 1.0);
+      expect(oh.data?[0], 1.0);
+      expect(oh.data?[5], 1.0);
 
       params.dispose();
       indices.dispose();
@@ -923,7 +913,7 @@ void main() {
 
       // select: cond ? x : y -> [10, 20]
       final sel = op.select(cond, x, y);
-      expect(sel.readMap<mnn.float32>().asTypedList(2), [10.0, 20.0]);
+      expect(sel.data, [10.0, 20.0]);
 
       // where
       final wh = op.where(cond);
@@ -934,11 +924,11 @@ void main() {
       // argMax
       final v = mnn.VARP.fromList1D<mnn.float32>([1, 5, 2]);
       final am = op.argMax(v, 0);
-      expect(am.readMap<mnn.int32>().value, 1); // Index of 5 is 1
+      expect(am.value, 1); // Index of 5 is 1
 
       // sort
       final s = op.sort(v, axis: 0, descend: false);
-      expect(s.readMap<mnn.float32>().asTypedList(3), [1.0, 2.0, 5.0]);
+      expect(s.data, [1.0, 2.0, 5.0]);
       s.dispose();
 
       cond.dispose();

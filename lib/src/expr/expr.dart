@@ -126,7 +126,6 @@ class VariableInfo extends NativeObject {
 
   @override
   void release() {
-    finalizer.detach(this);
     C.mnn_expr_Variable_Info_free(ptr);
   }
 
@@ -214,7 +213,6 @@ class Expr extends NativeObject {
 
   @override
   void release() {
-    finalizer.detach(this);
     C.mnn_expr_Expr_free(ptr);
   }
 
@@ -465,7 +463,6 @@ class VARP extends NativeObject {
 
   @override
   void release() {
-    finalizer.detach(this);
     C.mnn_expr_VARP_free(ptr);
   }
 
@@ -479,12 +476,16 @@ class VARP extends NativeObject {
 
   VARP mean(List<int> dims) {
     final cdims = dims.i32;
-    return VARP.fromPointer(C.mnn_expr_VARP_mean(ptr, cdims.ptr));
+    final rval = VARP.fromPointer(C.mnn_expr_VARP_mean(ptr, cdims.ptr));
+    cdims.dispose();
+    return rval;
   }
 
   VARP sum(List<int> dims) {
     final cdims = dims.i32;
-    return VARP.fromPointer(C.mnn_expr_VARP_sum(ptr, cdims.ptr));
+    final rval = VARP.fromPointer(C.mnn_expr_VARP_sum(ptr, cdims.ptr));
+    cdims.dispose();
+    return rval;
   }
 
   /// compare the two VARP whether they point to the same underlying expression
@@ -600,7 +601,7 @@ class VARP extends NativeObject {
     );
     final tShape = target.shape;
     final vShape = value.shape;
-    target.release();
+    target.dispose();
 
     bool shapeMatch = tShape != null && vShape != null && tShape.length == vShape.length;
     if (shapeMatch) {
@@ -731,7 +732,6 @@ class VecVARP extends NativeObject {
 
   @override
   void release() {
-    finalizer.detach(this);
     C.mnn_expr_VecVARP_free(ptr);
   }
 
@@ -742,7 +742,7 @@ class VecVARP extends NativeObject {
 }
 
 class VarMap extends NativeObject {
-  static final _finalizer = ffi.NativeFinalizer(C.addresses.mnn_expr_VecVARP_free);
+  static final _finalizer = ffi.NativeFinalizer(C.addresses.mnn_expr_VARMAP_free);
 
   VarMap.fromPointer(C.VARMAP_t ptr, {super.attach, super.externalSize}) : super(ptr.cast());
 
@@ -795,7 +795,7 @@ class VarMap extends NativeObject {
 
   VARP atRef(String key) {
     final ckey = key.toNativeUtf8().cast<ffi.Char>();
-    final rval = VARP.fromPointer(C.mnn_expr_VARMAP_get_ref(ptr, ckey));
+    final rval = VARP.fromPointer(C.mnn_expr_VARMAP_get_ref(ptr, ckey), attach: false);
     malloc.free(ckey);
     return rval;
   }
@@ -806,6 +806,9 @@ class VarMap extends NativeObject {
     malloc.free(ckey);
   }
 
+  VARP operator [](String key) => atRef(key);
+  void operator []=(String key, VARP varp) => set(key, varp);
+
   @override
   ffi.NativeFinalizer get finalizer => _finalizer;
 
@@ -814,7 +817,6 @@ class VarMap extends NativeObject {
 
   @override
   void release() {
-    finalizer.detach(this);
     C.mnn_expr_VARMAP_free(ptr);
   }
 

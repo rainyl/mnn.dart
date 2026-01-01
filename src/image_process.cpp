@@ -7,7 +7,7 @@
 mnn_cv_matrix_t mnn_cv_matrix_create() { return new MNN::CV::Matrix(); }
 
 void mnn_cv_matrix_destroy(mnn_cv_matrix_t self) {
-  if (self != nullptr) { delete (MNN::CV::Matrix *)self; }
+  if (self != nullptr) { delete (MNN::CV::Matrix *)self; self = nullptr; }
 }
 
 void mnn_cv_matrix_set(mnn_cv_matrix_t self, int index, float value) {
@@ -275,6 +275,7 @@ void mnn_cv_image_process_destroy(mnn_cv_image_process_t self) {
   if (self != nullptr) {
     self->reset();
     delete self;
+    self = nullptr;
   }
 }
 

@@ -68,8 +68,9 @@ abstract class NativeObject with ComparableMixin implements ffi.Finalizable {
   void dispose() {
     if (attach) {
       finalizer.detach(this);
-      release();
     }
+    release();
+    _ptr = ffi.nullptr;
   }
 }
 

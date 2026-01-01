@@ -42,7 +42,7 @@ mnn_interpreter_create_from_buffer(const void *buffer, size_t size, mnn_callback
 }
 
 void mnn_interpreter_destroy(mnn_interpreter_t self) {
-  if (self) { MNN::Interpreter::destroy((MNN::Interpreter *)self); }
+  if (self) { MNN::Interpreter::destroy((MNN::Interpreter *)self); self = nullptr; }
 }
 
 const char *mnn_interpreter_biz_code(mnn_interpreter_t self) {
@@ -145,7 +145,7 @@ mnn_interpreter_create_runtime(const mnn_schedule_config_t *configs, size_t coun
 }
 
 void mnn_runtime_info_destroy(mnn_runtime_info_t runtime) {
-  if (runtime) { delete (MNN::RuntimeInfo *)runtime; }
+  if (runtime) { delete (MNN::RuntimeInfo *)runtime; runtime = nullptr; }
 }
 
 // Session management

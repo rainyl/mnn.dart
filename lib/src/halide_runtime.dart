@@ -152,7 +152,6 @@ class _HalideTypeNative extends NativeObject {
 
   @override
   void release() {
-    finalizer.detach(this);
     calloc.free(ptr);
   }
 }
