@@ -6,9 +6,9 @@ import 'dart:ffi' as ffi;
 
 import 'package:ffi/ffi.dart';
 
+import '../g/mnn.g.dart' as c;
 import 'base.dart';
 import 'exception.dart';
-import 'g/mnn.g.dart' as c;
 import 'interpreter.dart';
 import 'tensor.dart';
 

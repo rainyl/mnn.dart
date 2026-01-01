@@ -45,7 +45,7 @@ public:
         LAZY_FULL = 0,
         // Don't compute content until user needed.
         LAZY_CONTENT = 1 << 0,
-        
+
         // Expr can only compute once, it can reduce the create cost of expr
         LAZY_COMPUTE_ONCE = 1 << 1,
     };
@@ -85,7 +85,7 @@ public:
          * @param cacheName : full path for cache file. Note: should choose location for reading and writing.
          */
         static RuntimeManager* createRuntimeManager(const ScheduleConfig& config);
-        
+
         /**
          * @param rtmgr : the rtmgr to destroy
          */
@@ -104,14 +104,14 @@ public:
          * Calling Position: calling after createRuntimeManager.
          */
         void setCache(std::string cacheName);
-        
+
         /**
          * @brief set the path of external files or directory
          * @param path -- The path of a file or directory on disk
          * @param type -- Type of the external path (see "enum ExternalPathType" in Interpreter.hpp)
          */
         void setExternalPath(std::string path, int type);
-        
+
         /**
          * @brief set external file.
          */

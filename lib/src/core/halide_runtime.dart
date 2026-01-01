@@ -6,8 +6,8 @@ import 'dart:ffi' as ffi;
 
 import 'package:ffi/ffi.dart';
 
+import '../g/mnn.g.dart' as c;
 import 'base.dart';
-import 'g/mnn.g.dart' as c;
 
 class HalideType with ComparableMixin {
   final c.HalideTypeCode code;

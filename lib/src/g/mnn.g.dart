@@ -2858,11 +2858,314 @@ external ffi.Pointer<ffi.Char> mnn_interpreter_uuid(
   mnn_interpreter_t self$1,
 );
 
+@ffi.Native<ffi.Int Function(mnn_module_t, VARP_t)>()
+external int mnn_module_add_parameter(
+  mnn_module_t self$1,
+  VARP_t parameter,
+);
+
+@ffi.Native<ffi.Void Function(mnn_module_t)>()
+external void mnn_module_clear_cache(
+  mnn_module_t self$1,
+);
+
+@ffi.Native<mnn_module_t Function(mnn_module_t, ffi.Bool)>()
+external mnn_module_t mnn_module_clone(
+  mnn_module_t self$1,
+  bool share_params,
+);
+
+@ffi.Native<ffi.Void Function(mnn_module_t)>()
+external void mnn_module_destroy(
+  mnn_module_t self$1,
+);
+
+@ffi.Native<mnn_module_t Function(VecVARP_t, VecVARP_t, ffi.Bool)>()
+external mnn_module_t mnn_module_extract(
+  VecVARP_t inputs,
+  VecVARP_t outputs,
+  bool fortrain,
+);
+
+@ffi.Native<ffi.UnsignedInt Function(mnn_module_t, VARP_t, ffi.Pointer<VARP_t>, mnn_callback_0)>(
+  symbol: 'mnn_module_forward',
+)
+external int _mnn_module_forward(
+  mnn_module_t self$1,
+  VARP_t input,
+  ffi.Pointer<VARP_t> output,
+  mnn_callback_0 callback,
+);
+
+ErrorCode mnn_module_forward(
+  mnn_module_t self$1,
+  VARP_t input,
+  ffi.Pointer<VARP_t> output,
+  mnn_callback_0 callback,
+) => ErrorCode.fromValue(
+  _mnn_module_forward(
+    self$1,
+    input,
+    output,
+    callback,
+  ),
+);
+
+@ffi.Native<mnn_module_info_t Function(mnn_module_t)>()
+external mnn_module_info_t mnn_module_get_info(
+  mnn_module_t self$1,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_module_t)>()
+external bool mnn_module_get_is_training(
+  mnn_module_t self$1,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_t)>()
+external ffi.Pointer<ffi.Char> mnn_module_get_name(
+  mnn_module_t self$1,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_t)>()
+external ffi.Pointer<ffi.Char> mnn_module_get_type(
+  mnn_module_t self$1,
+);
+
+/// MNN::Express::Module::Info
+@ffi.Native<mnn_module_info_t Function()>()
+external mnn_module_info_t mnn_module_info_create();
+
+@ffi.Native<ffi.Void Function(mnn_module_info_t)>()
+external void mnn_module_info_destroy(
+  mnn_module_info_t self$1,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_info_t)>()
+external ffi.Pointer<ffi.Char> mnn_module_info_get_bizCode(
+  mnn_module_info_t self$1,
+);
+
+@ffi.Native<ffi.Int Function(mnn_module_info_t)>()
+external int mnn_module_info_get_default_format(
+  mnn_module_info_t self$1,
+);
+
+@ffi.Native<ffi.Size Function(mnn_module_info_t, ffi.Pointer<ffi.Pointer<ffi.Char>>)>()
+external int mnn_module_info_get_input_names(
+  mnn_module_info_t self$1,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> input_names,
+);
+
+@ffi.Native<ffi.Pointer<mnn_expr_Variable_Info> Function(mnn_module_info_t, ffi.Int)>()
+external ffi.Pointer<mnn_expr_Variable_Info> mnn_module_info_get_inputs_at(
+  mnn_module_info_t self$1,
+  int index,
+);
+
+@ffi.Native<ffi.Size Function(mnn_module_info_t)>()
+external int mnn_module_info_get_inputs_length(
+  mnn_module_info_t self$1,
+);
+
+@ffi.Native<
+  ffi.Size Function(mnn_module_info_t, ffi.Pointer<ffi.Pointer<ffi.Char>>, ffi.Pointer<ffi.Pointer<ffi.Char>>)
+>()
+external int mnn_module_info_get_metadata(
+  mnn_module_info_t self$1,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> keys,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> values,
+);
+
+@ffi.Native<ffi.Size Function(mnn_module_info_t, ffi.Pointer<ffi.Pointer<ffi.Char>>)>()
+external int mnn_module_info_get_output_names(
+  mnn_module_info_t self$1,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> output_names,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_info_t)>()
+external ffi.Pointer<ffi.Char> mnn_module_info_get_uuid(
+  mnn_module_info_t self$1,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_info_t)>()
+external ffi.Pointer<ffi.Char> mnn_module_info_get_version(
+  mnn_module_info_t self$1,
+);
+
+@ffi.Native<
+  mnn_module_t Function(
+    ffi.Pointer<ffi.Uint8>,
+    ffi.Size,
+    ffi.Pointer<ffi.Pointer<ffi.Char>>,
+    ffi.Int,
+    ffi.Pointer<ffi.Pointer<ffi.Char>>,
+    ffi.Int,
+    mnn_runtime_manager_t,
+    ffi.Pointer<mnn_module_config_t>,
+  )
+>()
+external mnn_module_t mnn_module_load_from_bytes(
+  ffi.Pointer<ffi.Uint8> buffer,
+  int length,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> inputs,
+  int input_count,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> outputs,
+  int output_count,
+  mnn_runtime_manager_t mgr,
+  ffi.Pointer<mnn_module_config_t> config,
+);
+
+/// Module API
+/// inputs and outputs are arrays of strings (char**), length is input_count/output_count
+@ffi.Native<
+  mnn_module_t Function(
+    ffi.Pointer<ffi.Char>,
+    ffi.Pointer<ffi.Pointer<ffi.Char>>,
+    ffi.Int,
+    ffi.Pointer<ffi.Pointer<ffi.Char>>,
+    ffi.Int,
+    mnn_runtime_manager_t,
+    ffi.Pointer<mnn_module_config_t>,
+  )
+>()
+external mnn_module_t mnn_module_load_from_file(
+  ffi.Pointer<ffi.Char> file_name,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> inputs,
+  int input_count,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> outputs,
+  int output_count,
+  mnn_runtime_manager_t mgr,
+  ffi.Pointer<mnn_module_config_t> config,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_module_t, VecVARP_t)>()
+external bool mnn_module_load_parameters(
+  mnn_module_t self$1,
+  VecVARP_t parameters,
+);
+
+@ffi.Native<ffi.UnsignedInt Function(mnn_module_t, VecVARP_t, ffi.Pointer<VecVARP_t>, mnn_callback_0)>(
+  symbol: 'mnn_module_on_forward',
+)
+external int _mnn_module_on_forward(
+  mnn_module_t self$1,
+  VecVARP_t inputs,
+  ffi.Pointer<VecVARP_t> outputs,
+  mnn_callback_0 callback,
+);
+
+ErrorCode mnn_module_on_forward(
+  mnn_module_t self$1,
+  VecVARP_t inputs,
+  ffi.Pointer<VecVARP_t> outputs,
+  mnn_callback_0 callback,
+) => ErrorCode.fromValue(
+  _mnn_module_on_forward(
+    self$1,
+    inputs,
+    outputs,
+    callback,
+  ),
+);
+
+@ffi.Native<ffi.Void Function(mnn_module_t, ffi.Bool)>()
+external void mnn_module_set_is_training(
+  mnn_module_t self$1,
+  bool is_training,
+);
+
+@ffi.Native<ffi.Void Function(mnn_module_t, ffi.Pointer<ffi.Char>)>()
+external void mnn_module_set_name(
+  mnn_module_t self$1,
+  ffi.Pointer<ffi.Char> name,
+);
+
+@ffi.Native<ffi.Void Function(mnn_module_t, VARP_t, ffi.Int)>()
+external void mnn_module_set_parameter(
+  mnn_module_t self$1,
+  VARP_t parameter,
+  int index,
+);
+
+@ffi.Native<ffi.Void Function(mnn_module_t, ffi.Pointer<ffi.Char>)>()
+external void mnn_module_set_type(
+  mnn_module_t self$1,
+  ffi.Pointer<ffi.Char> type,
+);
+
 /// @brief Destroy runtime info
 /// @param runtime Runtime info to destroy
 @ffi.Native<ffi.Void Function(mnn_runtime_info_t)>()
 external void mnn_runtime_info_destroy(
   mnn_runtime_info_t runtime,
+);
+
+/// RuntimeManager API
+@ffi.Native<mnn_runtime_manager_t Function(mnn_schedule_config_t)>()
+external mnn_runtime_manager_t mnn_runtime_manager_create(
+  mnn_schedule_config_t config,
+);
+
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t)>()
+external void mnn_runtime_manager_destroy(
+  mnn_runtime_manager_t self$1,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_runtime_manager_t, ffi.Int, ffi.Pointer<ffi.Void>)>()
+external bool mnn_runtime_manager_get_info(
+  mnn_runtime_manager_t self$1,
+  int code,
+  ffi.Pointer<ffi.Void> ptr,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_runtime_manager_t, ffi.Int)>()
+external bool mnn_runtime_manager_is_backend_support(
+  mnn_runtime_manager_t self$1,
+  int backend,
+);
+
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Pointer<ffi.Char>)>()
+external void mnn_runtime_manager_set_cache(
+  mnn_runtime_manager_t self$1,
+  ffi.Pointer<ffi.Char> cache_path,
+);
+
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Pointer<ffi.Char>)>()
+external void mnn_runtime_manager_set_external_file(
+  mnn_runtime_manager_t self$1,
+  ffi.Pointer<ffi.Char> path,
+);
+
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Pointer<ffi.Char>, ffi.Int)>()
+external void mnn_runtime_manager_set_external_path(
+  mnn_runtime_manager_t self$1,
+  ffi.Pointer<ffi.Char> external_path,
+  int type,
+);
+
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Int, ffi.Int)>()
+external void mnn_runtime_manager_set_hint(
+  mnn_runtime_manager_t self$1,
+  int mode,
+  int value,
+);
+
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Int)>()
+external void mnn_runtime_manager_set_mode(
+  mnn_runtime_manager_t self$1,
+  int mode,
+);
+
+@ffi.Native<ffi.Bool Function(ffi.Pointer<ffi.Char>, ffi.Int, ffi.Pointer<ffi.Pointer<ffi.Char>>)>()
+external bool mnn_runtime_manager_static_get_device_info(
+  ffi.Pointer<ffi.Char> device_key,
+  int type,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> device_value,
+);
+
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t)>()
+external void mnn_runtime_manager_update_cache(
+  mnn_runtime_manager_t self$1,
 );
 
 /// @brief Get tensor batch
@@ -5460,8 +5763,14 @@ class _SymbolAddresses {
       ffi.Native.addressOf(self.mnn_expr_VecWeakEXPRP_free);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_interpreter_t)>> get mnn_interpreter_destroy =>
       ffi.Native.addressOf(self.mnn_interpreter_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_module_t)>> get mnn_module_destroy =>
+      ffi.Native.addressOf(self.mnn_module_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_module_info_t)>> get mnn_module_info_destroy =>
+      ffi.Native.addressOf(self.mnn_module_info_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_runtime_info_t)>> get mnn_runtime_info_destroy =>
       ffi.Native.addressOf(self.mnn_runtime_info_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_runtime_manager_t)>> get mnn_runtime_manager_destroy =>
+      ffi.Native.addressOf(self.mnn_runtime_manager_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_tensor_t)>> get mnn_tensor_destroy =>
       ffi.Native.addressOf(self.mnn_tensor_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_timer_t)>> get mnn_timer_destroy =>
@@ -6367,7 +6676,36 @@ final class mnn_image_process_config_t extends ffi.Struct {
 }
 
 typedef mnn_interpreter_t = ffi.Pointer<ffi.Void>;
+
+/// Config struct equivalent for C
+final class mnn_module_config_t extends ffi.Struct {
+  /// Load module as dynamic, default static
+  @ffi.Bool()
+  external bool dynamic;
+
+  /// for static mode, if the shape is mutable, set true, otherwise set false to avoid resizeSession freqencily
+  @ffi.Bool()
+  external bool shape_mutable;
+
+  /// Pre-rearrange weights or not. Disabled by default.
+  /// The weights will be rearranged in a general way, so the best implementation
+  /// may not be adopted if `rearrange` is enabled.
+  @ffi.Bool()
+  external bool rearrange;
+
+  /// MNN_FORWARD_CPU
+  @ffi.Int()
+  external int backend_info_type;
+
+  external ffi.Pointer<mnn_backend_config_t> backend_info_config;
+}
+
+typedef mnn_module_info_t = ffi.Pointer<ffi.Void>;
+
+/// typedef void *mnn_executor_t;
+typedef mnn_module_t = ffi.Pointer<ffi.Void>;
 typedef mnn_runtime_info_t = ffi.Pointer<ffi.Void>;
+typedef mnn_runtime_manager_t = ffi.Pointer<ffi.Void>;
 
 /// Schedule config structure
 final class mnn_schedule_config_t extends ffi.Struct {

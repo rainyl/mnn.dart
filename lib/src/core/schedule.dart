@@ -6,9 +6,9 @@ import 'dart:ffi' as ffi;
 
 import 'package:ffi/ffi.dart';
 
+import '../g/mnn.g.dart' as c;
 import 'backend.dart';
 import 'base.dart';
-import 'g/mnn.g.dart' as c;
 
 class ScheduleConfig extends NativeObject {
   static final ffi.NativeFinalizer _finalizer = ffi.NativeFinalizer(calloc.nativeFree);

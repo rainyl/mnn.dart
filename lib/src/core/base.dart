@@ -8,8 +8,8 @@ import 'dart:async';
 import 'dart:ffi' as ffi;
 import 'package:meta/meta.dart';
 
+import '../g/mnn.g.dart' as c;
 import 'exception.dart';
-import 'g/mnn.g.dart' as c;
 
 mixin ComparableMixin {
   List<Object?> get props;

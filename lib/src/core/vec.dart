@@ -9,8 +9,8 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 
+import '../g/mnn.g.dart' as C;
 import 'base.dart';
-import 'g/mnn.g.dart' as C;
 
 abstract class Vec<N extends ffi.Pointer, T> extends NativeObject with IterableMixin<T> {
   Vec.fromPointer(N ptr, {super.attach, super.externalSize}) : super(ptr.cast());

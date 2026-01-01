@@ -3,12 +3,13 @@
 import 'dart:ffi' as ffi;
 
 import 'package:ffi/ffi.dart';
-import 'package:mnn/src/base.dart';
-import 'package:mnn/src/expr/expr.dart';
-import 'package:mnn/src/expr/utils.dart';
-import 'package:mnn/src/g/mnn.g.dart' as C;
-import 'package:mnn/src/halide_runtime.dart';
-import 'package:mnn/src/vec.dart';
+
+import '../core/base.dart';
+import '../core/halide_runtime.dart';
+import '../core/vec.dart';
+import '../g/mnn.g.dart' as C;
+import 'expr.dart';
+import 'utils.dart';
 
 enum PaddingMode {
   CAFFE(0),

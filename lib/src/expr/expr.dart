@@ -6,14 +6,15 @@ import 'dart:ffi' as ffi;
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
-import 'package:mnn/src/base.dart';
-import 'package:mnn/src/expr/op.dart' as op;
-import 'package:mnn/src/g/mnn.g.dart' as C;
-import 'package:mnn/src/halide_runtime.dart';
-import 'package:mnn/src/tensor.dart';
-import 'package:mnn/src/vec.dart';
 
-import '../exception.dart';
+import '../core/base.dart';
+import '../core/exception.dart';
+import '../core/halide_runtime.dart';
+import '../core/tensor.dart';
+import '../core/vec.dart';
+import '../g/mnn.g.dart' as C;
+import 'op.dart' as op;
+
 
 enum MemoryType {
   COPY(0),

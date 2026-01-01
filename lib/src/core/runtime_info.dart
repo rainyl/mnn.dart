@@ -4,8 +4,8 @@
 
 import 'dart:ffi' as ffi;
 
+import '../g/mnn.g.dart' as c;
 import 'base.dart';
-import 'g/mnn.g.dart' as c;
 
 class RuntimeInfo extends NativeObject {
   static final ffi.NativeFinalizer _finalizer = ffi.NativeFinalizer(c.addresses.mnn_runtime_info_destroy);
