@@ -2075,9 +2075,9 @@ external VecVARP_t mnn_expr_Unstack(
 @ffi.Native<VARMAP_t Function()>()
 external VARMAP_t mnn_expr_VARMAP_create();
 
-@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>()
+@ffi.Native<ffi.Void Function(VARMAP_t)>()
 external void mnn_expr_VARMAP_free(
-  ffi.Pointer<ffi.Void> self$1,
+  VARMAP_t self$1,
 );
 
 @ffi.Native<VARP_t Function(VARMAP_t, ffi.Pointer<ffi.Char>)>()
@@ -2131,9 +2131,9 @@ external bool mnn_expr_VARP_fix(
   int type,
 );
 
-@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>()
+@ffi.Native<ffi.Void Function(VARP_t)>()
 external void mnn_expr_VARP_free(
-  ffi.Pointer<ffi.Void> self$1,
+  VARP_t self$1,
 );
 
 @ffi.Native<ffi.Pointer<Variable_expr_pair> Function(VARP_t)>()
@@ -2369,9 +2369,9 @@ external VecVARP_t mnn_expr_VecVARP_create(
   VARP_t value,
 );
 
-@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>()
+@ffi.Native<ffi.Void Function(VecVARP_t)>()
 external void mnn_expr_VecVARP_free(
-  ffi.Pointer<ffi.Void> self$1,
+  VecVARP_t self$1,
 );
 
 @ffi.Native<ffi.Void Function(VecVARP_t, VARP_t)>()
@@ -2398,9 +2398,9 @@ external EXPRP_t mnn_expr_VecWeakEXPRP_at(
   int i,
 );
 
-@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>()
+@ffi.Native<ffi.Void Function(VecWeakEXPRP_t)>()
 external void mnn_expr_VecWeakEXPRP_free(
-  ffi.Pointer<ffi.Void> self$1,
+  VecWeakEXPRP_t self$1,
 );
 
 @ffi.Native<ffi.Void Function(VecWeakEXPRP_t, EXPRP_t)>()
@@ -5828,15 +5828,15 @@ class _SymbolAddresses {
       ffi.Native.addressOf(self.mnn_executor_scope_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(EXPRP_t)>> get mnn_expr_Expr_free =>
       ffi.Native.addressOf(self.mnn_expr_Expr_free);
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> get mnn_expr_VARMAP_free =>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VARMAP_t)>> get mnn_expr_VARMAP_free =>
       ffi.Native.addressOf(self.mnn_expr_VARMAP_free);
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> get mnn_expr_VARP_free =>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VARP_t)>> get mnn_expr_VARP_free =>
       ffi.Native.addressOf(self.mnn_expr_VARP_free);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> get mnn_expr_Variable_Info_free =>
       ffi.Native.addressOf(self.mnn_expr_Variable_Info_free);
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> get mnn_expr_VecVARP_free =>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecVARP_t)>> get mnn_expr_VecVARP_free =>
       ffi.Native.addressOf(self.mnn_expr_VecVARP_free);
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> get mnn_expr_VecWeakEXPRP_free =>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecWeakEXPRP_t)>> get mnn_expr_VecWeakEXPRP_free =>
       ffi.Native.addressOf(self.mnn_expr_VecWeakEXPRP_free);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_interpreter_t)>> get mnn_interpreter_destroy =>
       ffi.Native.addressOf(self.mnn_interpreter_destroy);
@@ -5963,7 +5963,7 @@ enum ErrorCode {
   };
 }
 
-typedef FILE = _iobuf;
+typedef FILE = __sFILE;
 
 /// Types in the halide type system. They can be ints, unsigned ints,
 /// or floats (of various bit-widths), or a handle (which is always 64-bits).
@@ -6385,15 +6385,124 @@ typedef VecU8 = ffi.Pointer<ffi.Void>;
 typedef VecUChar = ffi.Pointer<ffi.Void>;
 typedef VecVARP_t = ffi.Pointer<ffi.Void>;
 typedef VecWeakEXPRP_t = ffi.Pointer<ffi.Void>;
+typedef __darwin_off_t = __int64_t;
+typedef __int64_t = ffi.LongLong;
+typedef Dart__int64_t = int;
 
-final class _iobuf extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _Placeholder;
+/// stdio state variables.
+///
+/// The following always hold:
+///
+/// if (_flags&(__SLBF|__SWR)) == (__SLBF|__SWR),
+/// _lbfsize is -_bf._size, else _lbfsize is 0
+/// if _flags&__SRD, _w is 0
+/// if _flags&__SWR, _r is 0
+///
+/// This ensures that the getc and putc macros (or inline functions) never
+/// try to write or read from a file that is in `read' or `write' mode.
+/// (Moreover, they can, and do, automatically switch from read mode to
+/// write mode, and back, on "r+" and "w+" files.)
+///
+/// _lbfsize is used only to make the inline line-buffered output stream
+/// code as compact as possible.
+///
+/// _ub, _up, and _ur are used when ungetc() pushes back more characters
+/// than fit in the current _bf, or when ungetc() pushes back a character
+/// that does not match the previous one in _bf.  When this happens,
+/// _ub._base becomes non-nil (i.e., a stream has ungetc() data iff
+/// _ub._base!=NULL) and _up and _ur save the current values of _p and _r.
+///
+/// NB: see WARNING above before changing the layout of this structure!
+final class __sFILE extends ffi.Struct {
+  /// current position in (some) buffer
+  external ffi.Pointer<ffi.UnsignedChar> _p;
+
+  /// read space left for getc()
+  @ffi.Int()
+  external int _r;
+
+  /// write space left for putc()
+  @ffi.Int()
+  external int _w;
+
+  /// flags, below; this FILE is free if 0
+  @ffi.Short()
+  external int _flags;
+
+  /// fileno, if Unix descriptor, else -1
+  @ffi.Short()
+  external int _file;
+
+  /// the buffer (at least 1 byte, if !NULL)
+  external __sbuf _bf;
+
+  /// 0 or -_bf._size, for inline putc
+  @ffi.Int()
+  external int _lbfsize;
+
+  /// cookie passed to io functions
+  external ffi.Pointer<ffi.Void> _cookie;
+
+  external ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void>)>> _close;
+
+  external ffi.Pointer<
+    ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Char>, ffi.Int)>
+  >
+  _read;
+
+  external ffi.Pointer<ffi.NativeFunction<fpos_t Function(ffi.Pointer<ffi.Void>, fpos_t, ffi.Int)>> _seek;
+
+  external ffi.Pointer<
+    ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Char>, ffi.Int)>
+  >
+  _write;
+
+  /// ungetc buffer
+  external __sbuf _ub;
+
+  /// additions to FILE to not break ABI
+  external ffi.Pointer<__sFILEX> _extra;
+
+  /// saved _r when _r is counting ungetc data
+  @ffi.Int()
+  external int _ur;
+
+  /// guarantee an ungetc() buffer
+  @ffi.Array.multi([3])
+  external ffi.Array<ffi.UnsignedChar> _ubuf;
+
+  /// guarantee a getc() buffer
+  @ffi.Array.multi([1])
+  external ffi.Array<ffi.UnsignedChar> _nbuf;
+
+  /// buffer for fgetln()
+  external __sbuf _lb;
+
+  /// stat.st_blksize (may be != _bf._size)
+  @ffi.Int()
+  external int _blksize;
+
+  /// current lseek offset (see WARNING)
+  @fpos_t()
+  external int _offset;
+}
+
+/// hold a buncha junk that would grow the ABI
+final class __sFILEX extends ffi.Opaque {}
+
+/// stdio buffers
+final class __sbuf extends ffi.Struct {
+  external ffi.Pointer<ffi.UnsignedChar> _base;
+
+  @ffi.Int()
+  external int _size;
 }
 
 typedef double_t = ffi.Double;
 typedef Dartdouble_t = double;
 typedef float_t = ffi.Float;
 typedef Dartfloat_t = double;
+typedef fpos_t = __darwin_off_t;
 
 /// The raw representation of an image passed around by generated
 /// Halide code. It includes some stuff to track whether the image is

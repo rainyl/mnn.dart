@@ -52,14 +52,14 @@ struct Variable_expr_pair {
 };
 
 MNN_C_API VecVARP_t mnn_expr_VecVARP_create(size_t length, VARP_t value);
-MNN_C_API void mnn_expr_VecVARP_free(void *self);
+MNN_C_API void mnn_expr_VecVARP_free(VecVARP_t self);
 MNN_C_API VARP_t mnn_expr_VecVARP_at(VecVARP_t self, int i);
 MNN_C_API VARP_t mnn_expr_VecVARP_at_ref(VecVARP_t self, int i);
 MNN_C_API void mnn_expr_VecVARP_set(VecVARP_t self, int i, VARP_t value);
 MNN_C_API void mnn_expr_VecVARP_push_back(VecVARP_t self, VARP_t value);
 MNN_C_API size_t mnn_expr_VecVARP_size(VecVARP_t self);
 
-MNN_C_API void mnn_expr_VecWeakEXPRP_free(void *self);
+MNN_C_API void mnn_expr_VecWeakEXPRP_free(VecWeakEXPRP_t self);
 MNN_C_API EXPRP_t mnn_expr_VecWeakEXPRP_at(VecWeakEXPRP_t self, int i);
 MNN_C_API void mnn_expr_VecWeakEXPRP_set(VecWeakEXPRP_t self, int i, EXPRP_t value);
 MNN_C_API void mnn_expr_VecWeakEXPRP_push_back(VecWeakEXPRP_t self, EXPRP_t value);
@@ -68,7 +68,7 @@ MNN_C_API size_t mnn_expr_VecWeakEXPRP_size(VecWeakEXPRP_t self);
 MNN_C_API void mnn_expr_Variable_Info_free(void *self);
 
 MNN_C_API VARMAP_t mnn_expr_VARMAP_create();
-MNN_C_API void mnn_expr_VARMAP_free(void *self);
+MNN_C_API void mnn_expr_VARMAP_free(VARMAP_t self);
 MNN_C_API size_t mnn_expr_VARMAP_size(VARMAP_t self);
 MNN_C_API char **mnn_expr_VARMAP_keys(VARMAP_t self);
 MNN_C_API VARP_t mnn_expr_VARMAP_get(VARMAP_t self, char *key);
@@ -78,7 +78,7 @@ MNN_C_API void mnn_expr_VARMAP_set(VARMAP_t self, char *key, VARP_t value);
 // MNN::Express::VARP
 MNN_C_API VARP_t mnn_expr_VARP_create_empty();
 MNN_C_API VARP_t mnn_expr_VARP_create_VARP(VARP_t other);
-MNN_C_API void mnn_expr_VARP_free(void *self);
+MNN_C_API void mnn_expr_VARP_free(VARP_t self);
 MNN_C_API VARP_t mnn_expr_VARP_op_add(VARP_t self, VARP_t other);
 MNN_C_API VARP_t mnn_expr_VARP_op_sub(VARP_t self, VARP_t other);
 MNN_C_API VARP_t mnn_expr_VARP_op_mul(VARP_t self, VARP_t other);

@@ -160,28 +160,40 @@ class Module extends NativeObject {
   VARP forward(VARP input) {
     final p = calloc<C.VARP_t>();
     mnnRun(() => C.mnn_module_forward(ptr, input.ptr, p, ffi.nullptr));
-    return VARP.fromPointer(p.value);
+    final rval = VARP.fromPointer(p.value);
+    calloc.free(p);
+    return rval;
   }
 
   Future<VARP> forwardAsync(VARP input) async {
     final p = calloc<C.VARP_t>();
     return mnnRunAsync0(
       (callback) => C.mnn_module_forward(ptr, input.ptr, p, callback),
-      (c) => c.complete(VARP.fromPointer(p.value)),
+      (c) {
+        final rval = VARP.fromPointer(p.value);
+        calloc.free(p);
+        return c.complete(rval);
+      },
     );
   }
 
   VecVARP onForward(VecVARP inputs) {
     final p = calloc<C.VecVARP_t>();
     mnnRun(() => C.mnn_module_on_forward(ptr, inputs.ptr, p, ffi.nullptr));
-    return VecVARP.fromPointer(p.value);
+    final rval = VecVARP.fromPointer(p.value);
+    calloc.free(p);
+    return rval;
   }
 
   Future<VecVARP> onForwardAsync(VecVARP inputs) async {
     final p = calloc<C.VecVARP_t>();
     return mnnRunAsync0(
       (callback) => C.mnn_module_on_forward(ptr, inputs.ptr, p, callback),
-      (c) => c.complete(VecVARP.fromPointer(p.value)),
+      (c) {
+        final rval = VecVARP.fromPointer(p.value);
+        calloc.free(p);
+        return c.complete(rval);
+      },
     );
   }
 

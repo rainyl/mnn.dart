@@ -811,11 +811,11 @@ class VarMap extends NativeObject {
         continue;
       }
       final key = cKey.cast<Utf8>().toDartString();
-      final value = VARP.fromPointer(C.mnn_expr_VARMAP_get(ptr, cKey));
+      final value = VARP.fromPointer(C.mnn_expr_VARMAP_get(ptr, cKey), attach: false);
       map[key] = value;
 
-      malloc.free(cKey);
-      cKey.value = 0;
+      // Here, cKey will be owned by `key` string, do not free it.
+      // malloc.free(cKey);
     }
     malloc.free(pKeys);
     return map;

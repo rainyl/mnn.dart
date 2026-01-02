@@ -137,6 +137,11 @@ class Executor extends NativeObject {
 
   @override
   List<Object?> get props => [ptr.address];
+
+  @override
+  String toString() {
+    return "Executor(address=0x${ptr.address.toRadixString(16)})";
+  }
 }
 
 class ExecutorScope extends NativeObject {
@@ -169,6 +174,11 @@ class ExecutorScope extends NativeObject {
 
   @override
   List<Object?> get props => [ptr.address];
+
+  @override
+  String toString() {
+    return "ExecutorScope(address=0x${ptr.address.toRadixString(16)})";
+  }
 }
 
 class RuntimeManager extends NativeObject {
@@ -343,7 +353,15 @@ class ModuleInfo extends NativeObject {
 
 /// Execute a computation using an executor
 ///
+/// TODO: support this
+/// NOTE: DO NOT USE!!!
+///
 /// Note: remember to dispose the module in [computation]
+///
+/// NOTE: Our implementation uses `attach` to attach a native object to a Dart object,
+/// which means in most cases, native objects will be disposed automatically when Dart objects
+/// are garbage collected. **However**, when they will be disposed is not guaranteed,
+/// if they are freed before the lazy computation is executed, a use-after-free may occur.
 ///
 /// - [computation] The computation to execute, which takes an executor as input and returns a result
 ///
@@ -364,21 +382,17 @@ T usingExecutor<T>(
   numThreads ??= Platform.numberOfProcessors;
   // var isAsync = false;
   final executor = Executor.create(type, config, numThreads);
+  executor.lazyMode = LazyMode.LAZY_FULL;
   final scope = ExecutorScope.create(executor);
 
   try {
     final result = computation(executor);
     if (result is Future) {
       // isAsync = true;
-      return result.whenComplete(() {
-            executor.dispose();
-            scope.dispose();
-          })
-          as T;
+      return result.whenComplete(scope.dispose) as T;
     }
     return result;
   } finally {
-    executor.dispose();
     scope.dispose();
   }
 }
