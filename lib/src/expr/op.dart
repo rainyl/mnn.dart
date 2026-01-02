@@ -3,12 +3,13 @@
 import 'dart:ffi' as ffi;
 
 import 'package:ffi/ffi.dart';
-import 'package:mnn/src/base.dart';
-import 'package:mnn/src/expr/expr.dart';
-import 'package:mnn/src/expr/utils.dart';
-import 'package:mnn/src/g/mnn.g.dart' as C;
-import 'package:mnn/src/halide_runtime.dart';
-import 'package:mnn/src/vec.dart';
+
+import '../core/base.dart';
+import '../core/halide_runtime.dart';
+import '../core/vec.dart';
+import '../g/mnn.g.dart' as C;
+import 'expr.dart';
+import 'utils.dart';
 
 enum PaddingMode {
   CAFFE(0),
@@ -1204,9 +1205,9 @@ VARP scalar<T extends ffi.SizedNativeType>(num value, {HalideType? dtype}) {
 }
 
 VARP conv(
-  VARP weight,
-  VARP bias,
-  VARP x, {
+  VARP x,
+  VARP weight, {
+  VARP? bias,
   PaddingMode pad = PaddingMode.VALID,
   List<int> stride = const [1, 1],
   List<int> dilatie = const [1, 1],
@@ -1219,7 +1220,7 @@ VARP conv(
   final rval = VARP.fromPointer(
     C.mnn_expr_Conv(
       weight.ptr,
-      bias.ptr,
+      bias?.ptr ?? ffi.nullptr,
       x.ptr,
       pad.value,
       stridePtr.cast(),
@@ -1238,20 +1239,20 @@ VARP conv(
 }
 
 VARP conv2d(
-  VARP weight,
-  VARP bias,
-  VARP x, {
+  VARP x,
+  VARP weight, {
+  VARP? bias,
   PaddingMode pad = PaddingMode.VALID,
   List<int> stride = const [1, 1],
   List<int> dilatie = const [1, 1],
   int group = 1,
   List<int> pads = const [0, 0],
-}) => conv(weight, bias, x, pad: pad, stride: stride, dilatie: dilatie, group: group, pads: pads);
+}) => conv(x, weight, bias: bias, pad: pad, stride: stride, dilatie: dilatie, group: group, pads: pads);
 
 VARP deconv(
-  VARP weight,
-  VARP bias,
-  VARP x, {
+  VARP x,
+  VARP weight, {
+  VARP? bias,
   PaddingMode pad = PaddingMode.VALID,
   List<int> stride = const [1, 1],
   List<int> dilatie = const [1, 1],
@@ -1264,7 +1265,7 @@ VARP deconv(
   final rval = VARP.fromPointer(
     C.mnn_expr_Deconv(
       weight.ptr,
-      bias.ptr,
+      bias?.ptr ?? ffi.nullptr,
       x.ptr,
       pad.value,
       stridePtr.cast(),
@@ -1283,15 +1284,15 @@ VARP deconv(
 }
 
 VARP conv2dTranspose(
-  VARP weight,
-  VARP bias,
-  VARP x, {
+  VARP x,
+  VARP weight, {
+  VARP? bias,
   PaddingMode pad = PaddingMode.VALID,
   List<int> stride = const [1, 1],
   List<int> dilatie = const [1, 1],
   int group = 1,
   List<int> pads = const [0, 0],
-}) => deconv(weight, bias, x, pad: pad, stride: stride, dilatie: dilatie, group: group, pads: pads);
+}) => deconv(x, weight, bias: bias, pad: pad, stride: stride, dilatie: dilatie, group: group, pads: pads);
 
 VARP maxPool(
   VARP x,

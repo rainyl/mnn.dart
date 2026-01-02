@@ -4,8 +4,8 @@
 
 import 'dart:ffi' as ffi;
 
+import '../g/mnn.g.dart' as c;
 import 'base.dart';
-import 'g/mnn.g.dart' as c;
 
 class Timer extends NativeObject {
   static final _finalizer = ffi.NativeFinalizer(c.addresses.mnn_timer_destroy);

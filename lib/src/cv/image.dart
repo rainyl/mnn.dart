@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 
-import '../base.dart';
-import '../exception.dart';
+import '../core/base.dart';
+import '../core/exception.dart';
 import '../g/mnn.g.dart' as c;
 import 'enums.dart';
 

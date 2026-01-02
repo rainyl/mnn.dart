@@ -119,6 +119,10 @@ set(SOURCES
     "image_process.cpp"
     "mnn_stb_image.cpp"
     "expr_op.cpp"
+        module.cpp
+        module.h
+        cv.cpp
+        cv.h
 )
 
 include_directories(

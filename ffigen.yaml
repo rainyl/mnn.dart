@@ -30,6 +30,7 @@ headers:
     - "src/expr.h"
     - "src/expr_op.h"
     - "src/stdvec.h"
+    - "src/module.h"
   include-directives:
     - "src/autotime.h"
     - "src/error_code.h"
@@ -45,6 +46,7 @@ headers:
     - "src/expr.h"
     - "src/expr_op.h"
     - "src/stdvec.h"
+    - "src/module.h"
 structs:
   exclude:
     - 'halide_type_t'

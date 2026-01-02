@@ -7,9 +7,9 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 
+import '../g/mnn.g.dart' as c;
 import 'base.dart';
 import 'exception.dart';
-import 'g/mnn.g.dart' as c;
 import 'runtime_info.dart';
 import 'schedule.dart';
 import 'session.dart';

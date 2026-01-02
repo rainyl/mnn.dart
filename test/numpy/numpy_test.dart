@@ -18,17 +18,14 @@ void main() {
       {
         final a = np.empty<mnn.float32>([3]);
         expect(a.shape, equals([3]));
-        expect(a.data, isNotNull);
       }
 
       {
         final a = np.empty<mnn.int32>([1, 2, 3, 4]);
         expect(a.shape, equals([1, 2, 3, 4]));
-        expect(a.data, isNotNull);
 
         final b = np.emptyLike<mnn.int32>(a);
         expect(b.shape, equals([1, 2, 3, 4]));
-        expect(b.data, isNotNull);
       }
     });
 

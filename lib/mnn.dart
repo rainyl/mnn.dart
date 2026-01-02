@@ -5,14 +5,20 @@
 /// Apache 2.0 license that can be found in the LICENSE file.
 library mnn;
 
-export 'src/autotime.dart';
-export 'src/backend.dart';
-export 'src/base.dart';
-export 'src/constant.dart';
-export 'src/exception.dart';
+export 'src/core/autotime.dart';
+export 'src/core/backend.dart';
+export 'src/core/base.dart';
+export 'src/core/constant.dart';
+export 'src/core/exception.dart';
+export 'src/core/halide_runtime.dart';
+export 'src/core/interpreter.dart';
+export 'src/core/runtime_info.dart';
+export 'src/core/schedule.dart';
+export 'src/core/session.dart';
+export 'src/core/tensor.dart';
 export 'src/expr/expr.dart';
+export 'src/expr/formatter.dart';
 export 'src/expr/utils.dart';
-export 'src/formatter.dart';
 export 'src/g/mnn.g.dart'
     show
         DimensionType,
@@ -24,13 +30,3 @@ export 'src/g/mnn.g.dart'
         StbirEdge,
         StbirFilter,
         StbirPixelLayout;
-export 'src/halide_runtime.dart';
-export 'src/image/image.dart';
-export 'src/image_process.dart';
-export 'src/interpreter.dart';
-export 'src/matrix.dart';
-export 'src/rect.dart';
-export 'src/runtime_info.dart';
-export 'src/schedule.dart';
-export 'src/session.dart';
-export 'src/tensor.dart';

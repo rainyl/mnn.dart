@@ -7,11 +7,11 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 
+import '../cv/image.dart';
+import '../g/mnn.g.dart' as c;
 import 'base.dart';
 import 'exception.dart';
-import 'g/mnn.g.dart' as c;
 import 'halide_runtime.dart';
-import 'image/image.dart';
 
 class Tensor extends NativeObject {
   static final ffi.NativeFinalizer _finalizer = ffi.NativeFinalizer(c.addresses.mnn_tensor_destroy);

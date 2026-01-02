@@ -8,8 +8,8 @@ import 'dart:async';
 import 'dart:ffi' as ffi;
 import 'package:meta/meta.dart';
 
+import '../g/mnn.g.dart' as c;
 import 'exception.dart';
-import 'g/mnn.g.dart' as c;
 
 mixin ComparableMixin {
   List<Object?> get props;
@@ -68,8 +68,8 @@ abstract class NativeObject with ComparableMixin implements ffi.Finalizable {
   void dispose() {
     if (attach) {
       finalizer.detach(this);
+      release();
     }
-    release();
     _ptr = ffi.nullptr;
   }
 }

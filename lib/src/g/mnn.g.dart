@@ -549,6 +549,75 @@ external void mnn_cv_matrix_set_translate(
   double dy,
 );
 
+@ffi.Native<ffi.Void Function(mnn_executor_t)>()
+external void mnn_executor_destroy(
+  mnn_executor_t self$1,
+);
+
+@ffi.Native<ffi.Void Function(mnn_executor_t, ffi.Int)>()
+external void mnn_executor_gc(
+  mnn_executor_t self$1,
+  int flag,
+);
+
+@ffi.Native<ffi.Int Function(mnn_executor_t, ffi.Int)>()
+external int mnn_executor_get_current_runtime_status(
+  mnn_executor_t self$1,
+  int status_enum,
+);
+
+@ffi.Native<ffi.Uint32 Function(mnn_executor_t)>()
+external int mnn_executor_get_lazy_mode(
+  mnn_executor_t self$1,
+);
+
+@ffi.Native<mnn_executor_scope_t Function(mnn_executor_t)>()
+external mnn_executor_scope_t mnn_executor_scope_create(
+  mnn_executor_t current,
+);
+
+@ffi.Native<mnn_executor_scope_t Function(ffi.Pointer<ffi.Char>, mnn_executor_t)>()
+external mnn_executor_scope_t mnn_executor_scope_create_with_name(
+  ffi.Pointer<ffi.Char> name,
+  mnn_executor_t current,
+);
+
+@ffi.Native<ffi.Void Function(mnn_executor_scope_t)>()
+external void mnn_executor_scope_destroy(
+  mnn_executor_scope_t self$1,
+);
+
+@ffi.Native<mnn_executor_t Function()>()
+external mnn_executor_t mnn_executor_scope_static_current_executor();
+
+@ffi.Native<ffi.Void Function(mnn_executor_t, ffi.Int, mnn_backend_config_t, ffi.Int)>()
+external void mnn_executor_set_global_executor_config(
+  mnn_executor_t self$1,
+  int type,
+  mnn_backend_config_t config,
+  int num_thread,
+);
+
+@ffi.Native<ffi.Void Function(mnn_executor_t, ffi.Uint32)>()
+external void mnn_executor_set_lazy_mode(
+  mnn_executor_t self$1,
+  int mode,
+);
+
+@ffi.Native<mnn_executor_t Function()>()
+external mnn_executor_t mnn_executor_static_get_global_executor();
+
+@ffi.Native<mnn_runtime_info_t Function()>()
+external mnn_runtime_info_t mnn_executor_static_get_runtime();
+
+/// Executor, ExecutorScope
+@ffi.Native<mnn_executor_t Function(ffi.Int, mnn_backend_config_t, ffi.Int)>()
+external mnn_executor_t mnn_executor_static_new_executor(
+  int type,
+  mnn_backend_config_t config,
+  int num_thread,
+);
+
 @ffi.Native<VARP_t Function(VARP_t)>()
 external VARP_t mnn_expr_Abs(
   VARP_t x,
@@ -2006,9 +2075,9 @@ external VecVARP_t mnn_expr_Unstack(
 @ffi.Native<VARMAP_t Function()>()
 external VARMAP_t mnn_expr_VARMAP_create();
 
-@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>()
+@ffi.Native<ffi.Void Function(VARMAP_t)>()
 external void mnn_expr_VARMAP_free(
-  ffi.Pointer<ffi.Void> self$1,
+  VARMAP_t self$1,
 );
 
 @ffi.Native<VARP_t Function(VARMAP_t, ffi.Pointer<ffi.Char>)>()
@@ -2062,9 +2131,9 @@ external bool mnn_expr_VARP_fix(
   int type,
 );
 
-@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>()
+@ffi.Native<ffi.Void Function(VARP_t)>()
 external void mnn_expr_VARP_free(
-  ffi.Pointer<ffi.Void> self$1,
+  VARP_t self$1,
 );
 
 @ffi.Native<ffi.Pointer<Variable_expr_pair> Function(VARP_t)>()
@@ -2300,9 +2369,9 @@ external VecVARP_t mnn_expr_VecVARP_create(
   VARP_t value,
 );
 
-@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>()
+@ffi.Native<ffi.Void Function(VecVARP_t)>()
 external void mnn_expr_VecVARP_free(
-  ffi.Pointer<ffi.Void> self$1,
+  VecVARP_t self$1,
 );
 
 @ffi.Native<ffi.Void Function(VecVARP_t, VARP_t)>()
@@ -2329,9 +2398,9 @@ external EXPRP_t mnn_expr_VecWeakEXPRP_at(
   int i,
 );
 
-@ffi.Native<ffi.Void Function(ffi.Pointer<ffi.Void>)>()
+@ffi.Native<ffi.Void Function(VecWeakEXPRP_t)>()
 external void mnn_expr_VecWeakEXPRP_free(
-  ffi.Pointer<ffi.Void> self$1,
+  VecWeakEXPRP_t self$1,
 );
 
 @ffi.Native<ffi.Void Function(VecWeakEXPRP_t, EXPRP_t)>()
@@ -2858,11 +2927,318 @@ external ffi.Pointer<ffi.Char> mnn_interpreter_uuid(
   mnn_interpreter_t self$1,
 );
 
+@ffi.Native<ffi.Int Function(mnn_module_t, VARP_t)>()
+external int mnn_module_add_parameter(
+  mnn_module_t self$1,
+  VARP_t parameter,
+);
+
+@ffi.Native<ffi.Void Function(mnn_module_t)>()
+external void mnn_module_clear_cache(
+  mnn_module_t self$1,
+);
+
+@ffi.Native<mnn_module_t Function(mnn_module_t, ffi.Bool)>()
+external mnn_module_t mnn_module_clone(
+  mnn_module_t self$1,
+  bool share_params,
+);
+
+@ffi.Native<ffi.Void Function(mnn_module_t)>()
+external void mnn_module_destroy(
+  mnn_module_t self$1,
+);
+
+@ffi.Native<mnn_module_t Function(VecVARP_t, VecVARP_t, ffi.Bool)>()
+external mnn_module_t mnn_module_extract(
+  VecVARP_t inputs,
+  VecVARP_t outputs,
+  bool fortrain,
+);
+
+@ffi.Native<ffi.UnsignedInt Function(mnn_module_t, VARP_t, ffi.Pointer<VARP_t>, mnn_callback_0)>(
+  symbol: 'mnn_module_forward',
+)
+external int _mnn_module_forward(
+  mnn_module_t self$1,
+  VARP_t input,
+  ffi.Pointer<VARP_t> output,
+  mnn_callback_0 callback,
+);
+
+ErrorCode mnn_module_forward(
+  mnn_module_t self$1,
+  VARP_t input,
+  ffi.Pointer<VARP_t> output,
+  mnn_callback_0 callback,
+) => ErrorCode.fromValue(
+  _mnn_module_forward(
+    self$1,
+    input,
+    output,
+    callback,
+  ),
+);
+
+@ffi.Native<mnn_module_info_t Function(mnn_module_t)>()
+external mnn_module_info_t mnn_module_get_info(
+  mnn_module_t self$1,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_module_t)>()
+external bool mnn_module_get_is_training(
+  mnn_module_t self$1,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_t)>()
+external ffi.Pointer<ffi.Char> mnn_module_get_name(
+  mnn_module_t self$1,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_t)>()
+external ffi.Pointer<ffi.Char> mnn_module_get_type(
+  mnn_module_t self$1,
+);
+
+/// MNN::Express::Module::Info
+@ffi.Native<mnn_module_info_t Function()>()
+external mnn_module_info_t mnn_module_info_create();
+
+@ffi.Native<ffi.Void Function(mnn_module_info_t)>()
+external void mnn_module_info_destroy(
+  mnn_module_info_t self$1,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_info_t)>()
+external ffi.Pointer<ffi.Char> mnn_module_info_get_bizCode(
+  mnn_module_info_t self$1,
+);
+
+@ffi.Native<ffi.Int Function(mnn_module_info_t)>()
+external int mnn_module_info_get_default_format(
+  mnn_module_info_t self$1,
+);
+
+@ffi.Native<ffi.Size Function(mnn_module_info_t, ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>>)>()
+external int mnn_module_info_get_input_names(
+  mnn_module_info_t self$1,
+  ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>> input_names,
+);
+
+@ffi.Native<ffi.Pointer<mnn_expr_Variable_Info> Function(mnn_module_info_t, ffi.Int)>()
+external ffi.Pointer<mnn_expr_Variable_Info> mnn_module_info_get_inputs_at(
+  mnn_module_info_t self$1,
+  int index,
+);
+
+@ffi.Native<ffi.Size Function(mnn_module_info_t)>()
+external int mnn_module_info_get_inputs_length(
+  mnn_module_info_t self$1,
+);
+
+@ffi.Native<
+  ffi.Size Function(
+    mnn_module_info_t,
+    ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>>,
+    ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>>,
+  )
+>()
+external int mnn_module_info_get_metadata(
+  mnn_module_info_t self$1,
+  ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>> keys,
+  ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>> values,
+);
+
+@ffi.Native<ffi.Size Function(mnn_module_info_t, ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>>)>()
+external int mnn_module_info_get_output_names(
+  mnn_module_info_t self$1,
+  ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>> output_names,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_info_t)>()
+external ffi.Pointer<ffi.Char> mnn_module_info_get_uuid(
+  mnn_module_info_t self$1,
+);
+
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_info_t)>()
+external ffi.Pointer<ffi.Char> mnn_module_info_get_version(
+  mnn_module_info_t self$1,
+);
+
+@ffi.Native<
+  mnn_module_t Function(
+    ffi.Pointer<ffi.Uint8>,
+    ffi.Size,
+    ffi.Pointer<ffi.Pointer<ffi.Char>>,
+    ffi.Int,
+    ffi.Pointer<ffi.Pointer<ffi.Char>>,
+    ffi.Int,
+    mnn_runtime_manager_t,
+    ffi.Pointer<mnn_module_config_t>,
+  )
+>()
+external mnn_module_t mnn_module_load_from_bytes(
+  ffi.Pointer<ffi.Uint8> buffer,
+  int length,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> inputs,
+  int input_count,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> outputs,
+  int output_count,
+  mnn_runtime_manager_t mgr,
+  ffi.Pointer<mnn_module_config_t> config,
+);
+
+/// Module API
+/// inputs and outputs are arrays of strings (char**), length is input_count/output_count
+@ffi.Native<
+  mnn_module_t Function(
+    ffi.Pointer<ffi.Char>,
+    ffi.Pointer<ffi.Pointer<ffi.Char>>,
+    ffi.Int,
+    ffi.Pointer<ffi.Pointer<ffi.Char>>,
+    ffi.Int,
+    mnn_runtime_manager_t,
+    ffi.Pointer<mnn_module_config_t>,
+  )
+>()
+external mnn_module_t mnn_module_load_from_file(
+  ffi.Pointer<ffi.Char> file_name,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> inputs,
+  int input_count,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> outputs,
+  int output_count,
+  mnn_runtime_manager_t mgr,
+  ffi.Pointer<mnn_module_config_t> config,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_module_t, VecVARP_t)>()
+external bool mnn_module_load_parameters(
+  mnn_module_t self$1,
+  VecVARP_t parameters,
+);
+
+@ffi.Native<ffi.UnsignedInt Function(mnn_module_t, VecVARP_t, ffi.Pointer<VecVARP_t>, mnn_callback_0)>(
+  symbol: 'mnn_module_on_forward',
+)
+external int _mnn_module_on_forward(
+  mnn_module_t self$1,
+  VecVARP_t inputs,
+  ffi.Pointer<VecVARP_t> outputs,
+  mnn_callback_0 callback,
+);
+
+ErrorCode mnn_module_on_forward(
+  mnn_module_t self$1,
+  VecVARP_t inputs,
+  ffi.Pointer<VecVARP_t> outputs,
+  mnn_callback_0 callback,
+) => ErrorCode.fromValue(
+  _mnn_module_on_forward(
+    self$1,
+    inputs,
+    outputs,
+    callback,
+  ),
+);
+
+@ffi.Native<ffi.Void Function(mnn_module_t, ffi.Bool)>()
+external void mnn_module_set_is_training(
+  mnn_module_t self$1,
+  bool is_training,
+);
+
+@ffi.Native<ffi.Void Function(mnn_module_t, ffi.Pointer<ffi.Char>)>()
+external void mnn_module_set_name(
+  mnn_module_t self$1,
+  ffi.Pointer<ffi.Char> name,
+);
+
+@ffi.Native<ffi.Void Function(mnn_module_t, VARP_t, ffi.Int)>()
+external void mnn_module_set_parameter(
+  mnn_module_t self$1,
+  VARP_t parameter,
+  int index,
+);
+
+@ffi.Native<ffi.Void Function(mnn_module_t, ffi.Pointer<ffi.Char>)>()
+external void mnn_module_set_type(
+  mnn_module_t self$1,
+  ffi.Pointer<ffi.Char> type,
+);
+
 /// @brief Destroy runtime info
 /// @param runtime Runtime info to destroy
 @ffi.Native<ffi.Void Function(mnn_runtime_info_t)>()
 external void mnn_runtime_info_destroy(
   mnn_runtime_info_t runtime,
+);
+
+/// RuntimeManager API
+@ffi.Native<mnn_runtime_manager_t Function(mnn_schedule_config_t)>()
+external mnn_runtime_manager_t mnn_runtime_manager_create(
+  mnn_schedule_config_t config,
+);
+
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t)>()
+external void mnn_runtime_manager_destroy(
+  mnn_runtime_manager_t self$1,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_runtime_manager_t, ffi.Int, ffi.Pointer<ffi.Void>)>()
+external bool mnn_runtime_manager_get_info(
+  mnn_runtime_manager_t self$1,
+  int code,
+  ffi.Pointer<ffi.Void> ptr,
+);
+
+@ffi.Native<ffi.Bool Function(mnn_runtime_manager_t, ffi.Int)>()
+external bool mnn_runtime_manager_is_backend_support(
+  mnn_runtime_manager_t self$1,
+  int backend,
+);
+
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Pointer<ffi.Char>)>()
+external void mnn_runtime_manager_set_cache(
+  mnn_runtime_manager_t self$1,
+  ffi.Pointer<ffi.Char> cache_path,
+);
+
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Pointer<ffi.Char>)>()
+external void mnn_runtime_manager_set_external_file(
+  mnn_runtime_manager_t self$1,
+  ffi.Pointer<ffi.Char> path,
+);
+
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Pointer<ffi.Char>, ffi.Int)>()
+external void mnn_runtime_manager_set_external_path(
+  mnn_runtime_manager_t self$1,
+  ffi.Pointer<ffi.Char> external_path,
+  int type,
+);
+
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Int, ffi.Int)>()
+external void mnn_runtime_manager_set_hint(
+  mnn_runtime_manager_t self$1,
+  int mode,
+  int value,
+);
+
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Int)>()
+external void mnn_runtime_manager_set_mode(
+  mnn_runtime_manager_t self$1,
+  int mode,
+);
+
+@ffi.Native<ffi.Bool Function(ffi.Pointer<ffi.Char>, ffi.Int, ffi.Pointer<ffi.Pointer<ffi.Char>>)>()
+external bool mnn_runtime_manager_static_get_device_info(
+  ffi.Pointer<ffi.Char> device_key,
+  int type,
+  ffi.Pointer<ffi.Pointer<ffi.Char>> device_value,
+);
+
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t)>()
+external void mnn_runtime_manager_update_cache(
+  mnn_runtime_manager_t self$1,
 );
 
 /// @brief Get tensor batch
@@ -5446,22 +5822,32 @@ class _SymbolAddresses {
   get mnn_cv_image_process_destroy => ffi.Native.addressOf(self.mnn_cv_image_process_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_cv_matrix_t)>> get mnn_cv_matrix_destroy =>
       ffi.Native.addressOf(self.mnn_cv_matrix_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_executor_t)>> get mnn_executor_destroy =>
+      ffi.Native.addressOf(self.mnn_executor_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_executor_scope_t)>> get mnn_executor_scope_destroy =>
+      ffi.Native.addressOf(self.mnn_executor_scope_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(EXPRP_t)>> get mnn_expr_Expr_free =>
       ffi.Native.addressOf(self.mnn_expr_Expr_free);
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> get mnn_expr_VARMAP_free =>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VARMAP_t)>> get mnn_expr_VARMAP_free =>
       ffi.Native.addressOf(self.mnn_expr_VARMAP_free);
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> get mnn_expr_VARP_free =>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VARP_t)>> get mnn_expr_VARP_free =>
       ffi.Native.addressOf(self.mnn_expr_VARP_free);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> get mnn_expr_Variable_Info_free =>
       ffi.Native.addressOf(self.mnn_expr_Variable_Info_free);
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> get mnn_expr_VecVARP_free =>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecVARP_t)>> get mnn_expr_VecVARP_free =>
       ffi.Native.addressOf(self.mnn_expr_VecVARP_free);
-  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>> get mnn_expr_VecWeakEXPRP_free =>
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(VecWeakEXPRP_t)>> get mnn_expr_VecWeakEXPRP_free =>
       ffi.Native.addressOf(self.mnn_expr_VecWeakEXPRP_free);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_interpreter_t)>> get mnn_interpreter_destroy =>
       ffi.Native.addressOf(self.mnn_interpreter_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_module_t)>> get mnn_module_destroy =>
+      ffi.Native.addressOf(self.mnn_module_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_module_info_t)>> get mnn_module_info_destroy =>
+      ffi.Native.addressOf(self.mnn_module_info_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_runtime_info_t)>> get mnn_runtime_info_destroy =>
       ffi.Native.addressOf(self.mnn_runtime_info_destroy);
+  ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_runtime_manager_t)>> get mnn_runtime_manager_destroy =>
+      ffi.Native.addressOf(self.mnn_runtime_manager_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_tensor_t)>> get mnn_tensor_destroy =>
       ffi.Native.addressOf(self.mnn_tensor_destroy);
   ffi.Pointer<ffi.NativeFunction<ffi.Void Function(mnn_timer_t)>> get mnn_timer_destroy =>
@@ -5577,7 +5963,7 @@ enum ErrorCode {
   };
 }
 
-typedef FILE = _iobuf;
+typedef FILE = __sFILE;
 
 /// Types in the halide type system. They can be ints, unsigned ints,
 /// or floats (of various bit-widths), or a handle (which is always 64-bits).
@@ -5957,20 +6343,20 @@ enum StbirPixelLayout {
   }
 }
 
-/// CPU:number of threads in parallel , Or GPU: mode setting
 final class UnnamedUnion extends ffi.Union {
+  external ffi.Pointer<ffi.Void> sharedContext;
+
+  @ffi.Size()
+  external int flags;
+}
+
+/// CPU:number of threads in parallel , Or GPU: mode setting
+final class UnnamedUnion$1 extends ffi.Union {
   @ffi.Int()
   external int num_thread;
 
   @ffi.Int()
   external int mode;
-}
-
-final class UnnamedUnion$1 extends ffi.Union {
-  external ffi.Pointer<ffi.Void> sharedContext;
-
-  @ffi.Size()
-  external int flags;
 }
 
 typedef VARMAP_PAIR_t = ffi.Pointer<ffi.Void>;
@@ -5999,15 +6385,124 @@ typedef VecU8 = ffi.Pointer<ffi.Void>;
 typedef VecUChar = ffi.Pointer<ffi.Void>;
 typedef VecVARP_t = ffi.Pointer<ffi.Void>;
 typedef VecWeakEXPRP_t = ffi.Pointer<ffi.Void>;
+typedef __darwin_off_t = __int64_t;
+typedef __int64_t = ffi.LongLong;
+typedef Dart__int64_t = int;
 
-final class _iobuf extends ffi.Struct {
-  external ffi.Pointer<ffi.Void> _Placeholder;
+/// stdio state variables.
+///
+/// The following always hold:
+///
+/// if (_flags&(__SLBF|__SWR)) == (__SLBF|__SWR),
+/// _lbfsize is -_bf._size, else _lbfsize is 0
+/// if _flags&__SRD, _w is 0
+/// if _flags&__SWR, _r is 0
+///
+/// This ensures that the getc and putc macros (or inline functions) never
+/// try to write or read from a file that is in `read' or `write' mode.
+/// (Moreover, they can, and do, automatically switch from read mode to
+/// write mode, and back, on "r+" and "w+" files.)
+///
+/// _lbfsize is used only to make the inline line-buffered output stream
+/// code as compact as possible.
+///
+/// _ub, _up, and _ur are used when ungetc() pushes back more characters
+/// than fit in the current _bf, or when ungetc() pushes back a character
+/// that does not match the previous one in _bf.  When this happens,
+/// _ub._base becomes non-nil (i.e., a stream has ungetc() data iff
+/// _ub._base!=NULL) and _up and _ur save the current values of _p and _r.
+///
+/// NB: see WARNING above before changing the layout of this structure!
+final class __sFILE extends ffi.Struct {
+  /// current position in (some) buffer
+  external ffi.Pointer<ffi.UnsignedChar> _p;
+
+  /// read space left for getc()
+  @ffi.Int()
+  external int _r;
+
+  /// write space left for putc()
+  @ffi.Int()
+  external int _w;
+
+  /// flags, below; this FILE is free if 0
+  @ffi.Short()
+  external int _flags;
+
+  /// fileno, if Unix descriptor, else -1
+  @ffi.Short()
+  external int _file;
+
+  /// the buffer (at least 1 byte, if !NULL)
+  external __sbuf _bf;
+
+  /// 0 or -_bf._size, for inline putc
+  @ffi.Int()
+  external int _lbfsize;
+
+  /// cookie passed to io functions
+  external ffi.Pointer<ffi.Void> _cookie;
+
+  external ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void>)>> _close;
+
+  external ffi.Pointer<
+    ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Char>, ffi.Int)>
+  >
+  _read;
+
+  external ffi.Pointer<ffi.NativeFunction<fpos_t Function(ffi.Pointer<ffi.Void>, fpos_t, ffi.Int)>> _seek;
+
+  external ffi.Pointer<
+    ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Char>, ffi.Int)>
+  >
+  _write;
+
+  /// ungetc buffer
+  external __sbuf _ub;
+
+  /// additions to FILE to not break ABI
+  external ffi.Pointer<__sFILEX> _extra;
+
+  /// saved _r when _r is counting ungetc data
+  @ffi.Int()
+  external int _ur;
+
+  /// guarantee an ungetc() buffer
+  @ffi.Array.multi([3])
+  external ffi.Array<ffi.UnsignedChar> _ubuf;
+
+  /// guarantee a getc() buffer
+  @ffi.Array.multi([1])
+  external ffi.Array<ffi.UnsignedChar> _nbuf;
+
+  /// buffer for fgetln()
+  external __sbuf _lb;
+
+  /// stat.st_blksize (may be != _bf._size)
+  @ffi.Int()
+  external int _blksize;
+
+  /// current lseek offset (see WARNING)
+  @fpos_t()
+  external int _offset;
+}
+
+/// hold a buncha junk that would grow the ABI
+final class __sFILEX extends ffi.Opaque {}
+
+/// stdio buffers
+final class __sbuf extends ffi.Struct {
+  external ffi.Pointer<ffi.UnsignedChar> _base;
+
+  @ffi.Int()
+  external int _size;
 }
 
 typedef double_t = ffi.Double;
 typedef Dartdouble_t = double;
 typedef float_t = ffi.Float;
 typedef Dartfloat_t = double;
+typedef fpos_t = __darwin_off_t;
 
 /// The raw representation of an image passed around by generated
 /// Halide code. It includes some stuff to track whether the image is
@@ -6287,7 +6782,7 @@ final class mnn_backend_config_t extends ffi.Struct {
   @ffi.Int()
   external int precision;
 
-  external UnnamedUnion$1 unnamed;
+  external UnnamedUnion unnamed;
 }
 
 typedef mnn_backend_t = ffi.Pointer<ffi.Void>;
@@ -6319,6 +6814,8 @@ final class mnn_cv_rect_t extends ffi.Struct {
   external double bottom;
 }
 
+typedef mnn_executor_scope_t = ffi.Pointer<ffi.Void>;
+typedef mnn_executor_t = ffi.Pointer<ffi.Void>;
 typedef mnn_expr_Expr_t = ffi.Pointer<ffi.Void>;
 
 final class mnn_expr_Variable_Info extends ffi.Struct {
@@ -6367,14 +6864,41 @@ final class mnn_image_process_config_t extends ffi.Struct {
 }
 
 typedef mnn_interpreter_t = ffi.Pointer<ffi.Void>;
+
+/// Config struct equivalent for C
+final class mnn_module_config_t extends ffi.Struct {
+  /// Load module as dynamic, default static
+  @ffi.Bool()
+  external bool dynamic;
+
+  /// for static mode, if the shape is mutable, set true, otherwise set false to avoid resizeSession freqencily
+  @ffi.Bool()
+  external bool shape_mutable;
+
+  /// Pre-rearrange weights or not. Disabled by default.
+  /// The weights will be rearranged in a general way, so the best implementation
+  /// may not be adopted if `rearrange` is enabled.
+  @ffi.Bool()
+  external bool rearrange;
+
+  /// MNN_FORWARD_CPU
+  @ffi.Int()
+  external int backend_info_type;
+
+  external ffi.Pointer<mnn_backend_config_t> backend_info_config;
+}
+
+typedef mnn_module_info_t = ffi.Pointer<ffi.Void>;
+typedef mnn_module_t = ffi.Pointer<ffi.Void>;
 typedef mnn_runtime_info_t = ffi.Pointer<ffi.Void>;
+typedef mnn_runtime_manager_t = ffi.Pointer<ffi.Void>;
 
 /// Schedule config structure
 final class mnn_schedule_config_t extends ffi.Struct {
   @mnn_forward_type_t()
   external int type;
 
-  external UnnamedUnion unnamed;
+  external UnnamedUnion$1 unnamed;
 
   @mnn_forward_type_t()
   external int backupType;

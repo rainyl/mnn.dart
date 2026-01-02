@@ -6,9 +6,9 @@ import 'dart:ffi' as ffi;
 
 import 'package:ffi/ffi.dart';
 
-import 'base.dart';
-import 'exception.dart';
-import 'g/mnn.g.dart' as c;
+import '../core/base.dart';
+import '../core/exception.dart';
+import '../g/mnn.g.dart' as c;
 import 'rect.dart';
 
 class Matrix extends NativeObject {

@@ -9,13 +9,14 @@
 #include "base.h"
 #include <cstdlib>
 #include <cstring>
+#include <iostream>
 
 VecVARP_t mnn_expr_VecVARP_create(size_t length, VARP_t value) {
   if (value) return new std::vector<MNN::Express::VARP>(length, *value);
   return new std::vector<MNN::Express::VARP>(length);
 }
 
-void mnn_expr_VecVARP_free(void *self) {
+void mnn_expr_VecVARP_free(VecVARP_t self) {
   if (self == nullptr) return;
   delete static_cast<VecVARP_t>(self);
   self = nullptr;
@@ -26,7 +27,7 @@ void mnn_expr_VecVARP_set(VecVARP_t self, int i, VARP_t value) { self->at(i) = *
 void mnn_expr_VecVARP_push_back(VecVARP_t self, VARP_t value) { return self->push_back(*value); }
 size_t mnn_expr_VecVARP_size(VecVARP_t self) { return self->size(); }
 
-void mnn_expr_VecWeakEXPRP_free(void *self) {
+void mnn_expr_VecWeakEXPRP_free(VecWeakEXPRP_t self) {
   if (self == nullptr) return;
   delete static_cast<VecWeakEXPRP_t>(self);
   self = nullptr;
@@ -56,7 +57,7 @@ void mnn_expr_Variable_Info_free(void *self) {
 MNN_C_API VARMAP_t mnn_expr_VARMAP_create() {
   return new std::map<std::string, MNN::Express::VARP>();
 }
-MNN_C_API void mnn_expr_VARMAP_free(void *self) {
+MNN_C_API void mnn_expr_VARMAP_free(VARMAP_t self) {
   if (self == nullptr) return;
   delete static_cast<VARMAP_t>(self);
   self = nullptr;
@@ -87,9 +88,10 @@ MNN_C_API void mnn_expr_VARMAP_set(VARMAP_t self, char *key, VARP_t value) {
 
 VARP_t mnn_expr_VARP_create_empty() { return new MNN::Express::VARP(); }
 VARP_t mnn_expr_VARP_create_VARP(VARP_t other) { return new MNN::Express::VARP(*other); }
-void mnn_expr_VARP_free(void *self) {
+void mnn_expr_VARP_free(VARP_t self) {
+  // std::cout << "Releasing VARP at " << self << std::endl;
   if (self == nullptr) return;
-  delete static_cast<MNN::Express::VARP *>(self);
+  delete self;
   self = nullptr;
 }
 VARP_t mnn_expr_VARP_op_add(VARP_t self, VARP_t other) {

@@ -1,10 +1,10 @@
 import 'dart:ffi' as ffi;
 import 'dart:math' as math;
 
-import '../base.dart';
+import '../core/base.dart';
+import '../core/halide_runtime.dart';
 import '../expr/expr.dart';
 import '../expr/op.dart' as F;
-import '../halide_runtime.dart';
 
 void _orderAssert(String order) {
   if (order.isEmpty || !["C", "K"].contains(order)) {

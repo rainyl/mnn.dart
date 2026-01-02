@@ -7,14 +7,14 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 
-import 'base.dart';
-import 'exception.dart';
-import 'g/mnn.g.dart' as c;
-import 'halide_runtime.dart';
-import 'image/enums.dart';
-import 'image/image.dart';
+import '../core/base.dart';
+import '../core/exception.dart';
+import '../core/halide_runtime.dart';
+import '../core/tensor.dart';
+import '../g/mnn.g.dart' as c;
+import 'enums.dart';
+import 'image.dart';
 import 'matrix.dart';
-import 'tensor.dart';
 
 class ImageProcessConfig extends NativeObject {
   static final _finalizer = ffi.NativeFinalizer(calloc.nativeFree);

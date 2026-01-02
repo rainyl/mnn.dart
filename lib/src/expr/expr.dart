@@ -6,14 +6,14 @@ import 'dart:ffi' as ffi;
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
-import 'package:mnn/src/base.dart';
-import 'package:mnn/src/expr/op.dart' as op;
-import 'package:mnn/src/g/mnn.g.dart' as C;
-import 'package:mnn/src/halide_runtime.dart';
-import 'package:mnn/src/tensor.dart';
-import 'package:mnn/src/vec.dart';
 
-import '../exception.dart';
+import '../core/base.dart';
+import '../core/exception.dart';
+import '../core/halide_runtime.dart';
+import '../core/tensor.dart';
+import '../core/vec.dart';
+import '../g/mnn.g.dart' as C;
+import 'op.dart' as op;
 
 enum MemoryType {
   COPY(0),
@@ -73,7 +73,7 @@ class VariableInfo extends NativeObject {
     : super(ptr.cast());
 
   factory VariableInfo.create({
-    DimensionFormat order = DimensionFormat.NHWC,
+    DimensionFormat order = DimensionFormat.NCHW,
     List<int>? dim,
     HalideType type = HalideType.f32,
     int size = 0,
@@ -238,17 +238,17 @@ class VARP extends NativeObject {
 
   static VARP fromList1D<T extends ffi.SizedNativeType>(
     Iterable<num> data, {
-    DimensionFormat format = DimensionFormat.NHWC,
+    DimensionFormat format = DimensionFormat.NCHW,
   }) => op.constant<T>(data, [data.length], format: format);
 
   static VARP fromList2D<T extends ffi.SizedNativeType>(
     Iterable<Iterable<num>> data, {
-    DimensionFormat format = DimensionFormat.NHWC,
+    DimensionFormat format = DimensionFormat.NCHW,
   }) => op.constant<T>(data.expand((e) => e), [data.length, data.first.length], format: format);
 
   static VARP fromList3D<T extends ffi.SizedNativeType>(
     Iterable<Iterable<Iterable<num>>> data, {
-    DimensionFormat format = DimensionFormat.NHWC,
+    DimensionFormat format = DimensionFormat.NCHW,
   }) => op.constant<T>(
     data.expand((e) => e.expand((e) => e)),
     [data.length, data.first.length, data.first.first.length],
@@ -257,7 +257,7 @@ class VARP extends NativeObject {
 
   static VARP fromList4D<T extends ffi.SizedNativeType>(
     Iterable<Iterable<Iterable<Iterable<num>>>> data, {
-    DimensionFormat format = DimensionFormat.NHWC,
+    DimensionFormat format = DimensionFormat.NCHW,
   }) => op.constant<T>(
     data.expand((e) => e.expand((e) => e.expand((e) => e))),
     [data.length, data.first.length, data.first.first.length, data.first.first.first.length],
@@ -267,7 +267,7 @@ class VARP extends NativeObject {
   static VARP fromListND<T extends ffi.SizedNativeType>(
     Iterable<num> data,
     Iterable<int> shape, {
-    DimensionFormat format = DimensionFormat.NHWC,
+    DimensionFormat format = DimensionFormat.NCHW,
   }) => op.constant<T>(data, shape, format: format);
 
   VARP astype<T extends ffi.SizedNativeType>({HalideType? dtype}) => op.cast<T>(this, dtype: dtype);
@@ -437,22 +437,57 @@ class VARP extends NativeObject {
 
   List<num>? get data {
     final info = this.info;
-    if (info == null || (info.isEmpty) || info.size <= 0) {
+    final pRead = readMap<ffi.Void>();
+    if (info == null || (info.isEmpty) || info.size <= 0 || pRead == ffi.nullptr) {
       return null;
     }
     final List<num> dataList = switch (dtype) {
-      HalideType.f32 => readMap().cast<ffi.Float>().asTypedList(info.size),
-      HalideType.f64 => readMap().cast<ffi.Double>().asTypedList(info.size),
-      HalideType.i32 => readMap().cast<ffi.Int32>().asTypedList(info.size),
-      HalideType.u8 => readMap().cast<ffi.Uint8>().asTypedList(info.size),
-      HalideType.i8 => readMap().cast<ffi.Int8>().asTypedList(info.size),
-      HalideType.i16 => readMap().cast<ffi.Int16>().asTypedList(info.size),
-      HalideType.u16 => readMap().cast<ffi.Uint16>().asTypedList(info.size),
-      HalideType.i64 => readMap().cast<ffi.Int64>().asTypedList(info.size),
-      HalideType.u64 => readMap().cast<ffi.Uint64>().asTypedList(info.size),
-      _ => throw UnimplementedError('Data type $dtype not supported'),
+      HalideType.f32 => pRead.cast<ffi.Float>().asTypedList(info.size),
+      HalideType.f64 => pRead.cast<ffi.Double>().asTypedList(info.size),
+      HalideType.i32 => pRead.cast<ffi.Int32>().asTypedList(info.size),
+      HalideType.u8 => pRead.cast<ffi.Uint8>().asTypedList(info.size),
+      HalideType.i8 => pRead.cast<ffi.Int8>().asTypedList(info.size),
+      HalideType.i16 => pRead.cast<ffi.Int16>().asTypedList(info.size),
+      HalideType.u16 => pRead.cast<ffi.Uint16>().asTypedList(info.size),
+      HalideType.i64 => pRead.cast<ffi.Int64>().asTypedList(info.size),
+      HalideType.u64 => pRead.cast<ffi.Uint64>().asTypedList(info.size),
+      _ => throw UnsupportedError('Data type $dtype not supported'),
     };
     return dataList;
+  }
+
+  set data(List<num> data) {
+    final info = this.info;
+    if (info == null || (info.isEmpty) || info.size <= 0) {
+      return;
+    }
+
+    final pWrite = writeMap<ffi.Void>();
+    if (pWrite == ffi.nullptr) {
+      throw MNNException("writeMap returns a null pointer");
+    }
+    switch (dtype) {
+      case HalideType.f32:
+        pWrite.cast<ffi.Float>().asTypedList(info.size).setAll(0, data.map((e) => e.toDouble()).toList());
+      case HalideType.f64:
+        pWrite.cast<ffi.Double>().asTypedList(info.size).setAll(0, data.map((e) => e.toDouble()).toList());
+      case HalideType.i32:
+        pWrite.cast<ffi.Int32>().asTypedList(info.size).setAll(0, data.map((e) => e.toInt()).toList());
+      case HalideType.u8:
+        pWrite.cast<ffi.Uint8>().asTypedList(info.size).setAll(0, data.map((e) => e.toInt()).toList());
+      case HalideType.i8:
+        pWrite.cast<ffi.Int8>().asTypedList(info.size).setAll(0, data.map((e) => e.toInt()).toList());
+      case HalideType.i16:
+        pWrite.cast<ffi.Int16>().asTypedList(info.size).setAll(0, data.map((e) => e.toInt()).toList());
+      case HalideType.u16:
+        pWrite.cast<ffi.Uint16>().asTypedList(info.size).setAll(0, data.map((e) => e.toInt()).toList());
+      case HalideType.i64:
+        pWrite.cast<ffi.Int64>().asTypedList(info.size).setAll(0, data.map((e) => e.toInt()).toList());
+      case HalideType.u64:
+        pWrite.cast<ffi.Uint64>().asTypedList(info.size).setAll(0, data.map((e) => e.toInt()).toList());
+      case _:
+        throw UnsupportedError('Data type $dtype not supported');
+    }
   }
 
   @override
@@ -776,11 +811,11 @@ class VarMap extends NativeObject {
         continue;
       }
       final key = cKey.cast<Utf8>().toDartString();
-      final value = VARP.fromPointer(C.mnn_expr_VARMAP_get(ptr, cKey));
+      final value = VARP.fromPointer(C.mnn_expr_VARMAP_get(ptr, cKey), attach: false);
       map[key] = value;
 
-      malloc.free(cKey);
-      cKey.value = 0;
+      // Here, cKey will be owned by `key` string, do not free it.
+      // malloc.free(cKey);
     }
     malloc.free(pKeys);
     return map;

@@ -6,8 +6,8 @@ import 'dart:ffi' as ffi;
 
 import 'package:ffi/ffi.dart';
 
-import 'base.dart';
-import 'g/mnn.g.dart' as c;
+import '../core/base.dart';
+import '../g/mnn.g.dart' as c;
 
 class Rect extends NativeObject {
   static final _finalizer = ffi.NativeFinalizer(calloc.nativeFree);

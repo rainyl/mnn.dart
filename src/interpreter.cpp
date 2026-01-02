@@ -133,7 +133,7 @@ mnn_interpreter_create_runtime(const mnn_schedule_config_t *configs, size_t coun
     std::vector<MNN::ScheduleConfig> vecConfigs;
     for (size_t i = 0; i < count; i++) {
       MNN::ScheduleConfig config;
-      config.type = (MNNForwardType)configs[i].type;
+      config.type = static_cast<MNNForwardType>(configs[i].type);
       config.numThread = configs[i].num_thread;
       config.mode = configs[i].mode;
       config.backendConfig = (MNN::BackendConfig *)configs[i].backend_config;

@@ -6,15 +6,15 @@ import 'dart:ffi' as ffi;
 
 import 'package:ffi/ffi.dart';
 
+import '../g/mnn.g.dart' as c;
 import 'backend.dart';
 import 'base.dart';
-import 'g/mnn.g.dart' as c;
 
 class ScheduleConfig extends NativeObject {
   static final ffi.NativeFinalizer _finalizer = ffi.NativeFinalizer(calloc.nativeFree);
 
   ScheduleConfig.fromPointer(ffi.Pointer<c.mnn_schedule_config_t> ptr, {super.attach, super.externalSize})
-      : super(ptr.cast());
+    : super(ptr.cast());
 
   factory ScheduleConfig.create({
     ForwardType type = ForwardType.MNN_FORWARD_CPU,
@@ -110,29 +110,38 @@ enum ForwardType {
   MNN_FORWARD_CPU_EXTENSION(13),
 
   /// use for shared memory on android device
-  MNN_MEMORY_AHARDWAREBUFFER(14);
+  MNN_MEMORY_AHARDWAREBUFFER(14),
+
+  /* For Offline Convert*/
+  MNN_CONVERT_QNN(32),
+  MNN_CONVERT_NEUROPILOT(33),
+  MNN_CONVERT_COREML(34),
+  ;
 
   final int value;
   const ForwardType(this.value);
 
   static ForwardType fromValue(int value) => switch (value) {
-        0 => MNN_FORWARD_CPU,
-        4 => MNN_FORWARD_AUTO,
-        1 => MNN_FORWARD_METAL,
-        2 => MNN_FORWARD_CUDA,
-        3 => MNN_FORWARD_OPENCL,
-        6 => MNN_FORWARD_OPENGL,
-        7 => MNN_FORWARD_VULKAN,
-        5 => MNN_FORWARD_NN,
-        8 => MNN_FORWARD_USER_0,
-        9 => MNN_FORWARD_USER_1,
-        10 => MNN_FORWARD_USER_2,
-        11 => MNN_FORWARD_USER_3,
-        12 => MNN_FORWARD_ALL,
-        13 => MNN_FORWARD_CPU_EXTENSION,
-        14 => MNN_MEMORY_AHARDWAREBUFFER,
-        _ => throw ArgumentError('Unknown value for ForwardType: $value'),
-      };
+    0 => MNN_FORWARD_CPU,
+    4 => MNN_FORWARD_AUTO,
+    1 => MNN_FORWARD_METAL,
+    2 => MNN_FORWARD_CUDA,
+    3 => MNN_FORWARD_OPENCL,
+    6 => MNN_FORWARD_OPENGL,
+    7 => MNN_FORWARD_VULKAN,
+    5 => MNN_FORWARD_NN,
+    8 => MNN_FORWARD_USER_0,
+    9 => MNN_FORWARD_USER_1,
+    10 => MNN_FORWARD_USER_2,
+    11 => MNN_FORWARD_USER_3,
+    12 => MNN_FORWARD_ALL,
+    13 => MNN_FORWARD_CPU_EXTENSION,
+    14 => MNN_MEMORY_AHARDWAREBUFFER,
+    32 => MNN_CONVERT_QNN,
+    33 => MNN_CONVERT_NEUROPILOT,
+    34 => MNN_CONVERT_COREML,
+    _ => throw ArgumentError('Unknown value for ForwardType: $value'),
+  };
 }
 
 // mnn_forward_type;
