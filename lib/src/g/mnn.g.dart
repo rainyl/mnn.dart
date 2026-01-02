@@ -30,6 +30,165 @@ external void mnn_auto_time_destroy(
   mnn_auto_time_t auto_time,
 );
 
+/// calib3d
+@ffi.Native<VARP_t Function(VARP_t)>()
+external VARP_t mnn_cv_Rodrigues(
+  VARP_t src,
+);
+
+/// miscellaneous.hpp
+@ffi.Native<VARP_t Function(VARP_t, ffi.Double, ffi.Int, ffi.Int, ffi.Int, ffi.Double)>()
+external VARP_t mnn_cv_adaptiveThreshold(
+  VARP_t src,
+  double max_value,
+  int adaptiveMethod,
+  int thresholdType,
+  int blockSize,
+  double C,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t, VARP_t)>()
+external VARP_t mnn_cv_blendLinear(
+  VARP_t src1,
+  VARP_t src2,
+  VARP_t weight1,
+  VARP_t weight2,
+);
+
+@ffi.Native<ffi.Void Function(VARP_t, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)>()
+external void mnn_cv_boundingRect(
+  VARP_t points,
+  ffi.Pointer<ffi.Int> x,
+  ffi.Pointer<ffi.Int> y,
+);
+
+/// int connectedComponentsWithStats(VARP image, VARP& labels, VARP& statsv, VARP& centroids, int
+/// connectivity = 8);
+@ffi.Native<VARP_t Function(mnn_cv_rotated_rect)>()
+external VARP_t mnn_cv_boxPoints(
+  mnn_cv_rotated_rect box,
+);
+
+/// histograms.hpp
+@ffi.Native<
+  VARP_t Function(
+    VecVARP_t,
+    ffi.Pointer<ffi.Int>,
+    ffi.Size,
+    VARP_t,
+    ffi.Pointer<ffi.Int>,
+    ffi.Size,
+    ffi.Pointer<ffi.Float>,
+    ffi.Size,
+    ffi.Bool,
+  )
+>()
+external VARP_t mnn_cv_calcHist(
+  VecVARP_t images,
+  ffi.Pointer<ffi.Int> channels,
+  int channels_length,
+  VARP_t mask,
+  ffi.Pointer<ffi.Int> hist_size,
+  int hist_size_length,
+  ffi.Pointer<ffi.Float> ranges,
+  int ranges_length,
+  bool accumulate,
+);
+
+@ffi.Native<ffi.Double Function(VARP_t, ffi.Bool)>()
+external double mnn_cv_contourArea(
+  VARP_t _contour,
+  bool oriented,
+);
+
+@ffi.Native<VecI32 Function(VARP_t, ffi.Bool, ffi.Bool)>()
+external VecI32 mnn_cv_convexHull(
+  VARP_t _points,
+  bool clockwise,
+  bool returnPoints,
+);
+
+/// color.hpp
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int, ffi.Int)>()
+external VARP_t mnn_cv_cvtColor(
+  VARP_t src,
+  int code,
+  int dstCn,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Int)>()
+external VARP_t mnn_cv_cvtColorTwoPlane(
+  VARP_t src1,
+  VARP_t src2,
+  int code,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int, ffi.Int)>()
+external VARP_t mnn_cv_demosaicing(
+  VARP_t src,
+  int code,
+  int dstCn,
+);
+
+@ffi.Native<ffi.Void Function(VARP_t, ffi.Pointer<VARP_t>, ffi.Pointer<VARP_t>, ffi.Int, ffi.Int, ffi.Int)>()
+external void mnn_cv_distanceTransform(
+  VARP_t src,
+  ffi.Pointer<VARP_t> dst,
+  ffi.Pointer<VARP_t> labels,
+  int distanceType,
+  int maskSize,
+  int labelType,
+);
+
+/// structural.hpp
+@ffi.Native<VecVARP_t Function(VARP_t, ffi.Int, ffi.Int, ffi.Int, ffi.Int)>()
+external VecVARP_t mnn_cv_findContours(
+  VARP_t image,
+  int mode,
+  int method,
+  int offset_x,
+  int offset_y,
+);
+
+@ffi.Native<ffi.Int Function(VARP_t, ffi.Int, ffi.Int, ffi.Float)>()
+external int mnn_cv_floodFill(
+  VARP_t image,
+  int seedPoint_x,
+  int seedPoint_y,
+  double newVal,
+);
+
+@ffi.Native<ffi.Int Function(VARP_t)>()
+external int mnn_cv_getVARPByte(
+  VARP_t var$,
+);
+
+@ffi.Native<ffi.Int Function(VARP_t)>()
+external int mnn_cv_getVARPChannel(
+  VARP_t var$,
+);
+
+@ffi.Native<ffi.Int Function(VARP_t)>()
+external int mnn_cv_getVARPHeight(
+  VARP_t var$,
+);
+
+@ffi.Native<ffi.Int Function(VARP_t)>()
+external int mnn_cv_getVARPWidth(
+  VARP_t var$,
+);
+
+/// imgcodecs.hpp
+@ffi.Native<ffi.Bool Function(ffi.Pointer<ffi.Char>)>()
+external bool mnn_cv_haveImageReader(
+  ffi.Pointer<ffi.Char> filename,
+);
+
+@ffi.Native<ffi.Bool Function(ffi.Pointer<ffi.Char>)>()
+external bool mnn_cv_haveImageWriter(
+  ffi.Pointer<ffi.Char> filename,
+);
+
 @ffi.Native<
   ffi.UnsignedInt Function(
     mnn_cv_image_process_t,
@@ -226,6 +385,44 @@ ErrorCode mnn_cv_image_process_set_matrix(
 external void mnn_cv_image_process_set_padding(
   mnn_cv_image_process_t self$1,
   int value,
+);
+
+@ffi.Native<VARP_t Function(ffi.Pointer<ffi.Uint8>, ffi.Size, ffi.Int)>()
+external VARP_t mnn_cv_imdecode(
+  ffi.Pointer<ffi.Uint8> buf,
+  int length,
+  int flags,
+);
+
+@ffi.Native<
+  ffi.Bool Function(ffi.Pointer<ffi.Char>, VARP_t, ffi.Pointer<ffi.Int>, ffi.Size, ffi.Pointer<VecU8>)
+>()
+external bool mnn_cv_imencode(
+  ffi.Pointer<ffi.Char> ext,
+  VARP_t img,
+  ffi.Pointer<ffi.Int> params,
+  int params_length,
+  ffi.Pointer<VecU8> out,
+);
+
+@ffi.Native<VARP_t Function(ffi.Pointer<ffi.Char>, ffi.Int)>()
+external VARP_t mnn_cv_imread(
+  ffi.Pointer<ffi.Char> filename,
+  int flags,
+);
+
+@ffi.Native<ffi.Bool Function(ffi.Pointer<ffi.Char>, VARP_t, ffi.Pointer<ffi.Int>, ffi.Size)>()
+external bool mnn_cv_imwrite(
+  ffi.Pointer<ffi.Char> filename,
+  VARP_t img,
+  ffi.Pointer<ffi.Int> params,
+  int params_length,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int)>()
+external VARP_t mnn_cv_integral(
+  VARP_t src,
+  int sdepth,
 );
 
 @ffi.Native<ffi.Bool Function(mnn_cv_matrix_t, mnn_cv_matrix_t)>()
@@ -547,6 +744,50 @@ external void mnn_cv_matrix_set_translate(
   mnn_cv_matrix_t self$1,
   double dx,
   double dy,
+);
+
+@ffi.Native<ffi.Pointer<mnn_cv_rotated_rect> Function(VARP_t)>()
+external ffi.Pointer<mnn_cv_rotated_rect> mnn_cv_minAreaRect(
+  VARP_t _points,
+);
+
+/// core
+@ffi.Native<ffi.Bool Function(VARP_t, VARP_t, ffi.Int, ffi.Pointer<VARP_t>)>()
+external bool mnn_cv_solve(
+  VARP_t src1,
+  VARP_t src2,
+  int flags,
+  ffi.Pointer<VARP_t> out,
+);
+
+@ffi.Native<
+  ffi.Void Function(VARP_t, VARP_t, VARP_t, VARP_t, ffi.Bool, ffi.Pointer<VARP_t>, ffi.Pointer<VARP_t>)
+>()
+external void mnn_cv_solvePnP(
+  VARP_t objectPoints,
+  VARP_t imagePoints,
+  VARP_t cameraMatrix,
+  VARP_t distCoeffs,
+  bool useExtrinsicGuess,
+  ffi.Pointer<VARP_t> out1,
+  ffi.Pointer<VARP_t> out2,
+);
+
+/// types.h
+@ffi.Native<ffi.Void Function(VARP_t, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)>()
+external void mnn_cv_static_getVARPSize(
+  VARP_t var$,
+  ffi.Pointer<ffi.Int> height,
+  ffi.Pointer<ffi.Int> width,
+  ffi.Pointer<ffi.Int> channel,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Double, ffi.Double, ffi.Int)>()
+external VARP_t mnn_cv_threshold(
+  VARP_t src,
+  double thresh,
+  double maxval,
+  int type,
 );
 
 @ffi.Native<ffi.Void Function(mnn_executor_t)>()
@@ -5963,7 +6204,7 @@ enum ErrorCode {
   };
 }
 
-typedef FILE = __sFILE;
+typedef FILE = _iobuf;
 
 /// Types in the halide type system. They can be ints, unsigned ints,
 /// or floats (of various bit-widths), or a handle (which is always 64-bits).
@@ -6385,124 +6626,15 @@ typedef VecU8 = ffi.Pointer<ffi.Void>;
 typedef VecUChar = ffi.Pointer<ffi.Void>;
 typedef VecVARP_t = ffi.Pointer<ffi.Void>;
 typedef VecWeakEXPRP_t = ffi.Pointer<ffi.Void>;
-typedef __darwin_off_t = __int64_t;
-typedef __int64_t = ffi.LongLong;
-typedef Dart__int64_t = int;
 
-/// stdio state variables.
-///
-/// The following always hold:
-///
-/// if (_flags&(__SLBF|__SWR)) == (__SLBF|__SWR),
-/// _lbfsize is -_bf._size, else _lbfsize is 0
-/// if _flags&__SRD, _w is 0
-/// if _flags&__SWR, _r is 0
-///
-/// This ensures that the getc and putc macros (or inline functions) never
-/// try to write or read from a file that is in `read' or `write' mode.
-/// (Moreover, they can, and do, automatically switch from read mode to
-/// write mode, and back, on "r+" and "w+" files.)
-///
-/// _lbfsize is used only to make the inline line-buffered output stream
-/// code as compact as possible.
-///
-/// _ub, _up, and _ur are used when ungetc() pushes back more characters
-/// than fit in the current _bf, or when ungetc() pushes back a character
-/// that does not match the previous one in _bf.  When this happens,
-/// _ub._base becomes non-nil (i.e., a stream has ungetc() data iff
-/// _ub._base!=NULL) and _up and _ur save the current values of _p and _r.
-///
-/// NB: see WARNING above before changing the layout of this structure!
-final class __sFILE extends ffi.Struct {
-  /// current position in (some) buffer
-  external ffi.Pointer<ffi.UnsignedChar> _p;
-
-  /// read space left for getc()
-  @ffi.Int()
-  external int _r;
-
-  /// write space left for putc()
-  @ffi.Int()
-  external int _w;
-
-  /// flags, below; this FILE is free if 0
-  @ffi.Short()
-  external int _flags;
-
-  /// fileno, if Unix descriptor, else -1
-  @ffi.Short()
-  external int _file;
-
-  /// the buffer (at least 1 byte, if !NULL)
-  external __sbuf _bf;
-
-  /// 0 or -_bf._size, for inline putc
-  @ffi.Int()
-  external int _lbfsize;
-
-  /// cookie passed to io functions
-  external ffi.Pointer<ffi.Void> _cookie;
-
-  external ffi.Pointer<ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void>)>> _close;
-
-  external ffi.Pointer<
-    ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Char>, ffi.Int)>
-  >
-  _read;
-
-  external ffi.Pointer<ffi.NativeFunction<fpos_t Function(ffi.Pointer<ffi.Void>, fpos_t, ffi.Int)>> _seek;
-
-  external ffi.Pointer<
-    ffi.NativeFunction<ffi.Int Function(ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Char>, ffi.Int)>
-  >
-  _write;
-
-  /// ungetc buffer
-  external __sbuf _ub;
-
-  /// additions to FILE to not break ABI
-  external ffi.Pointer<__sFILEX> _extra;
-
-  /// saved _r when _r is counting ungetc data
-  @ffi.Int()
-  external int _ur;
-
-  /// guarantee an ungetc() buffer
-  @ffi.Array.multi([3])
-  external ffi.Array<ffi.UnsignedChar> _ubuf;
-
-  /// guarantee a getc() buffer
-  @ffi.Array.multi([1])
-  external ffi.Array<ffi.UnsignedChar> _nbuf;
-
-  /// buffer for fgetln()
-  external __sbuf _lb;
-
-  /// stat.st_blksize (may be != _bf._size)
-  @ffi.Int()
-  external int _blksize;
-
-  /// current lseek offset (see WARNING)
-  @fpos_t()
-  external int _offset;
-}
-
-/// hold a buncha junk that would grow the ABI
-final class __sFILEX extends ffi.Opaque {}
-
-/// stdio buffers
-final class __sbuf extends ffi.Struct {
-  external ffi.Pointer<ffi.UnsignedChar> _base;
-
-  @ffi.Int()
-  external int _size;
+final class _iobuf extends ffi.Struct {
+  external ffi.Pointer<ffi.Void> _Placeholder;
 }
 
 typedef double_t = ffi.Double;
 typedef Dartdouble_t = double;
 typedef float_t = ffi.Float;
 typedef Dartfloat_t = double;
-typedef fpos_t = __darwin_off_t;
 
 /// The raw representation of an image passed around by generated
 /// Halide code. It includes some stuff to track whether the image is
@@ -6812,6 +6944,28 @@ final class mnn_cv_rect_t extends ffi.Struct {
 
   @ffi.Float()
   external double bottom;
+}
+
+final class mnn_cv_rotated_rect extends ffi.Struct {
+  @ffi.Float()
+  external double center_x;
+
+  @ffi.Float()
+  external double center_y;
+
+  @ffi.Float()
+  external double width;
+
+  @ffi.Float()
+  external double height;
+
+  @ffi.Float()
+  external double angle;
+}
+
+final class mnn_cv_scalar extends ffi.Struct {
+  @ffi.Array.multi([4])
+  external ffi.Array<ffi.Double> val;
 }
 
 typedef mnn_executor_scope_t = ffi.Pointer<ffi.Void>;
