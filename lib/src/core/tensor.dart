@@ -7,8 +7,8 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 
-import '../g/mnn.g.dart' as c;
 import '../cv/image.dart';
+import '../g/mnn.g.dart' as c;
 import 'base.dart';
 import 'exception.dart';
 import 'halide_runtime.dart';
