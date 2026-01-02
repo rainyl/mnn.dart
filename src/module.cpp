@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 //
 // Created by rainy on 2026/1/1.
 //
@@ -5,6 +6,7 @@
 #include "module.h"
 #include <string>
 #include <vector>
+#include <cstring>
 
 using namespace MNN::Express;
 using namespace MNN;
