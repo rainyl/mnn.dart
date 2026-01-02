@@ -59,24 +59,37 @@ void main() async {
     });
 
     test('Module load from file', () {
-      final model = nn.Module.loadFromFile("test/data/mnist-8.mnn");
-      expect(model.isEmpty, false);
+      nn.usingExecutor((e) {
+        final model = nn.Module.loadFromFile("test/data/mnist-8.mnn");
+        expect(model.isEmpty, false);
+        model.dispose();
+      });
     });
 
     test('Module load from buffer', () {
-      final modelFile = File("test/data/mnist-8.mnn");
-      final modelBuffer = modelFile.readAsBytesSync();
-      final model = nn.Module.loadFromBuffer(modelBuffer);
-      expect(model.isEmpty, false);
+      nn.usingExecutor((e) {
+        final modelFile = File("test/data/mnist-8.mnn");
+        final modelBuffer = modelFile.readAsBytesSync();
+        // will use global Executor
+        final model = nn.Module.loadFromBuffer(modelBuffer);
+        expect(model.isEmpty, false);
+        model.dispose();
+      });
     });
 
     test('Module load with RuntimeManager', () async {
-      final schedule = mnn.ScheduleConfig.create();
-      final mgr = nn.RuntimeManager.create(schedule);
-      final model = nn.Module.loadFromFile("test/data/mnist-8.mnn", runtimeManager: mgr);
-      expect(model.isEmpty, false);
+      await nn.usingExecutor((e) async {
+        final schedule = mnn.ScheduleConfig.create();
+        final mgr = nn.RuntimeManager.create(schedule);
+        final model = nn.Module.loadFromFile("test/data/mnist-8.mnn", runtimeManager: mgr);
+        expect(model.isEmpty, false);
 
-      await testInferenceMnist(model);
+        for (final (imgPath, target) in imagePaths) {
+          await testInferenceMnist(model, imgPath: imgPath, target: target);
+          await testInferenceMnist(model, imgPath: imgPath, target: target, runAsync: true);
+        }
+        model.dispose();
+      });
     });
   });
 }

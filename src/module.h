@@ -11,18 +11,21 @@
 
 #ifdef __cplusplus
 #include "MNN/expr/Executor.hpp"
+#include "MNN/expr/ExecutorScope.hpp"
 #include "MNN/expr/Module.hpp"
 
 extern "C" {
 #endif
 
 #ifdef __cplusplus
-// typedef MNN::Express::Executor *mnn_executor_t;
+typedef std::shared_ptr<MNN::Express::Executor> *mnn_executor_t;
+typedef MNN::Express::ExecutorScope *mnn_executor_scope_t;
 typedef MNN::Express::Module *mnn_module_t;
 typedef MNN::Express::Executor::RuntimeManager *mnn_runtime_manager_t;
 typedef MNN::Express::Module::Info *mnn_module_info_t;
 #else
-// typedef void *mnn_executor_t;
+typedef void *mnn_executor_t;
+typedef void *mnn_executor_scope_t;
 typedef void *mnn_module_t;
 typedef void *mnn_runtime_manager_t;
 typedef void *mnn_module_info_t;
@@ -55,12 +58,28 @@ MNN_C_API void mnn_module_info_destroy(mnn_module_info_t self);
 MNN_C_API struct mnn_expr_Variable_Info *mnn_module_info_get_inputs_at(mnn_module_info_t self, int index);
 MNN_C_API size_t mnn_module_info_get_inputs_length(mnn_module_info_t self);
 MNN_C_API int mnn_module_info_get_default_format(mnn_module_info_t self);
-MNN_C_API size_t mnn_module_info_get_input_names(mnn_module_info_t self, /*return*/ char **input_names);
-MNN_C_API size_t mnn_module_info_get_output_names(mnn_module_info_t self, /*return*/ char **output_names);
+MNN_C_API size_t mnn_module_info_get_input_names(mnn_module_info_t self, /*return*/ char ***input_names);
+MNN_C_API size_t mnn_module_info_get_output_names(mnn_module_info_t self, /*return*/ char ***output_names);
 MNN_C_API char *mnn_module_info_get_version(mnn_module_info_t self);
 MNN_C_API char *mnn_module_info_get_bizCode(mnn_module_info_t self);
 MNN_C_API char *mnn_module_info_get_uuid(mnn_module_info_t self);
-MNN_C_API size_t mnn_module_info_get_metadata(mnn_module_info_t self, /*return*/ char **keys, /*return*/ char **values);
+MNN_C_API size_t mnn_module_info_get_metadata(mnn_module_info_t self, /*return*/ char ***keys, /*return*/ char ***values);
+
+// Executor, ExecutorScope
+MNN_C_API mnn_executor_t mnn_executor_static_new_executor(/*MNNForwardType*/int type, mnn_backend_config_t config, int num_thread);
+MNN_C_API mnn_executor_t mnn_executor_static_get_global_executor();
+MNN_C_API void mnn_executor_destroy(mnn_executor_t self);
+MNN_C_API uint32_t mnn_executor_get_lazy_mode(mnn_executor_t self);
+MNN_C_API void mnn_executor_set_lazy_mode(mnn_executor_t self, uint32_t mode);
+MNN_C_API void mnn_executor_set_global_executor_config(mnn_executor_t self, /*MNNForwardType*/int type, mnn_backend_config_t config, int num_thread);
+MNN_C_API int mnn_executor_get_current_runtime_status(mnn_executor_t self, /*RuntimeStatus*/ int status_enum);
+MNN_C_API void mnn_executor_gc(mnn_executor_t self, /*GCFlag*/int flag);
+MNN_C_API mnn_runtime_info_t mnn_executor_static_get_runtime();
+
+MNN_C_API mnn_executor_scope_t mnn_executor_scope_create(mnn_executor_t current);
+MNN_C_API mnn_executor_scope_t mnn_executor_scope_create_with_name(const char *name, mnn_executor_t current);
+MNN_C_API void mnn_executor_scope_destroy(mnn_executor_scope_t self);
+MNN_C_API mnn_executor_t mnn_executor_scope_static_current_executor();
 
 // RuntimeManager API
 MNN_C_API mnn_runtime_manager_t mnn_runtime_manager_create(mnn_schedule_config_t config);

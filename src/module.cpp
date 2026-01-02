@@ -39,20 +39,20 @@ int mnn_module_info_get_default_format(mnn_module_info_t self) {
     return static_cast<int>(self->defaultFormat);
 }
 
-size_t mnn_module_info_get_input_names(mnn_module_info_t self, /*return*/ char **input_names) {
+size_t mnn_module_info_get_input_names(mnn_module_info_t self, /*return*/ char ***input_names) {
     auto len = self->inputs.size();
     if (input_names) {
-        input_names = new char *[len];
-        for (int i = 0; i < len; i++) { input_names[i] = strdup(self->inputNames[i].c_str()); }
+        *input_names = new char *[len];
+        for (int i = 0; i < len; i++) { *input_names[i] = strdup(self->inputNames[i].c_str()); }
     }
     return len;
 }
 
-size_t mnn_module_info_get_output_names(mnn_module_info_t self, /*return*/ char **output_names) {
+size_t mnn_module_info_get_output_names(mnn_module_info_t self, /*return*/ char ***output_names) {
     auto len = self->outputNames.size();
     if (output_names) {
-        output_names = new char *[len];
-        for (int i = 0; i < len; i++) { output_names[i] = strdup(self->outputNames[i].c_str()); }
+        *output_names = new char *[len];
+        for (int i = 0; i < len; i++) { *output_names[i] = strdup(self->outputNames[i].c_str()); }
     }
     return len;
 }
@@ -63,19 +63,92 @@ char *mnn_module_info_get_bizCode(mnn_module_info_t self) { return strdup(self->
 
 char *mnn_module_info_get_uuid(mnn_module_info_t self) { return strdup(self->uuid.c_str()); }
 
-size_t mnn_module_info_get_metadata(mnn_module_info_t self, /*return*/ char **keys, /*return*/ char **values) {
+size_t mnn_module_info_get_metadata(mnn_module_info_t self, /*return*/ char ***keys, /*return*/ char ***values) {
     auto len = self->metaData.size();
     if (keys && values) {
-        keys = new char *[len];
-        values = new char *[len];
+        *keys = new char *[len];
+        *values = new char *[len];
         size_t i = 0;
         for (auto it = self->metaData.begin(); it != self->metaData.end(); ++it) {
-            keys[i] = strdup(it->first.c_str());
-            values[i] = strdup(it->second.c_str());
+            *keys[i] = strdup(it->first.c_str());
+            *values[i] = strdup(it->second.c_str());
             i++;
         }
     }
     return len;
+}
+
+// Executor, ExecutorScope
+mnn_executor_t
+mnn_executor_static_new_executor(/*MNNForwardType*/int type, mnn_backend_config_t config, int num_thread) {
+    MNN::BackendConfig _config;
+    _config.memory = static_cast<MNN::BackendConfig::MemoryMode>(config.memory);
+    _config.power = static_cast<MNN::BackendConfig::PowerMode>(config.power);
+    _config.precision = static_cast<MNN::BackendConfig::PrecisionMode>(config.precision);
+    _config.sharedContext = config.sharedContext;
+    _config.flags = config.flags;
+    return new std::shared_ptr<MNN::Express::Executor>(
+        MNN::Express::Executor::newExecutor(static_cast<MNNForwardType>(type), _config, num_thread));
+}
+
+mnn_executor_t mnn_executor_static_get_global_executor() {
+    return new std::shared_ptr<MNN::Express::Executor>(MNN::Express::Executor::getGlobalExecutor());
+}
+
+void mnn_executor_destroy(mnn_executor_t self) {
+    if (self == nullptr) return;
+    self->reset();
+    delete self;
+    self = nullptr;
+}
+
+uint32_t mnn_executor_get_lazy_mode(mnn_executor_t self) {
+    return (*self)->getLazyMode();
+}
+
+void mnn_executor_set_lazy_mode(mnn_executor_t self, uint32_t mode) {
+    (*self)->setLazyComputeMode(mode);
+}
+
+void mnn_executor_set_global_executor_config(mnn_executor_t self, /*MNNForwardType*/int type,
+                                             mnn_backend_config_t config, int num_thread) {
+    MNN::BackendConfig _config;
+    _config.memory = static_cast<MNN::BackendConfig::MemoryMode>(config.memory);
+    _config.power = static_cast<MNN::BackendConfig::PowerMode>(config.power);
+    _config.precision = static_cast<MNN::BackendConfig::PrecisionMode>(config.precision);
+    _config.sharedContext = config.sharedContext;
+    _config.flags = config.flags;
+    return (*self)->setGlobalExecutorConfig(static_cast<MNNForwardType>(type), _config, num_thread);
+}
+
+int mnn_executor_get_current_runtime_status(mnn_executor_t self, /*RuntimeStatus*/ int status_enum) {
+    return (*self)->getCurrentRuntimeStatus(static_cast<RuntimeStatus>(status_enum));
+}
+
+void mnn_executor_gc(mnn_executor_t self, /*GCFlag*/int flag) {
+    (*self)->gc(static_cast<Executor::GCFlag>(flag));
+}
+
+mnn_runtime_info_t mnn_executor_static_get_runtime() {
+    return new MNN::RuntimeInfo(MNN::Express::Executor::getRuntime());
+}
+
+mnn_executor_scope_t mnn_executor_scope_create(mnn_executor_t current) {
+    return new MNN::Express::ExecutorScope(*current);
+}
+
+mnn_executor_scope_t mnn_executor_scope_create_with_name(const char *name, mnn_executor_t current) {
+    return new MNN::Express::ExecutorScope(name, *current);
+}
+
+void mnn_executor_scope_destroy(mnn_executor_scope_t self) {
+    if (self == nullptr) return;
+    delete self;
+    self = nullptr;
+}
+
+mnn_executor_t mnn_executor_scope_static_current_executor() {
+    return new std::shared_ptr<MNN::Express::Executor>(MNN::Express::ExecutorScope::Current());
 }
 
 // RuntimeManager API
@@ -301,7 +374,8 @@ mnn_module_info_t mnn_module_get_info(mnn_module_t self) {
     return new MNN::Express::Module::Info(*info);
 }
 
-mnn_error_code_t mnn_module_on_forward(mnn_module_t self, VecVARP_t inputs, VecVARP_t *outputs, mnn_callback_0 callback) {
+mnn_error_code_t mnn_module_on_forward(mnn_module_t self, VecVARP_t inputs, VecVARP_t *outputs,
+                                       mnn_callback_0 callback) {
     if (!self) {
         if (callback) callback();
         return MNNC_INVALID_PTR;
@@ -311,7 +385,7 @@ mnn_error_code_t mnn_module_on_forward(mnn_module_t self, VecVARP_t inputs, VecV
         *outputs = new std::vector<VARP>(_outputs);
         if (callback) callback();
         return MNNC_NO_ERROR;
-    }catch (...) {
+    } catch (...) {
         if (callback) callback();
         return MNNC_UNKNOWN_ERROR;
     }
@@ -327,7 +401,7 @@ mnn_error_code_t mnn_module_forward(mnn_module_t self, VARP_t input, VARP_t *out
         *output = new VARP(_output);
         if (callback) callback();
         return MNNC_NO_ERROR;
-    }catch (...) {
+    } catch (...) {
         if (callback) callback();
         return MNNC_UNKNOWN_ERROR;
     }

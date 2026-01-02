@@ -47,7 +47,7 @@ class ModuleConfig extends NativeObject {
   set backendType(ForwardType value) => ref.backend_info_type = value.value;
 
   BackendConfig? get backendConfig => ref.backend_info_config != ffi.nullptr
-      ? BackendConfig.fromPointer(ref.backend_info_config.cast())
+      ? BackendConfig.fromPointer(ref.backend_info_config.cast(), attach: false)
       : null;
   set backendConfig(BackendConfig? value) => ref.backend_info_config = value?.ptr.cast() ?? ffi.nullptr;
 
@@ -59,7 +59,7 @@ class ModuleConfig extends NativeObject {
 
   @override
   void release() {
-    C.mnn_module_destroy(ptr);
+    calloc.free(ptr);
   }
 }
 
