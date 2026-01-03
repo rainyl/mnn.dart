@@ -67,6 +67,8 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
       'MNN_ENABLE_COVERAGE': 'OFF',
       'MNN_JNI': 'OFF',
       "MNN_KLEIDIAI": 'OFF',
+      "MNN_BUILD_OPENCV": "ON",
+      "MNN_IMGCODECS": "ON",
       ...defines,
     },
   );

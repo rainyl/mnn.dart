@@ -30,10 +30,52 @@ external void mnn_auto_time_destroy(
   mnn_auto_time_t auto_time,
 );
 
+@ffi.Native<VARP_t Function(VARP_t, mnn_cv_size2i_t, ffi.Double, ffi.Double, ffi.Int)>()
+external VARP_t mnn_cv_GaussianBlur(
+  VARP_t src,
+  mnn_cv_size2i_t ksize,
+  double sigmaX,
+  double sigmaY,
+  int borderType,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int, ffi.Int, ffi.Double, ffi.Double, ffi.Int)>()
+external VARP_t mnn_cv_Laplacian(
+  VARP_t src,
+  int ddepth,
+  int ksize,
+  double scale,
+  double delta,
+  int borderType,
+);
+
 /// calib3d
 @ffi.Native<VARP_t Function(VARP_t)>()
 external VARP_t mnn_cv_Rodrigues(
   VARP_t src,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int, ffi.Int, ffi.Int, ffi.Double, ffi.Double, ffi.Int)>()
+external VARP_t mnn_cv_Scharr(
+  VARP_t src,
+  int ddepth,
+  int dx,
+  int dy,
+  double scale,
+  double delta,
+  int borderType,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int, ffi.Int, ffi.Int, ffi.Int, ffi.Double, ffi.Double, ffi.Int)>()
+external VARP_t mnn_cv_Sobel(
+  VARP_t src,
+  int ddepth,
+  int dx,
+  int dy,
+  int ksize,
+  double scale,
+  double delta,
+  int borderType,
 );
 
 /// miscellaneous.hpp
@@ -47,6 +89,40 @@ external VARP_t mnn_cv_adaptiveThreshold(
   double C,
 );
 
+/// draw.hpp
+@ffi.Native<
+  ffi.Void Function(
+    VARP_t,
+    mnn_cv_point_t,
+    mnn_cv_point_t,
+    mnn_cv_scalar_t,
+    ffi.Int,
+    ffi.Int,
+    ffi.Int,
+    ffi.Double,
+  )
+>()
+external void mnn_cv_arrowedLine(
+  VARP_t img,
+  mnn_cv_point_t pt1,
+  mnn_cv_point_t pt2,
+  mnn_cv_scalar_t color,
+  int thickness,
+  int line_type,
+  int shift,
+  double tipLength,
+);
+
+/// filter.hpp
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int, ffi.Double, ffi.Double, ffi.Int)>()
+external VARP_t mnn_cv_bilateralFilter(
+  VARP_t src,
+  int d,
+  double sigmaColor,
+  double sigmaSpace,
+  int borderType,
+);
+
 @ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t, VARP_t)>()
 external VARP_t mnn_cv_blendLinear(
   VARP_t src1,
@@ -55,44 +131,54 @@ external VARP_t mnn_cv_blendLinear(
   VARP_t weight2,
 );
 
-@ffi.Native<ffi.Void Function(VARP_t, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)>()
-external void mnn_cv_boundingRect(
+@ffi.Native<VARP_t Function(VARP_t, mnn_cv_size2i_t, ffi.Int)>()
+external VARP_t mnn_cv_blur(
+  VARP_t src,
+  mnn_cv_size2i_t ksize,
+  int borderType,
+);
+
+@ffi.Native<ffi.Pointer<mnn_cv_rect_t> Function(VARP_t)>()
+external ffi.Pointer<mnn_cv_rect_t> mnn_cv_boundingRect(
   VARP_t points,
-  ffi.Pointer<ffi.Int> x,
-  ffi.Pointer<ffi.Int> y,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int, mnn_cv_size2i_t, ffi.Bool, ffi.Int)>()
+external VARP_t mnn_cv_boxFilter(
+  VARP_t src,
+  int ddepth,
+  mnn_cv_size2i_t ksize,
+  bool normalize,
+  int borderType,
 );
 
 /// int connectedComponentsWithStats(VARP image, VARP& labels, VARP& statsv, VARP& centroids, int
 /// connectivity = 8);
-@ffi.Native<VARP_t Function(mnn_cv_rotated_rect)>()
+@ffi.Native<VARP_t Function(mnn_cv_rotated_rect_t)>()
 external VARP_t mnn_cv_boxPoints(
-  mnn_cv_rotated_rect box,
+  mnn_cv_rotated_rect_t box,
 );
 
 /// histograms.hpp
-@ffi.Native<
-  VARP_t Function(
-    VecVARP_t,
-    ffi.Pointer<ffi.Int>,
-    ffi.Size,
-    VARP_t,
-    ffi.Pointer<ffi.Int>,
-    ffi.Size,
-    ffi.Pointer<ffi.Float>,
-    ffi.Size,
-    ffi.Bool,
-  )
->()
+@ffi.Native<VARP_t Function(VecVARP_t, VecI32, VARP_t, VecI32, VecF32, ffi.Bool)>()
 external VARP_t mnn_cv_calcHist(
   VecVARP_t images,
-  ffi.Pointer<ffi.Int> channels,
-  int channels_length,
+  VecI32 channels,
   VARP_t mask,
-  ffi.Pointer<ffi.Int> hist_size,
-  int hist_size_length,
-  ffi.Pointer<ffi.Float> ranges,
-  int ranges_length,
+  VecI32 hist_size,
+  VecF32 ranges,
   bool accumulate,
+);
+
+@ffi.Native<ffi.Void Function(VARP_t, mnn_cv_point_t, ffi.Int, mnn_cv_scalar_t, ffi.Int, ffi.Int, ffi.Int)>()
+external void mnn_cv_circle(
+  VARP_t img,
+  mnn_cv_point_t center,
+  int radius,
+  mnn_cv_scalar_t color,
+  int thickness,
+  int line_type,
+  int shift,
 );
 
 @ffi.Native<ffi.Double Function(VARP_t, ffi.Bool)>()
@@ -123,39 +209,163 @@ external VARP_t mnn_cv_cvtColorTwoPlane(
   int code,
 );
 
-@ffi.Native<VARP_t Function(VARP_t, ffi.Int, ffi.Int)>()
-external VARP_t mnn_cv_demosaicing(
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Int, ffi.Int)>()
+external VARP_t mnn_cv_dilate(
   VARP_t src,
-  int code,
-  int dstCn,
+  VARP_t kernel,
+  int iterations,
+  int borderType,
 );
 
-@ffi.Native<ffi.Void Function(VARP_t, ffi.Pointer<VARP_t>, ffi.Pointer<VARP_t>, ffi.Int, ffi.Int, ffi.Int)>()
-external void mnn_cv_distanceTransform(
+@ffi.Native<
+  ffi.Void Function(
+    VARP_t,
+    ffi.Pointer<ffi.Pointer<mnn_cv_point_t>>,
+    ffi.Pointer<ffi.Size>,
+    ffi.Size,
+    ffi.Int,
+    mnn_cv_scalar_t,
+    ffi.Int,
+    ffi.Int,
+  )
+>()
+external void mnn_cv_drawContours(
+  VARP_t img,
+  ffi.Pointer<ffi.Pointer<mnn_cv_point_t>> contours,
+  ffi.Pointer<ffi.Size> contours_inner_length,
+  int contours_length,
+  int contourIdx,
+  mnn_cv_scalar_t color,
+  int thickness,
+  int lineType,
+);
+
+@ffi.Native<
+  ffi.Void Function(
+    VARP_t,
+    mnn_cv_point_t,
+    mnn_cv_size2i_t,
+    ffi.Double,
+    ffi.Double,
+    ffi.Double,
+    mnn_cv_scalar_t,
+    ffi.Int,
+    ffi.Int,
+    ffi.Int,
+  )
+>()
+external void mnn_cv_ellipse(
+  VARP_t img,
+  mnn_cv_point_t center,
+  mnn_cv_size2i_t axes,
+  double angle,
+  double start_angle,
+  double end_angle,
+  mnn_cv_scalar_t color,
+  int thickness,
+  int line_type,
+  int shift,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, ffi.Int, ffi.Int)>()
+external VARP_t mnn_cv_erode(
   VARP_t src,
-  ffi.Pointer<VARP_t> dst,
-  ffi.Pointer<VARP_t> labels,
-  int distanceType,
-  int maskSize,
-  int labelType,
+  VARP_t kernel,
+  int iterations,
+  int borderType,
+);
+
+@ffi.Native<
+  ffi.Void Function(
+    VARP_t,
+    ffi.Pointer<ffi.Pointer<mnn_cv_point_t>>,
+    ffi.Pointer<ffi.Size>,
+    ffi.Size,
+    mnn_cv_scalar_t,
+    ffi.Int,
+    ffi.Int,
+    mnn_cv_point_t,
+  )
+>()
+external void mnn_cv_fillPoly(
+  VARP_t img,
+  ffi.Pointer<ffi.Pointer<mnn_cv_point_t>> pts,
+  ffi.Pointer<ffi.Size> pts_inner_length,
+  int pts_length,
+  mnn_cv_scalar_t color,
+  int line_type,
+  int shift,
+  mnn_cv_point_t offset,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int, VARP_t, ffi.Double, ffi.Int)>()
+external VARP_t mnn_cv_filter2D(
+  VARP_t src,
+  int ddepth,
+  VARP_t kernel,
+  double delta,
+  int borderType,
 );
 
 /// structural.hpp
-@ffi.Native<VecVARP_t Function(VARP_t, ffi.Int, ffi.Int, ffi.Int, ffi.Int)>()
+@ffi.Native<VecVARP_t Function(VARP_t, ffi.Int, ffi.Int, mnn_cv_point_t)>()
 external VecVARP_t mnn_cv_findContours(
   VARP_t image,
   int mode,
   int method,
-  int offset_x,
-  int offset_y,
+  mnn_cv_point_t offset,
 );
 
-@ffi.Native<ffi.Int Function(VARP_t, ffi.Int, ffi.Int, ffi.Float)>()
-external int mnn_cv_floodFill(
+/// std::pair<VARP, VARP> convertMaps(VARP map1, VARP map2, int dstmap1type,
+/// bool interpolation = false);
+@ffi.Native<mnn_cv_matrix_t Function(ffi.Pointer<mnn_cv_point_t>, ffi.Pointer<mnn_cv_point_t>)>()
+external mnn_cv_matrix_t mnn_cv_getAffineTransform(
+  ffi.Pointer<mnn_cv_point_t> src,
+  ffi.Pointer<mnn_cv_point_t> dst,
+);
+
+/// MNN_C_API std::pair<VARP_t, VARP_t> getDerivKernels(int dx, int dy, int ksize,
+/// bool normalize);
+@ffi.Native<VARP_t Function(mnn_cv_size2i_t, ffi.Double, ffi.Double, ffi.Double, ffi.Double, ffi.Double)>()
+external VARP_t mnn_cv_getGaborKernel(
+  mnn_cv_size2i_t ksize,
+  double sigma,
+  double theta,
+  double lambd,
+  double gamma,
+  double psi,
+);
+
+@ffi.Native<VARP_t Function(ffi.Int, ffi.Double)>()
+external VARP_t mnn_cv_getGaussianKernel(
+  int n,
+  double sigma,
+);
+
+@ffi.Native<mnn_cv_matrix_t Function(ffi.Pointer<mnn_cv_point_t>, ffi.Pointer<mnn_cv_point_t>)>()
+external mnn_cv_matrix_t mnn_cv_getPerspectiveTransform(
+  ffi.Pointer<mnn_cv_point_t> src,
+  ffi.Pointer<mnn_cv_point_t> dst,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, mnn_cv_size2i_t, mnn_cv_point_t)>()
+external VARP_t mnn_cv_getRectSubPix(
   VARP_t image,
-  int seedPoint_x,
-  int seedPoint_y,
-  double newVal,
+  mnn_cv_size2i_t patchSize,
+  mnn_cv_point_t center,
+);
+
+@ffi.Native<mnn_cv_matrix_t Function(mnn_cv_point_t, ffi.Double, ffi.Double)>()
+external mnn_cv_matrix_t mnn_cv_getRotationMatrix2D(
+  mnn_cv_point_t center,
+  double angle,
+  double scale,
+);
+
+@ffi.Native<VARP_t Function(ffi.Int, mnn_cv_size2i_t)>()
+external VARP_t mnn_cv_getStructuringElement(
+  int shape,
+  mnn_cv_size2i_t ksize,
 );
 
 @ffi.Native<ffi.Int Function(VARP_t)>()
@@ -419,10 +629,22 @@ external bool mnn_cv_imwrite(
   int params_length,
 );
 
-@ffi.Native<VARP_t Function(VARP_t, ffi.Int)>()
-external VARP_t mnn_cv_integral(
-  VARP_t src,
-  int sdepth,
+@ffi.Native<mnn_cv_matrix_t Function(mnn_cv_matrix_t)>()
+external mnn_cv_matrix_t mnn_cv_invertAffineTransform(
+  mnn_cv_matrix_t M,
+);
+
+@ffi.Native<
+  ffi.Void Function(VARP_t, mnn_cv_point_t, mnn_cv_point_t, mnn_cv_scalar_t, ffi.Int, ffi.Int, ffi.Int)
+>()
+external void mnn_cv_line(
+  VARP_t img,
+  mnn_cv_point_t pt1,
+  mnn_cv_point_t pt2,
+  mnn_cv_scalar_t color,
+  int thickness,
+  int lineType,
+  int shift,
 );
 
 @ffi.Native<ffi.Bool Function(mnn_cv_matrix_t, mnn_cv_matrix_t)>()
@@ -746,9 +968,70 @@ external void mnn_cv_matrix_set_translate(
   double dy,
 );
 
-@ffi.Native<ffi.Pointer<mnn_cv_rotated_rect> Function(VARP_t)>()
-external ffi.Pointer<mnn_cv_rotated_rect> mnn_cv_minAreaRect(
+@ffi.Native<ffi.Pointer<mnn_cv_rotated_rect_t> Function(VARP_t)>()
+external ffi.Pointer<mnn_cv_rotated_rect_t> mnn_cv_minAreaRect(
   VARP_t _points,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, mnn_cv_size2i_t, ffi.Int)>()
+external VARP_t mnn_cv_pyrDown(
+  VARP_t src,
+  mnn_cv_size2i_t dstsize,
+  int borderType,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, mnn_cv_size2i_t, ffi.Int)>()
+external VARP_t mnn_cv_pyrUp(
+  VARP_t src,
+  mnn_cv_size2i_t dstsize,
+  int borderType,
+);
+
+@ffi.Native<
+  ffi.Void Function(VARP_t, mnn_cv_point_t, mnn_cv_point_t, mnn_cv_scalar_t, ffi.Int, ffi.Int, ffi.Int)
+>()
+external void mnn_cv_rectangle(
+  VARP_t img,
+  mnn_cv_point_t pt1,
+  mnn_cv_point_t pt2,
+  mnn_cv_scalar_t color,
+  int thickness,
+  int lineType,
+  int shift,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t, ffi.Int, ffi.Int, ffi.Int)>()
+external VARP_t mnn_cv_remap(
+  VARP_t src,
+  VARP_t map1,
+  VARP_t map2,
+  int interpolation,
+  int borderMode,
+  int borderValue,
+);
+
+@ffi.Native<
+  VARP_t Function(VARP_t, mnn_cv_size2i_t, ffi.Double, ffi.Double, ffi.Int, ffi.Int, VecF32, VecF32)
+>()
+external VARP_t mnn_cv_resize(
+  VARP_t src,
+  mnn_cv_size2i_t dsize,
+  double fx,
+  double fy,
+  int interpolation,
+  int code,
+  VecF32 mean,
+  VecF32 norm,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int, VARP_t, VARP_t, ffi.Double, ffi.Int)>()
+external VARP_t mnn_cv_sepFilter2D(
+  VARP_t src,
+  int ddepth,
+  VARP_t kernelX,
+  VARP_t kernelY,
+  double delta,
+  int borderType,
 );
 
 /// core
@@ -773,6 +1056,17 @@ external void mnn_cv_solvePnP(
   ffi.Pointer<VARP_t> out2,
 );
 
+/// MNN_C_API std::pair<VARP_t, VARP_t> spatialGradient(VARP_t src, int ksize,
+/// int borderType);
+@ffi.Native<VARP_t Function(VARP_t, ffi.Int, mnn_cv_size2i_t, ffi.Bool, ffi.Int)>()
+external VARP_t mnn_cv_sqrBoxFilter(
+  VARP_t src,
+  int ddepth,
+  mnn_cv_size2i_t ksize,
+  bool normalize,
+  int borderType,
+);
+
 /// types.h
 @ffi.Native<ffi.Void Function(VARP_t, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)>()
 external void mnn_cv_static_getVARPSize(
@@ -782,12 +1076,60 @@ external void mnn_cv_static_getVARPSize(
   ffi.Pointer<ffi.Int> channel,
 );
 
+/// TODO: not implemented by MNN::CV
+/// MNN_C_API void mnn_cv_distanceTransform(
+/// VARP_t src, VARP_t *dst, VARP_t *labels, int distanceType, int maskSize, int labelType
+/// );
+/// MNN_C_API int mnn_cv_floodFill(VARP_t image, int seedPoint_x, int seedPoint_y, float newVal);
+/// MNN_C_API VARP_t mnn_cv_integral(VARP_t src, int sdepth);
 @ffi.Native<VARP_t Function(VARP_t, ffi.Double, ffi.Double, ffi.Int)>()
 external VARP_t mnn_cv_threshold(
   VARP_t src,
   double thresh,
   double maxval,
   int type,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, VARP_t, VARP_t)>()
+external VARP_t mnn_cv_undistortPoints(
+  VARP_t src,
+  VARP_t cameraMatrix,
+  VARP_t distCoeffs,
+);
+
+@ffi.Native<
+  VARP_t Function(
+    VARP_t,
+    mnn_cv_matrix_t,
+    mnn_cv_size2i_t,
+    ffi.Int,
+    ffi.Int,
+    ffi.Int,
+    ffi.Int,
+    VecF32,
+    VecF32,
+  )
+>()
+external VARP_t mnn_cv_warpAffine(
+  VARP_t src,
+  mnn_cv_matrix_t M,
+  mnn_cv_size2i_t dsize,
+  int flags,
+  int borderMode,
+  int borderValue,
+  int code,
+  VecF32 mean,
+  VecF32 norm,
+);
+
+@ffi.Native<VARP_t Function(VARP_t, mnn_cv_matrix_t, mnn_cv_size2i_t, ffi.Int, ffi.Int, ffi.Int)>()
+external VARP_t mnn_cv_warpPerspective(
+  VARP_t src,
+  mnn_cv_matrix_t M,
+  mnn_cv_size2i_t dsize,
+  int flags,
+  int borderMode,
+  int borderValue,
 );
 
 @ffi.Native<ffi.Void Function(mnn_executor_t)>()
@@ -6946,7 +7288,7 @@ final class mnn_cv_rect_t extends ffi.Struct {
   external double bottom;
 }
 
-final class mnn_cv_rotated_rect extends ffi.Struct {
+final class mnn_cv_rotated_rect_t extends ffi.Struct {
   @ffi.Float()
   external double center_x;
 
@@ -6963,9 +7305,17 @@ final class mnn_cv_rotated_rect extends ffi.Struct {
   external double angle;
 }
 
-final class mnn_cv_scalar extends ffi.Struct {
+final class mnn_cv_scalar_t extends ffi.Struct {
   @ffi.Array.multi([4])
   external ffi.Array<ffi.Double> val;
+}
+
+final class mnn_cv_size2i_t extends ffi.Struct {
+  @ffi.Int()
+  external int width;
+
+  @ffi.Int()
+  external int height;
 }
 
 typedef mnn_executor_scope_t = ffi.Pointer<ffi.Void>;
