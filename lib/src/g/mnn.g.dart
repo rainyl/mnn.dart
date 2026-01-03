@@ -159,6 +159,15 @@ external VARP_t mnn_cv_boxPoints(
   mnn_cv_rotated_rect_t box,
 );
 
+@ffi.Native<VARP_t Function(ffi.Pointer<ffi.Uint8>, ffi.Int, ffi.Int, ffi.Int, ffi.Int)>()
+external VARP_t mnn_cv_buildImgVARP(
+  ffi.Pointer<ffi.Uint8> img,
+  int height,
+  int width,
+  int channel,
+  int flags,
+);
+
 /// histograms.hpp
 @ffi.Native<VARP_t Function(VecVARP_t, VecI32, VARP_t, VecI32, VecF32, ffi.Bool)>()
 external VARP_t mnn_cv_calcHist(
@@ -392,6 +401,12 @@ external int mnn_cv_getVARPWidth(
 @ffi.Native<ffi.Bool Function(ffi.Pointer<ffi.Char>)>()
 external bool mnn_cv_haveImageReader(
   ffi.Pointer<ffi.Char> filename,
+);
+
+@ffi.Native<ffi.Bool Function(ffi.Pointer<ffi.Uint8>, ffi.Size)>()
+external bool mnn_cv_haveImageReaderFromMemory(
+  ffi.Pointer<ffi.Uint8> buf,
+  int length,
 );
 
 @ffi.Native<ffi.Bool Function(ffi.Pointer<ffi.Char>)>()
@@ -6594,6 +6609,53 @@ enum HandleDataType {
     0 => MNN_HANDLE_NONE,
     1 => MNN_HANDLE_STRING,
     _ => throw ArgumentError('Unknown value for HandleDataType: $value'),
+  };
+}
+
+enum ImreadModes {
+  /// uint8_t gray
+  IMREAD_GRAYSCALE(0),
+
+  /// uint8_t bgr
+  IMREAD_COLOR(1),
+
+  /// float bgr
+  IMREAD_ANYDEPTH(2),
+  IMREAD_COLOR_RGB(256)
+  ;
+
+  /// uint8_t bgr
+  static const IMREAD_COLOR_BGR = IMREAD_COLOR;
+
+  final int value;
+  const ImreadModes(this.value);
+
+  static ImreadModes fromValue(int value) => switch (value) {
+    0 => IMREAD_GRAYSCALE,
+    1 => IMREAD_COLOR,
+    2 => IMREAD_ANYDEPTH,
+    256 => IMREAD_COLOR_RGB,
+    _ => throw ArgumentError('Unknown value for ImreadModes: $value'),
+  };
+
+  @override
+  String toString() {
+    if (this == IMREAD_COLOR) return "ImreadModes.IMREAD_COLOR, ImreadModes.IMREAD_COLOR_BGR";
+    return super.toString();
+  }
+}
+
+enum ImwriteFlags {
+  /// jpg, default is 95
+  IMWRITE_JPEG_QUALITY(1)
+  ;
+
+  final int value;
+  const ImwriteFlags(this.value);
+
+  static ImwriteFlags fromValue(int value) => switch (value) {
+    1 => IMWRITE_JPEG_QUALITY,
+    _ => throw ArgumentError('Unknown value for ImwriteFlags: $value'),
   };
 }
 

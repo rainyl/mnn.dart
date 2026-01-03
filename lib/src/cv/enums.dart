@@ -361,7 +361,9 @@ const int LINE_AA = 16;
 // ImreadModes
 const int IMREAD_GRAYSCALE = 0;
 const int IMREAD_COLOR = 1;
-const int IMREAD_ANYDEPTH = 4;
+const int IMREAD_COLOR_BGR = 1;
+const int IMREAD_ANYDEPTH = 2;
+const int IMREAD_COLOR_RGB = 256;
 // rotateMode
 const int ROTATE_90_CLOCKWISE = 0;
 const int ROTATE_180 = 1;
@@ -384,3 +386,7 @@ const int NORM_MINMAX = 32;
 // adaptive threshold types
 const int ADAPTIVE_THRESH_MEAN_C = 0;
 const int ADAPTIVE_THRESH_GAUSSIAN_C = 1;
+// MorphShapes
+const int MORPH_RECT = 0;
+const int MORPH_CROSS = 1;
+const int MORPH_ELLIPSE = 2;

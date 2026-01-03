@@ -1,8 +1,6 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:mnn/cv.dart' as cv;
-import 'package:mnn/mnn.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -161,6 +159,18 @@ void main() {
       expect(result, isNot(0));
       expect(File(savePath).existsSync(), isTrue);
       File(savePath).deleteSync();
+    });
+
+    test('Image.save BMP', () {
+      const savePath = 'test/data/save_test.bmp';
+      final result = image.save(savePath);
+      expect(result, isNot(0));
+      expect(File(savePath).existsSync(), isTrue);
+      File(savePath).deleteSync();
+    });
+
+    test('Image.save', () {
+
     });
   });
 }

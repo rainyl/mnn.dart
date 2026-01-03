@@ -33,6 +33,14 @@ int getVARPWidth(VARP varp) => c.mnn_cv_getVARPWidth(varp.ptr);
 int getVARPChannels(VARP varp) => c.mnn_cv_getVARPChannel(varp.ptr);
 int getVARPByte(VARP varp) => c.mnn_cv_getVARPByte(varp.ptr);
 
+VARP buildImgVARP(Uint8List img, int height, int width, int channels, {int flags = IMREAD_COLOR}) {
+  final pImg = calloc<ffi.Uint8>(img.length)..asTypedList(img.length).setAll(0, img);
+  final pOut = c.mnn_cv_buildImgVARP(pImg, height, width, channels, flags);
+  final rval = VARP.fromPointer(pOut);
+  calloc.free(pImg);
+  return rval;
+}
+
 // core
 (bool success, VARP out) solve(VARP src1, VARP src2, {int flags = DECOMP_LU}) {
   final pOut = calloc<c.VARP_t>();
@@ -78,6 +86,15 @@ bool haveImageReader(String filename) {
     return c.mnn_cv_haveImageReader(cFilename);
   } finally {
     malloc.free(cFilename);
+  }
+}
+
+bool haveImageReaderFromMemory(Uint8List bytes) {
+  final pBytes = calloc<ffi.Uint8>(bytes.length)..asTypedList(bytes.length).setAll(0, bytes);
+  try {
+    return c.mnn_cv_haveImageReaderFromMemory(pBytes, bytes.length);
+  } finally {
+    calloc.free(pBytes);
   }
 }
 
@@ -289,6 +306,7 @@ Matrix invertAffineTransform(Matrix M) {
   return rval;
 }
 
+/// src need float, NC4HW4, dims = 4
 VARP remap(
   VARP src,
   VARP map1,
@@ -304,7 +322,7 @@ VARP remap(
 
 VARP resize(
   VARP src,
-  Size dsize, {
+  (int, int) dsize, {
   double fx = 0,
   double fy = 0,
   int interpolation = INTER_LINEAR,
@@ -314,9 +332,10 @@ VARP resize(
 }) {
   final cMean = mean.f32;
   final cNorm = norm.f32;
+  final cDsize = Size.fromTuple(dsize);
   final pOut = c.mnn_cv_resize(
     src.ptr,
-    dsize.ref,
+    cDsize.ref,
     fx,
     fy,
     interpolation,
@@ -327,13 +346,14 @@ VARP resize(
   final rval = VARP.fromPointer(pOut);
   cMean.dispose();
   cNorm.dispose();
+  cDsize.dispose();
   return rval;
 }
 
 VARP warpAffine(
   VARP src,
   Matrix M,
-  Size dsize, {
+  (int, int) dsize, {
   int flags = INTER_LINEAR,
   int borderMode = BORDER_CONSTANT,
   int borderValue = 0,
@@ -347,10 +367,11 @@ VARP warpAffine(
   );
   final cMean = mean.f32;
   final cNorm = norm.f32;
+  final cDsize = Size.fromTuple(dsize);
   final pOut = c.mnn_cv_warpAffine(
     src.ptr,
     M.ptr,
-    dsize.ref,
+    cDsize.ref,
     flags,
     borderMode,
     borderValue,
@@ -361,26 +382,29 @@ VARP warpAffine(
   final rval = VARP.fromPointer(pOut);
   cMean.dispose();
   cNorm.dispose();
+  cDsize.dispose();
   return rval;
 }
 
 VARP warpPerspective(
   VARP src,
   Matrix M,
-  Size dsize, {
+  (int, int) dsize, {
   int flags = INTER_LINEAR,
   int borderMode = BORDER_CONSTANT,
   int borderValue = 0,
 }) {
+  final cDsize = Size.fromTuple(dsize);
   final pOut = c.mnn_cv_warpPerspective(
     src.ptr,
     M.ptr,
-    dsize.ref,
+    cDsize.ref,
     flags,
     borderMode,
     borderValue,
   );
   final rval = VARP.fromPointer(pOut);
+  cDsize.dispose();
   return rval;
 }
 
@@ -403,15 +427,25 @@ VARP bilateralFilter(
   return rval;
 }
 
-VARP blur(VARP src, Size ksize, {int borderType = BORDER_REFLECT}) {
-  final pOut = c.mnn_cv_blur(src.ptr, ksize.ref, borderType);
+VARP blur(VARP src, (int, int) ksize, {int borderType = BORDER_REFLECT}) {
+  final cKsize = Size.fromTuple(ksize);
+  final pOut = c.mnn_cv_blur(src.ptr, cKsize.ref, borderType);
   final rval = VARP.fromPointer(pOut);
+  cKsize.dispose();
   return rval;
 }
 
-VARP boxFilter(VARP src, int ddepth, Size ksize, {bool normalize = true, int borderType = BORDER_REFLECT}) {
-  final pOut = c.mnn_cv_boxFilter(src.ptr, ddepth, ksize.ref, normalize, borderType);
+VARP boxFilter(
+  VARP src,
+  int ddepth,
+  (int, int) ksize, {
+  bool normalize = true,
+  int borderType = BORDER_REFLECT,
+}) {
+  final cKsize = Size.fromTuple(ksize);
+  final pOut = c.mnn_cv_boxFilter(src.ptr, ddepth, cKsize.ref, normalize, borderType);
   final rval = VARP.fromPointer(pOut);
+  cKsize.dispose();
   return rval;
 }
 
@@ -433,22 +467,32 @@ VARP filter2D(VARP src, int ddepth, VARP kernel, {double delta = 0, int borderTy
   return rval;
 }
 
-VARP GaussianBlur(VARP src, Size ksize, double sigmaX, {double sigmaY = 0, int borderType = BORDER_REFLECT}) {
-  final pOut = c.mnn_cv_GaussianBlur(src.ptr, ksize.ref, sigmaX, sigmaY, borderType);
+VARP GaussianBlur(
+  VARP src,
+  (int, int) ksize,
+  double sigmaX, {
+  double sigmaY = 0,
+  int borderType = BORDER_REFLECT,
+}) {
+  final cKsize = Size.fromTuple(ksize);
+  final pOut = c.mnn_cv_GaussianBlur(src.ptr, cKsize.ref, sigmaX, sigmaY, borderType);
   final rval = VARP.fromPointer(pOut);
+  cKsize.dispose();
   return rval;
 }
 
 VARP getGaborKernel(
-  Size ksize,
+  (int, int) ksize,
   double sigma,
   double theta,
   double lambd,
   double gamma, {
   double psi = math.pi * 0.5,
 }) {
-  final pOut = c.mnn_cv_getGaborKernel(ksize.ref, sigma, theta, lambd, gamma, psi);
+  final cKsize = Size.fromTuple(ksize);
+  final pOut = c.mnn_cv_getGaborKernel(cKsize.ref, sigma, theta, lambd, gamma, psi);
   final rval = VARP.fromPointer(pOut);
+  cKsize.dispose();
   return rval;
 }
 
@@ -458,9 +502,11 @@ VARP getGaussianKernel(int n, double sigma) {
   return rval;
 }
 
-VARP getStructuringElement(int shape, Size ksize) {
-  final pOut = c.mnn_cv_getStructuringElement(shape, ksize.ref);
+VARP getStructuringElement(int shape, (int, int) ksize) {
+  final cKsize = Size.fromTuple(ksize);
+  final pOut = c.mnn_cv_getStructuringElement(shape, cKsize.ref);
   final rval = VARP.fromPointer(pOut);
+  cKsize.dispose();
   return rval;
 }
 
@@ -478,15 +524,19 @@ VARP Laplacian(
   return rval;
 }
 
-VARP pyrDown(VARP src, Size dstsize, {int borderType = BORDER_REFLECT}) {
-  final pOut = c.mnn_cv_pyrDown(src.ptr, dstsize.ref, borderType);
+VARP pyrDown(VARP src, (int, int) dstsize, {int borderType = BORDER_REFLECT}) {
+  final cDstsize = Size.fromTuple(dstsize);
+  final pOut = c.mnn_cv_pyrDown(src.ptr, cDstsize.ref, borderType);
   final rval = VARP.fromPointer(pOut);
+  cDstsize.dispose();
   return rval;
 }
 
-VARP pyrUp(VARP src, Size dstsize, {int borderType = BORDER_REFLECT}) {
-  final pOut = c.mnn_cv_pyrUp(src.ptr, dstsize.ref, borderType);
+VARP pyrUp(VARP src, (int, int) dstsize, {int borderType = BORDER_REFLECT}) {
+  final cDstsize = Size.fromTuple(dstsize);
+  final pOut = c.mnn_cv_pyrUp(src.ptr, cDstsize.ref, borderType);
   final rval = VARP.fromPointer(pOut);
+  cDstsize.dispose();
   return rval;
 }
 
@@ -537,12 +587,14 @@ VARP Sobel(
 VARP sqrBoxFilter(
   VARP src,
   int ddepth,
-  Size ksize, {
+  (int, int) ksize, {
   bool normalize = true,
   int borderType = BORDER_REFLECT,
 }) {
-  final pOut = c.mnn_cv_sqrBoxFilter(src.ptr, ddepth, ksize.ref, normalize, borderType);
+  final cKsize = Size.fromTuple(ksize);
+  final pOut = c.mnn_cv_sqrBoxFilter(src.ptr, ddepth, cKsize.ref, normalize, borderType);
   final rval = VARP.fromPointer(pOut);
+  cKsize.dispose();
   return rval;
 }
 

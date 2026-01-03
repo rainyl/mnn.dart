@@ -33,11 +33,11 @@ class Image extends NativeObject {
     required StbiChannel desiredChannels,
     required this.dtype,
     super.attach,
-  })  : _width = width,
-        _height = height,
-        _channels = channels,
-        _desiredChannels = desiredChannels,
-        super(ptr.cast(), externalSize: width * height * channels);
+  }) : _width = width,
+       _height = height,
+       _channels = channels,
+       _desiredChannels = desiredChannels,
+       super(ptr.cast(), externalSize: width * height * channels);
 
   factory Image.load(
     String path, {
@@ -86,12 +86,30 @@ class Image extends NativeObject {
     final pH = calloc<ffi.Int>();
     final pChannels = calloc<ffi.Int>();
     final ptr = switch (dtype) {
-      StbiDType.u8 =>
-        c.stbi_load_from_memory(pBytes.cast(), bytes.length, pW, pH, pChannels, desiredChannel.value),
-      StbiDType.u16 =>
-        c.stbi_load_16_from_memory(pBytes.cast(), bytes.length, pW, pH, pChannels, desiredChannel.value),
-      StbiDType.f32 =>
-        c.stbi_loadf_from_memory(pBytes.cast(), bytes.length, pW, pH, pChannels, desiredChannel.value),
+      StbiDType.u8 => c.stbi_load_from_memory(
+        pBytes.cast(),
+        bytes.length,
+        pW,
+        pH,
+        pChannels,
+        desiredChannel.value,
+      ),
+      StbiDType.u16 => c.stbi_load_16_from_memory(
+        pBytes.cast(),
+        bytes.length,
+        pW,
+        pH,
+        pChannels,
+        desiredChannel.value,
+      ),
+      StbiDType.f32 => c.stbi_loadf_from_memory(
+        pBytes.cast(),
+        bytes.length,
+        pW,
+        pH,
+        pChannels,
+        desiredChannel.value,
+      ),
     };
     if (ptr == ffi.nullptr) {
       final pMsg = c.stbi_failure_reason();
@@ -141,7 +159,9 @@ class Image extends NativeObject {
   }) {
     final size = _width * _height * _channels;
     final p = calloc<ffi.Float>(size);
-    p.asTypedList(size).setAll(
+    p
+        .asTypedList(size)
+        .setAll(
           0,
           values.indexed
               .map((e) => (e.$2.toDouble() / scale - mean[e.$1 % _channels]) / std[e.$1 % _channels])
@@ -393,9 +413,6 @@ class Image extends NativeObject {
     }
   }
 
-  static bool haveReader(String path) => info(path).$1 != 0;
-  static bool haveReaderFromMemory(Uint8List bytes) => infoFromMemory(bytes).$1 != 0;
-
   int save(String path, {ImWriteFormats? format, Map<ImWriteFlags, int> params = const {}}) {
     final cPath = path.toNativeUtf8().cast<ffi.Char>();
     final pathExt = path.split('.').last;
@@ -416,10 +433,8 @@ class Image extends NativeObject {
         );
       case ImWriteFormats.BMP:
         rval = c.stbi_write_bmp(cPath, _width, _height, _channels, ptr);
-      case ImWriteFormats.TGA:
-        rval = c.stbi_write_tga(cPath, _width, _height, _channels, ptr);
-      case ImWriteFormats.HDR:
-        rval = c.stbi_write_hdr(cPath, _width, _height, _channels, ptr.cast());
+      case _:
+        throw ArgumentError.value(format, 'format', 'Unsupported image format');
     }
     calloc.free(cPath);
     return rval;
@@ -451,4 +466,5 @@ void hdrToLdrGamma(double gamma) => c.stbi_hdr_to_ldr_gamma(gamma);
 void hdrToLdrScale(double scale) => c.stbi_hdr_to_ldr_scale(scale);
 
 void ldrToHdrGamma(double gamma) => c.stbi_ldr_to_hdr_gamma(gamma);
+
 void ldrToHdrScale(double scale) => c.stbi_ldr_to_hdr_scale(scale);

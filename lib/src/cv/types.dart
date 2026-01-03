@@ -13,6 +13,9 @@ class Point extends NativeObject {
   static final _finalizer = ffi.NativeFinalizer(calloc.nativeFree);
   Point.fromPointer(ffi.Pointer<c.mnn_cv_point_t> ptr, {super.attach, super.externalSize})
     : super(ptr.cast());
+
+  factory Point(double x, double y) => Point.fromXY(x, y);
+
   factory Point.fromXY(double x, double y) {
     final ptr = calloc<c.mnn_cv_point_t>()
       ..ref.x = x
@@ -49,6 +52,8 @@ class Size extends NativeObject {
   Size.fromPointer(ffi.Pointer<c.mnn_cv_size2i_t> ptr, {super.attach, super.externalSize})
     : super(ptr.cast());
 
+  factory Size(int width, int height) => Size.fromXY(width, height);
+
   factory Size.fromXY(int x, int y) {
     final ptr = calloc<c.mnn_cv_size2i_t>()
       ..ref.width = x
@@ -84,6 +89,8 @@ class Scalar extends NativeObject {
   static final _finalizer = ffi.NativeFinalizer(calloc.nativeFree);
   Scalar.fromPointer(ffi.Pointer<c.mnn_cv_scalar_t> ptr, {super.attach, super.externalSize})
     : super(ptr.cast());
+
+  factory Scalar(List<double> values) => Scalar.fromVal(values);
 
   factory Scalar.fromVal(List<double> values) {
     MnnAssert(values.length == 4, 'Scalar must have 4 values');

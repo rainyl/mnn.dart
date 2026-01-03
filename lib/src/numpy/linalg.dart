@@ -4,8 +4,8 @@ import '../expr/op.dart' as F;
 import 'numpy.dart' as np;
 
 // Linear algebra
-VARP norm(dynamic x, {dynamic ord, dynamic axis, bool keepDims = false}) {
-  var xx = np.array<float32>(x);
+VARP norm(VARP x, {dynamic ord, dynamic axis, bool keepDims = false}) {
+  var xx = F.clone(x);
   final ndim = xx.ndim!;
 
   if (axis == null) {

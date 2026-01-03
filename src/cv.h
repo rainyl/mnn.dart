@@ -31,12 +31,25 @@ typedef struct mnn_cv_rotated_rect_t {
   float angle;
 } mnn_cv_rotated_rect_t;
 
+enum ImreadModes {
+    IMREAD_GRAYSCALE            = 0, // uint8_t gray
+    IMREAD_COLOR                = 1, // uint8_t bgr
+    IMREAD_COLOR_BGR            = 1, // uint8_t bgr
+    IMREAD_ANYDEPTH             = 2, // float bgr
+    IMREAD_COLOR_RGB            = 256,
+};
+
+enum ImwriteFlags {
+    IMWRITE_JPEG_QUALITY        = 1, // jpg, default is 95
+};
+
 // types.h
 MNN_C_API void mnn_cv_static_getVARPSize(VARP_t var, int *height, int *width, int *channel);
 MNN_C_API int mnn_cv_getVARPHeight(VARP_t var);
 MNN_C_API int mnn_cv_getVARPWidth(VARP_t var);
 MNN_C_API int mnn_cv_getVARPChannel(VARP_t var);
 MNN_C_API int mnn_cv_getVARPByte(VARP_t var);
+MNN_C_API VARP_t mnn_cv_buildImgVARP(uint8_t*img, int height, int width, int channel, int flags);
 
 // core
 MNN_C_API bool mnn_cv_solve(VARP_t src1, VARP_t src2, int flags, VARP_t *out);
@@ -55,6 +68,7 @@ MNN_C_API void mnn_cv_solvePnP(
 
 // imgcodecs.hpp
 MNN_C_API bool mnn_cv_haveImageReader(char *filename);
+MNN_C_API bool mnn_cv_haveImageReaderFromMemory(uint8_t *buf, size_t length);
 MNN_C_API bool mnn_cv_haveImageWriter(char *filename);
 MNN_C_API VARP_t mnn_cv_imdecode(uint8_t *buf, size_t length, int flags);
 MNN_C_API bool

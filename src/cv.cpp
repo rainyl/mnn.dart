@@ -4,6 +4,33 @@
 
 #include "cv.h"
 
+#include <set>
+
+#include "mnn_stb_image.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+#define STBI_ONLY_JPEG
+#define STBI_ONLY_PNG
+#define STBI_ONLY_BMP
+#include "stb_image.h"
+#include "stb_image_write.h"
+#ifdef __cplusplus
+}
+#endif
+
+// helper functions
+static void writeFunc(void *context, void *data, int size) {
+  std::vector<uint8_t> *ctx = (std::vector<uint8_t> *)context;
+  ctx->insert(ctx->end(), (uint8_t *)data, (uint8_t *)data + size);
+}
+
+static std::string getExt(std::string name) {
+  auto ext = name.substr(name.rfind('.') + 1, -1);
+  std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+  return ext;
+}
+
 void mnn_cv_static_getVARPSize(VARP_t var, int *height, int *width, int *channel) {
   MNN::CV::getVARPSize(*var, height, width, channel);
 }
@@ -16,6 +43,21 @@ int mnn_cv_getVARPChannel(VARP_t var) { return MNN::CV::getVARPChannel(*var); }
 
 int mnn_cv_getVARPByte(VARP_t var) { return MNN::CV::getVARPByte(*var); }
 
+VARP_t mnn_cv_buildImgVARP(uint8_t *img, int height, int width, int channel, int flags) {
+  auto rgb = MNN::Express::_Const(
+      img, {height, width, channel}, MNN::Express::NHWC, halide_type_of<uint8_t>()
+  );
+  MNN::Express::VARP res;
+  switch (flags) {
+  case IMREAD_COLOR: res = MNN::CV::cvtColor(rgb, MNN::CV::COLOR_RGB2BGR); break;
+  case IMREAD_GRAYSCALE: res = MNN::CV::cvtColor(rgb, MNN::CV::COLOR_RGB2GRAY); break;
+  case IMREAD_ANYDEPTH: res = MNN::Express::_Cast<float>(rgb); break;
+  case IMREAD_COLOR_RGB: return new MNN::Express::VARP(rgb); break;
+  default: MNN_ERROR("Don't support imread flags!"); return new MNN::Express::VARP(rgb);
+  }
+  return new MNN::Express::VARP(res);
+}
+
 // core
 bool mnn_cv_solve(VARP_t src1, VARP_t src2, int flags, VARP_t *out) {
   auto v = MNN::CV::solve(*src1, *src2, flags);
@@ -24,7 +66,7 @@ bool mnn_cv_solve(VARP_t src1, VARP_t src2, int flags, VARP_t *out) {
 }
 
 // calib3d
-VARP_t mnn_cv_Rodrigues(VARP_t src) { return new MNN::Express::VARP(*src); }
+VARP_t mnn_cv_Rodrigues(VARP_t src) { return new MNN::Express::VARP(MNN::CV::Rodrigues(*src)); }
 
 void mnn_cv_solvePnP(
     VARP_t objectPoints,
@@ -42,25 +84,106 @@ void mnn_cv_solvePnP(
 }
 
 // imgcodecs.hpp
-bool mnn_cv_haveImageReader(char *filename) { return MNN::CV::haveImageReader(filename); }
-bool mnn_cv_haveImageWriter(char *filename) { return MNN::CV::haveImageWriter(filename); }
-
+bool mnn_cv_haveImageReader(char *filename) {
+  int width, height, channel;
+  return stbi_info(filename, &width, &height, &channel);
+}
+bool mnn_cv_haveImageReaderFromMemory(uint8_t *buf, size_t length) {
+  int width, height, channel;
+  return stbi_info_from_memory(buf, length, &width, &height, &channel);
+}
+bool mnn_cv_haveImageWriter(char *filename) {
+  static const std::set<std::string> supportImages{
+      "jpg",
+      "jpeg",
+      "png",
+      "bmp", /* "gif", "psd", "pic", "pnm", "hdr", "tga" */
+  };
+  return supportImages.find(getExt(filename)) != supportImages.end();
+}
 VARP_t mnn_cv_imdecode(uint8_t *buf, size_t length, int flags) {
-  return new MNN::Express::VARP(MNN::CV::imdecode(std::vector<uint8_t>(buf, buf + length), flags));
+  int width, height, channel;
+  auto img = stbi_load_from_memory(buf, length, &width, &height, &channel, 3);
+  if (nullptr == img) {
+    MNN_ERROR("Can't decode\n");
+    return nullptr;
+  }
+  return mnn_cv_buildImgVARP(img, height, width, 3, flags);
 }
 
 bool mnn_cv_imencode(char *ext, VARP_t img, int *params, size_t params_length, VecU8 *out) {
-  auto v = MNN::CV::imencode(ext, *img, std::vector<int>(params, params + params_length));
-  *out = new std::vector<uint8_t>(v.second);
-  return v.first;
+  MNN::Express::VARP rgb = MNN::CV::cvtColor(*img, MNN::CV::COLOR_BGR2RGB);
+  int height, width, channel;
+  MNN::CV::getVARPSize(rgb, &height, &width, &channel);
+  auto _ext = getExt(ext);
+  bool res = false;
+  std::vector<uint8_t> buf;
+  if (_ext == "jpg" || "jpeg") {
+    int quality = 95;
+    for (size_t i = 0; i < params_length; i += 2) {
+      if (params[i] == IMWRITE_JPEG_QUALITY) {
+        quality = params[i + 1];
+        break;
+      }
+    }
+    res = stbi_write_jpg_to_func(
+        writeFunc, (void *)&buf, width, height, channel, rgb->readMap<uint8_t>(), quality
+    );
+  }
+  if (_ext == "png") {
+    res = stbi_write_png_to_func(
+        writeFunc, (void *)&buf, width, height, channel, rgb->readMap<uint8_t>(), 0
+    );
+  }
+  if (_ext == "bmp") {
+    res = stbi_write_bmp_to_func(
+        writeFunc, (void *)&buf, width, height, channel, rgb->readMap<uint8_t>()
+    );
+  }
+  *out = new std::vector<uint8_t>(buf);
+  return res;
 }
 
 VARP_t mnn_cv_imread(char *filename, int flags) {
-  return new MNN::Express::VARP(MNN::CV::imread(filename, flags));
+  int width, height, channel;
+  auto img = stbi_load(filename, &width, &height, &channel, 3);
+  if (nullptr == img) {
+    MNN_ERROR("Can't open %s\n", filename);
+    return nullptr;
+  }
+  return mnn_cv_buildImgVARP(img, height, width, 3, flags);
 }
 
 bool mnn_cv_imwrite(char *filename, VARP_t img, int *params, size_t params_length) {
-  return MNN::CV::imwrite(filename, *img, std::vector<int>(params, params + params_length));
+  auto _img = *img;
+  if (_img->getInfo()->type != halide_type_of<uint8_t>()) {
+    _img = MNN::Express::_Cast<uint8_t>(_img);
+  }
+  int height, width, channel;
+  MNN::CV::getVARPSize(_img, &height, &width, &channel);
+  if (channel == 3) {
+    _img = MNN::CV::cvtColor(_img, MNN::CV::COLOR_BGR2RGB);
+  } else {
+    MNN_ERROR("MNN cv imwrite just support RGB/BGR format.");
+  }
+  auto ext = getExt(filename);
+  if (ext == "jpg" || ext == "jpeg") {
+    int quality = 95;
+    for (size_t i = 0; i < params_length; i += 2) {
+      if (params[i] == IMWRITE_JPEG_QUALITY) {
+        quality = params[i + 1];
+        break;
+      }
+    }
+    return stbi_write_jpg(filename, width, height, channel, _img->readMap<uint8_t>(), quality);
+  }
+  if (ext == "png") {
+    return stbi_write_png(filename, width, height, channel, _img->readMap<uint8_t>(), 0);
+  }
+  if (ext == "bmp") {
+    return stbi_write_bmp(filename, width, height, channel, _img->readMap<uint8_t>());
+  }
+  return false;
 }
 
 // structural.hpp
@@ -180,13 +303,15 @@ mnn_cv_getPerspectiveTransform(const mnn_cv_point_t src[], const mnn_cv_point_t 
   return new MNN::CV::Matrix(matrix);
 }
 
-MNN_C_API VARP_t mnn_cv_getRectSubPix(VARP_t image, mnn_cv_size2i_t patchSize, mnn_cv_point_t center) {
+MNN_C_API VARP_t
+mnn_cv_getRectSubPix(VARP_t image, mnn_cv_size2i_t patchSize, mnn_cv_point_t center) {
   MNN::CV::Size _patchSize = {patchSize.width, patchSize.height};
   MNN::CV::Point _center = {center.x, center.y};
   return new MNN::Express::VARP(MNN::CV::getRectSubPix(*image, _patchSize, _center));
 }
 
-MNN_C_API mnn_cv_matrix_t mnn_cv_getRotationMatrix2D(mnn_cv_point_t center, double angle, double scale) {
+MNN_C_API mnn_cv_matrix_t
+mnn_cv_getRotationMatrix2D(mnn_cv_point_t center, double angle, double scale) {
   MNN::CV::Point _center = {center.x, center.y};
   return new MNN::CV::Matrix(MNN::CV::getRotationMatrix2D(_center, angle, scale));
 }
@@ -195,8 +320,9 @@ MNN_C_API mnn_cv_matrix_t mnn_cv_invertAffineTransform(mnn_cv_matrix_t M) {
   return new MNN::CV::Matrix(MNN::CV::invertAffineTransform(*M));
 }
 
-MNN_C_API VARP_t
-mnn_cv_remap(VARP_t src, VARP_t map1, VARP_t map2, int interpolation, int borderMode, int borderValue) {
+MNN_C_API VARP_t mnn_cv_remap(
+    VARP_t src, VARP_t map1, VARP_t map2, int interpolation, int borderMode, int borderValue
+) {
   return new MNN::Express::VARP(
       MNN::CV::remap(*src, *map1, *map2, interpolation, borderMode, borderValue)
   );
@@ -275,12 +401,14 @@ MNN_C_API VARP_t mnn_cv_erode(VARP_t src, VARP_t kernel, int iterations, int bor
   return new MNN::Express::VARP(MNN::CV::erode(*src, *kernel, iterations, borderType));
 }
 
-MNN_C_API VARP_t mnn_cv_filter2D(VARP_t src, int ddepth, VARP_t kernel, double delta, int borderType) {
+MNN_C_API VARP_t
+mnn_cv_filter2D(VARP_t src, int ddepth, VARP_t kernel, double delta, int borderType) {
   return new MNN::Express::VARP(MNN::CV::filter2D(*src, ddepth, *kernel, delta, borderType));
 }
 
-MNN_C_API VARP_t
-mnn_cv_GaussianBlur(VARP_t src, mnn_cv_size2i_t ksize, double sigmaX, double sigmaY, int borderType) {
+MNN_C_API VARP_t mnn_cv_GaussianBlur(
+    VARP_t src, mnn_cv_size2i_t ksize, double sigmaX, double sigmaY, int borderType
+) {
   MNN::CV::Size _ksize = {ksize.width, ksize.height};
   return new MNN::Express::VARP(MNN::CV::GaussianBlur(*src, _ksize, sigmaX, sigmaY, borderType));
 }
@@ -323,8 +451,9 @@ mnn_cv_Scharr(VARP_t src, int ddepth, int dx, int dy, double scale, double delta
   return new MNN::Express::VARP(MNN::CV::Scharr(*src, ddepth, dx, dy, scale, delta, borderType));
 }
 
-MNN_C_API VARP_t
-mnn_cv_sepFilter2D(VARP_t src, int ddepth, VARP_t kernelX, VARP_t kernelY, double delta, int borderType) {
+MNN_C_API VARP_t mnn_cv_sepFilter2D(
+    VARP_t src, int ddepth, VARP_t kernelX, VARP_t kernelY, double delta, int borderType
+) {
   return new MNN::Express::VARP(
       MNN::CV::sepFilter2D(*src, ddepth, *kernelX, *kernelY, delta, borderType)
   );
