@@ -8,16 +8,17 @@ enum ImreadModes {
   IMREAD_COLOR(1),
 
   /// float bgr
-  IMREAD_ANYDEPTH(4);
+  IMREAD_ANYDEPTH(4)
+  ;
 
   final int value;
   const ImreadModes(this.value);
-  static ImreadModes fromValue(int value) => switch (value) {
-        0 => IMREAD_GRAYSCALE,
-        1 => IMREAD_COLOR,
-        4 => IMREAD_ANYDEPTH,
-        _ => throw ArgumentError("Invalid value: $value"),
-      };
+  factory ImreadModes.fromValue(int value) => switch (value) {
+    0 => IMREAD_GRAYSCALE,
+    1 => IMREAD_COLOR,
+    4 => IMREAD_ANYDEPTH,
+    _ => throw ArgumentError("Invalid value: $value"),
+  };
 }
 
 enum ImageFormat {
@@ -35,28 +36,29 @@ enum ImageFormat {
   YUV_NV21(11),
   YUV_NV12(12),
   YUV_I420(13),
-  HSV_FULL(14);
+  HSV_FULL(14)
+  ;
 
   final int value;
   const ImageFormat(this.value);
-  static ImageFormat fromValue(int value) => switch (value) {
-        0 => RGBA,
-        1 => RGB,
-        2 => BGR,
-        3 => GRAY,
-        4 => BGRA,
-        5 => YCrCb,
-        6 => YUV,
-        7 => HSV,
-        8 => XYZ,
-        9 => BGR555,
-        10 => BGR565,
-        11 => YUV_NV21,
-        12 => YUV_NV12,
-        13 => YUV_I420,
-        14 => HSV_FULL,
-        _ => throw ArgumentError("Invalid value: $value"),
-      };
+  factory ImageFormat.fromValue(int value) => switch (value) {
+    0 => RGBA,
+    1 => RGB,
+    2 => BGR,
+    3 => GRAY,
+    4 => BGRA,
+    5 => YCrCb,
+    6 => YUV,
+    7 => HSV,
+    8 => XYZ,
+    9 => BGR555,
+    10 => BGR565,
+    11 => YUV_NV21,
+    12 => YUV_NV12,
+    13 => YUV_I420,
+    14 => HSV_FULL,
+    _ => throw ArgumentError("Invalid value: $value"),
+  };
 }
 
 enum ImWriteFormats {
@@ -65,32 +67,34 @@ enum ImWriteFormats {
   TGA("tga"),
   HDR("hdr"),
   JPG("jpg"),
-  JPEG("jpeg");
+  JPEG("jpeg")
+  ;
 
   final String value;
   const ImWriteFormats(this.value);
 
-  static ImWriteFormats fromValue(String value) => switch (value) {
-        "png" => PNG,
-        "bmp" => BMP,
-        "tga" => TGA,
-        "hdr" => HDR,
-        "jpg" => JPG,
-        "jpeg" => JPEG,
-        _ => throw ArgumentError("Image format $value is not supported"),
-      };
+  factory ImWriteFormats.fromValue(String value) => switch (value) {
+    "png" => PNG,
+    "bmp" => BMP,
+    "tga" => TGA,
+    "hdr" => HDR,
+    "jpg" => JPG,
+    "jpeg" => JPEG,
+    _ => throw ArgumentError("Image format $value is not supported"),
+  };
 }
 
 enum ImWriteFlags {
   /// jpg, default is 95
-  IMWRITE_JPEG_QUALITY(1);
+  IMWRITE_JPEG_QUALITY(1)
+  ;
 
   final int value;
   const ImWriteFlags(this.value);
-  static ImWriteFlags fromValue(int value) => switch (value) {
-        1 => IMWRITE_JPEG_QUALITY,
-        _ => throw ArgumentError("Invalid value: $value"),
-      };
+  factory ImWriteFlags.fromValue(int value) => switch (value) {
+    1 => IMWRITE_JPEG_QUALITY,
+    _ => throw ArgumentError("Invalid value: $value"),
+  };
 }
 
 enum StbiChannel {
@@ -98,36 +102,37 @@ enum StbiChannel {
   grey(c.STBI_grey),
   greyAlpha(c.STBI_grey_alpha),
   rgb(c.STBI_rgb),
-  rgba(c.STBI_rgb_alpha);
+  rgba(c.STBI_rgb_alpha)
+  ;
 
   final int value;
   const StbiChannel(this.value);
 
-  static StbiChannel fromValue(int value) => switch (value) {
-        c.STBI_default => StbiChannel.default_,
-        c.STBI_grey => StbiChannel.grey,
-        c.STBI_grey_alpha => StbiChannel.greyAlpha,
-        c.STBI_rgb => StbiChannel.rgb,
-        c.STBI_rgb_alpha => StbiChannel.rgba,
-        _ => throw ArgumentError("Invalid value: $value"),
-      };
+  factory StbiChannel.fromValue(int value) => switch (value) {
+    c.STBI_default => StbiChannel.default_,
+    c.STBI_grey => StbiChannel.grey,
+    c.STBI_grey_alpha => StbiChannel.greyAlpha,
+    c.STBI_rgb => StbiChannel.rgb,
+    c.STBI_rgb_alpha => StbiChannel.rgba,
+    _ => throw ArgumentError("Invalid value: $value"),
+  };
 }
 
 enum StbiDType {
   u8,
   u16,
   // f16,
-  f32;
+  f32
+  ;
 
-  static StbiDType fromStbirDataType(c.StbirDataType value) => switch (value) {
-        c.StbirDataType.STBIR_TYPE_UINT8 ||
-        c.StbirDataType.STBIR_TYPE_UINT8_SRGB ||
-        c.StbirDataType.STBIR_TYPE_UINT8_SRGB_ALPHA =>
-          StbiDType.u8,
-        c.StbirDataType.STBIR_TYPE_UINT16 => StbiDType.u16,
-        c.StbirDataType.STBIR_TYPE_FLOAT => StbiDType.f32,
-        c.StbirDataType.STBIR_TYPE_HALF_FLOAT => throw UnimplementedError(),
-      };
+  factory StbiDType.fromStbirDataType(c.StbirDataType value) => switch (value) {
+    c.StbirDataType.STBIR_TYPE_UINT8 ||
+    c.StbirDataType.STBIR_TYPE_UINT8_SRGB ||
+    c.StbirDataType.STBIR_TYPE_UINT8_SRGB_ALPHA => StbiDType.u8,
+    c.StbirDataType.STBIR_TYPE_UINT16 => StbiDType.u16,
+    c.StbirDataType.STBIR_TYPE_FLOAT => StbiDType.f32,
+    c.StbirDataType.STBIR_TYPE_HALF_FLOAT => throw UnimplementedError(),
+  };
 }
 
 const int COLOR_BGR2BGRA = 0;
@@ -300,3 +305,88 @@ const int COLOR_BGR2YUV_YV12 = 132;
 const int COLOR_RGBA2YUV_YV12 = 133;
 const int COLOR_BGRA2YUV_YV12 = 134;
 const int COLOR_COLORCVT_MAX = 143;
+// InterpolationFlags
+const int INTER_NEAREST = 0;
+const int INTER_LINEAR = 1;
+const int INTER_CUBIC = 2;
+const int INTER_AREA = 3;
+const int INTER_LANCZOS4 = 4;
+const int INTER_LINEAR_EXACT = 5;
+const int INTER_NEAREST_EXACT = 6;
+const int INTER_MAX = 7;
+const int WARP_FILL_OUTLIERS = 8;
+const int WARP_INVERSE_MAP = 16;
+// BorderTypes
+const int BORDER_CONSTANT = 0;
+const int BORDER_REPLICATE = 1;
+const int BORDER_REFLECT = 2;
+const int BORDER_WRAP = 3;
+const int BORDER_REFLECT_101 = 4;
+const int BORDER_TRANSPARENT = 5;
+const int BORDER_REFLECT101 = BORDER_REFLECT_101;
+const int BORDER_DEFAULT = BORDER_REFLECT_101;
+const int BORDER_ISOLATED = 16;
+/*
+// not support padtype
+BORDER_REPLICATE = 1
+BORDER_WRAP = 3
+BORDER_TRANSPARENT = 5
+BORDER_ISOLATED = 16
+*/
+// ThresholdTypes
+const int THRESH_BINARY = 0;
+const int THRESH_BINARY_INV = 1;
+const int THRESH_TRUNC = 2;
+const int THRESH_TOZERO = 3;
+const int THRESH_TOZERO_INV = 4;
+const int THRESH_MASK = 7;
+const int THRESH_OTSU = 8;
+const int THRESH_TRIANGLE = 16;
+// RetrievalModes
+const int RETR_EXTERNAL = 0;
+const int RETR_LIST = 1;
+const int RETR_CCOMP = 2;
+const int RETR_TREE = 3;
+const int RETR_FLOODFILL = 4;
+// ContourApproximationModes
+const int CHAIN_APPROX_NONE = 1;
+const int CHAIN_APPROX_SIMPLE = 2;
+const int CHAIN_APPROX_TC89_L1 = 3;
+const int CHAIN_APPROX_TC89_KCOS = 4;
+// LineTypes
+const int FILLED = -1;
+const int LINE_4 = 4;
+const int LINE_8 = 8;
+const int LINE_AA = 16;
+// ImreadModes
+const int IMREAD_GRAYSCALE = 0;
+const int IMREAD_COLOR = 1;
+const int IMREAD_COLOR_BGR = 1;
+const int IMREAD_ANYDEPTH = 2;
+const int IMREAD_COLOR_RGB = 256;
+// rotateMode
+const int ROTATE_90_CLOCKWISE = 0;
+const int ROTATE_180 = 1;
+const int ROTATE_90_COUNTERCLOCKWISE = 2;
+// solvePnP
+const int SOLVEPNP_ITERATIVE = 0;
+const int SOLVEPNP_SQPNP = 8;
+// decomp types
+const int DECOMP_LU = 0;
+const int DECOMP_SVD = 1;
+const int DECOMP_EIG = 2;
+const int DECOMP_CHOLESKY = 3;
+const int DECOMP_QR = 4;
+const int DECOMP_NORMAL = 16;
+// norm tyes
+const int NORM_INF = 1;
+const int NORM_L1 = 2;
+const int NORM_L2 = 4;
+const int NORM_MINMAX = 32;
+// adaptive threshold types
+const int ADAPTIVE_THRESH_MEAN_C = 0;
+const int ADAPTIVE_THRESH_GAUSSIAN_C = 1;
+// MorphShapes
+const int MORPH_RECT = 0;
+const int MORPH_CROSS = 1;
+const int MORPH_ELLIPSE = 2;

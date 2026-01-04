@@ -40,7 +40,7 @@ hooks:
       defines:
         common:
           MNN_SUPPORT_BF16: ON
-          MNN_BUILD_OPENCV: OFF
+          MNN_BUILD_OPENCV: ON
           MNN_LOW_MEMORY: OFF
         macos:
           MNN_METAL: ON

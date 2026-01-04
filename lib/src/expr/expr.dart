@@ -755,9 +755,12 @@ class VecVARP extends NativeObject {
   List<VARP> asList() => List.generate(size(), (i) => VARP.fromPointer(C.mnn_expr_VecVARP_at_ref(ptr, i)));
 
   VARP at(int index) => VARP.fromPointer(C.mnn_expr_VecVARP_at(ptr, index));
-  VARP atRef(int index) => VARP.fromPointer(C.mnn_expr_VecVARP_at_ref(ptr, index));
+  VARP atRef(int index) => VARP.fromPointer(C.mnn_expr_VecVARP_at_ref(ptr, index), attach: false);
   void set(int index, VARP varp) => C.mnn_expr_VecVARP_set(ptr, index, varp.ptr);
   void push_back(VARP varp) => C.mnn_expr_VecVARP_push_back(ptr, varp.ptr);
+
+  VARP operator [](int index) => atRef(index);
+  void operator []=(int index, VARP value) => set(index, value);
 
   @override
   ffi.NativeFinalizer get finalizer => _finalizer;

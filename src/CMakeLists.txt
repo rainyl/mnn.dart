@@ -66,7 +66,7 @@ else()
   endif()
 endif()
 
-set(MNNC_LINK_LIBS MNN MNN_Express)
+set(MNNC_LINK_LIBS MNN MNN_Express MNNOpenCV)
 if (ANDROID)
     set(MNNC_LINK_LIBS ${MNNC_LINK_LIBS} mediandk -landroid)
     if(MNN_OPENCL)
@@ -119,15 +119,16 @@ set(SOURCES
     "image_process.cpp"
     "mnn_stb_image.cpp"
     "expr_op.cpp"
-        module.cpp
-        module.h
-        cv.cpp
-        cv.h
+    "module.cpp"
+    "module.h"
+    "cv.cpp"
+    "cv.h"
 )
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${MNN_SOURCE_DIR}/include
+    ${MNN_SOURCE_DIR}/tools/cv/include
 )
 
 add_library(mnn_c_api SHARED ${SOURCES})

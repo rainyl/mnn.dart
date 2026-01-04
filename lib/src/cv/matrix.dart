@@ -9,12 +9,12 @@ import 'package:ffi/ffi.dart';
 import '../core/base.dart';
 import '../core/exception.dart';
 import '../g/mnn.g.dart' as c;
-import 'rect.dart';
+import 'types.dart';
 
 class Matrix extends NativeObject {
   static final _finalizer = ffi.NativeFinalizer(c.addresses.mnn_cv_matrix_destroy);
 
-  Matrix.fromPointer(ffi.Pointer<c.mnn_cv_matrix_t> ptr, {super.attach, super.externalSize})
+  Matrix.fromPointer(c.mnn_cv_matrix_t ptr, {super.attach, super.externalSize})
       : super(ptr.cast());
 
   factory Matrix.create() {
