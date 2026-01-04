@@ -39,7 +39,7 @@ class Image extends NativeObject {
        _desiredChannels = desiredChannels,
        super(ptr.cast(), externalSize: width * height * channels);
 
-  factory Image.load(
+  factory Image.file(
     String path, {
     StbiChannel desiredChannel = StbiChannel.default_,
     StbiDType dtype = StbiDType.u8,
@@ -75,7 +75,7 @@ class Image extends NativeObject {
     );
   }
 
-  factory Image.fromMemory(
+  factory Image.fromBytes(
     Uint8List bytes, {
     StbiChannel desiredChannel = StbiChannel.default_,
     StbiDType dtype = StbiDType.u8,
@@ -194,14 +194,14 @@ class Image extends NativeObject {
   //   return dst;
   // }
 
-  static bool isHdr(String path) {
+  static bool isHDR(String path) {
     final pPath = path.toNativeUtf8().cast<ffi.Char>();
     final result = c.stbi_is_hdr(pPath);
     calloc.free(pPath);
     return result != 0;
   }
 
-  static bool isHdrFromMemory(Uint8List bytes) {
+  static bool isHDRBytes(Uint8List bytes) {
     final pBytes = malloc<ffi.Uint8>(bytes.length);
     pBytes.asTypedList(bytes.length).setAll(0, bytes);
     final result = c.stbi_is_hdr_from_memory(pBytes.cast(), bytes.length);
@@ -223,7 +223,7 @@ class Image extends NativeObject {
     return rval;
   }
 
-  static (int result, int channels, int width, int height) infoFromMemory(Uint8List bytes) {
+  static (int result, int channels, int width, int height) infoBytes(Uint8List bytes) {
     final pBytes = malloc<ffi.Uint8>(bytes.length);
     pBytes.asTypedList(bytes.length).setAll(0, bytes);
     final pW = calloc<ffi.Int>();
@@ -245,7 +245,7 @@ class Image extends NativeObject {
     return result != 0;
   }
 
-  static bool is16BitFromMemory(Uint8List bytes) {
+  static bool is16BitBytes(Uint8List bytes) {
     final pBytes = malloc<ffi.Uint8>(bytes.length);
     pBytes.asTypedList(bytes.length).setAll(0, bytes);
     final result = c.stbi_is_16_bit_from_memory(pBytes.cast(), bytes.length);

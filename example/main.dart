@@ -3,6 +3,7 @@
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
+import 'package:mnn/cv.dart' as cv;
 import 'package:mnn/mnn.dart' as mnn;
 
 void main(List<String> args) async {
@@ -64,7 +65,7 @@ void main(List<String> args) async {
       print("Can't open $imagePath");
       continue;
     }
-    final im = mnn.Image.fromMemory(await imageFile.readAsBytes());
+    final im = cv.Image.fromBytes(await imageFile.readAsBytes());
     if (im.isEmpty) {
       throw Exception("Can't decode $imagePath");
     }

@@ -8,7 +8,7 @@ void main() {
 
   group('Image Loading and Basic Info', () {
     test('Image.load', () {
-      final image = cv.Image.load(imagePath);
+      final image = cv.Image.file(imagePath);
       expect(image.width, greaterThan(0));
       expect(image.height, greaterThan(0));
       expect(image.channels, equals(3));
@@ -18,7 +18,7 @@ void main() {
 
     test('Image.fromMemory', () {
       final bytes = File(imagePath).readAsBytesSync();
-      final image = cv.Image.fromMemory(bytes);
+      final image = cv.Image.fromBytes(bytes);
       expect(image.width, greaterThan(0));
       expect(image.height, greaterThan(0));
       expect(image.channels, equals(3));
@@ -35,7 +35,7 @@ void main() {
 
     test('Image.infoFromMemory', () {
       final bytes = File(imagePath).readAsBytesSync();
-      final info = cv.Image.infoFromMemory(bytes);
+      final info = cv.Image.infoBytes(bytes);
       expect(info.$1, isNot(0));
       expect(info.$2, equals(3));
       expect(info.$3, greaterThan(0));
@@ -43,7 +43,7 @@ void main() {
     });
 
     test('Image.isHdr', () {
-      expect(cv.Image.isHdr(imagePath), isFalse);
+      expect(cv.Image.isHDR(imagePath), isFalse);
     });
 
     test('Image.is16Bit', () {
@@ -55,7 +55,7 @@ void main() {
     late cv.Image image;
 
     setUp(() {
-      image = cv.Image.load(imagePath);
+      image = cv.Image.file(imagePath);
     });
 
     tearDown(() {
@@ -100,7 +100,7 @@ void main() {
     late cv.Image image;
 
     setUp(() {
-      image = cv.Image.load(imagePath);
+      image = cv.Image.file(imagePath);
     });
 
     tearDown(() {
@@ -138,7 +138,7 @@ void main() {
     late cv.Image image;
 
     setUp(() {
-      image = cv.Image.load(imagePath);
+      image = cv.Image.file(imagePath);
     });
 
     tearDown(() {

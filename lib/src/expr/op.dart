@@ -1374,23 +1374,23 @@ VARP reshape(VARP x, List<int> shape, {DimensionFormat format = DimensionFormat.
   return rval;
 }
 
-// VARP scale(VARP x, int channels, List<double> scales, List<double> biases) {
-//   final (scalesPtr, scalesSize) = scales.toNativeArrayF32();
-//   final (biasesPtr, biasesSize) = biases.toNativeArrayF32();
-//   final rval = VARP.fromPointer(
-//     C.mnn_expr_Scale(
-//       x.ptr,
-//       channels,
-//       scalesPtr.cast(),
-//       scalesSize,
-//       biasesPtr.cast(),
-//       biasesSize,
-//     ),
-//   );
-//   calloc.free(scalesPtr);
-//   calloc.free(biasesPtr);
-//   return rval;
-// }
+VARP scale(VARP x, int channels, List<double> scales, List<double> biases) {
+  final (scalesPtr, scalesSize) = scales.toNativeArrayF32();
+  final (biasesPtr, biasesSize) = biases.toNativeArrayF32();
+  final rval = VARP.fromPointer(
+    C.mnn_expr_Scale(
+      x.ptr,
+      channels,
+      scalesPtr.cast(),
+      scalesSize,
+      biasesPtr.cast(),
+      biasesSize,
+    ),
+  );
+  calloc.free(scalesPtr);
+  calloc.free(biasesPtr);
+  return rval;
+}
 
 /// Given an input value x, it computes the output as x if x > 0 and slope * x if x <= 0.
 ///

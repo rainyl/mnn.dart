@@ -10,6 +10,9 @@
 - new: support numpy-style slicing for `VARP.operator []`, e.g., `x[0]` `x["0, 1, :"]`
 - new: support numpy-style slicing assignment for `VARP.operator []=`, e.g., `x[0]=...` `x["0, 1, :"]=...`
 - breaking change: rename `VARP.list`, `VARP.list2D`, `VARP.list3D`, `VARP.list4D`, `VARP.listND` to `VARP.fromList1D`, `VARP.fromList2D`, `VARP.fromList3D`, `VARP.fromList4D`, `VARP.fromListND`
+- breaking change: rename `Image.load`, `Image.fromMemory` -> `Image.file`, `Image.fromBytes`
+- new: add `package:mnn/expr.dart`
+- new: add `MNN::CV` module
 
 ## 0.0.3
 

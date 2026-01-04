@@ -15,9 +15,9 @@ List<List<(int, double)>> inference(
   mnn.Session session,
   List<String> imagePaths, {
   int topK = 3,
+  List<double> mean = const [0.485, 0.456, 0.406],
+  List<double> std = const [0.229, 0.224, 0.225],
 }) {
-  const mean = [0.485, 0.456, 0.406];
-  const std = [0.229, 0.224, 0.225];
   final input = session.getInput();
   if (input == null || input.isEmpty) {
     print("Can't get input tensor");
@@ -43,10 +43,7 @@ List<List<(int, double)>> inference(
     '  batch size = $B',
   );
 
-  final nchwTensor = mnn.Tensor.fromTensor(
-    input,
-    dimType: mnn.DimensionType.MNN_CAFFE,
-  );
+  final nchwTensor = mnn.Tensor.fromTensor(input, dimType: mnn.DimensionType.MNN_CAFFE);
   for (var i = 0; i < imagePaths.length; i++) {
     if (!cv.haveImageReader(imagePaths[i])) {
       throw Exception('OpenCV has no reader for: ${imagePaths[i]}');
@@ -74,10 +71,7 @@ List<List<(int, double)>> inference(
   input.copyFromHost(nchwTensor);
   session.run();
 
-  final outputUser = mnn.Tensor.fromTensor(
-    output,
-    dimType: mnn.DimensionType.MNN_CAFFE,
-  );
+  final outputUser = mnn.Tensor.fromTensor(output, dimType: mnn.DimensionType.MNN_CAFFE);
   output.copyToHost(outputUser);
 
   final result = <List<(int, double)>>[];
@@ -90,14 +84,12 @@ List<List<(int, double)>> inference(
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i]));
       }
-    } else if (type.code == mnn.HalideTypeCode.halide_type_uint &&
-        type.bytes == 1) {
+    } else if (type.code == mnn.HalideTypeCode.halide_type_uint && type.bytes == 1) {
       final values = outputUser.cast<mnn.uint8>() + batch * size;
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i].toDouble()));
       }
-    } else if (type.code == mnn.HalideTypeCode.halide_type_int &&
-        type.bytes == 1) {
+    } else if (type.code == mnn.HalideTypeCode.halide_type_int && type.bytes == 1) {
       final values = outputUser.cast<mnn.int8>() + batch * size;
       for (var i = 0; i < size; i++) {
         tempValues.add((i, values[i].toDouble()));
