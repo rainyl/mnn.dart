@@ -5,7 +5,7 @@ import 'numpy.dart' as np;
 
 // Linear algebra
 VARP norm(VARP x, {dynamic ord, dynamic axis, bool keepDims = false}) {
-  var xx = F.clone(x);
+  var xx = F.clone(x, deepCopy: true);
   final ndim = xx.ndim!;
 
   if (axis == null) {

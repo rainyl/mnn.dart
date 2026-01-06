@@ -18,30 +18,30 @@
 #include <cstring>
 
 enum DataType {
-  DataType_DT_INVALID = 0,
-  DataType_DT_FLOAT = 1,
-  DataType_DT_DOUBLE = 2,
-  DataType_DT_INT32 = 3,
-  DataType_DT_UINT8 = 4,
-  DataType_DT_INT16 = 5,
-  DataType_DT_INT8 = 6,
-  DataType_DT_STRING = 7,
-  DataType_DT_COMPLEX64 = 8,
-  DataType_DT_INT64 = 9,
-  DataType_DT_BOOL = 10,
-  DataType_DT_QINT8 = 11,
-  DataType_DT_QUINT8 = 12,
-  DataType_DT_QINT32 = 13,
-  DataType_DT_BFLOAT16 = 14,
-  DataType_DT_QINT16 = 15,
-  DataType_DT_QUINT16 = 16,
-  DataType_DT_UINT16 = 17,
+  DataType_DT_INVALID    = 0,
+  DataType_DT_FLOAT      = 1,
+  DataType_DT_DOUBLE     = 2,
+  DataType_DT_INT32      = 3,
+  DataType_DT_UINT8      = 4,
+  DataType_DT_INT16      = 5,
+  DataType_DT_INT8       = 6,
+  DataType_DT_STRING     = 7,
+  DataType_DT_COMPLEX64  = 8,
+  DataType_DT_INT64      = 9,
+  DataType_DT_BOOL       = 10,
+  DataType_DT_QINT8      = 11,
+  DataType_DT_QUINT8     = 12,
+  DataType_DT_QINT32     = 13,
+  DataType_DT_BFLOAT16   = 14,
+  DataType_DT_QINT16     = 15,
+  DataType_DT_QUINT16    = 16,
+  DataType_DT_UINT16     = 17,
   DataType_DT_COMPLEX128 = 18,
-  DataType_DT_HALF = 19,
-  DataType_DT_RESOURCE = 20,
-  DataType_DT_VARIANT = 21,
-  DataType_MIN = DataType_DT_INVALID,
-  DataType_MAX = DataType_DT_VARIANT
+  DataType_DT_HALF       = 19,
+  DataType_DT_RESOURCE   = 20,
+  DataType_DT_VARIANT    = 21,
+  DataType_MIN           = DataType_DT_INVALID,
+  DataType_MAX           = DataType_DT_VARIANT
 };
 
 halide_type_t mnn_halide_type_from_tensor_data_type(int type) {
@@ -112,7 +112,7 @@ mnn_tensor_t
 mnn_tensor_create_from_tensor(mnn_tensor_t self, mnn_dimension_type_t type, bool alloc_memory) {
   if (!self) return nullptr;
   try {
-    MNN::Tensor *src = (MNN::Tensor *)self;
+    MNN::Tensor *src       = (MNN::Tensor *)self;
     MNN::Tensor *newTensor = new MNN::Tensor(src, (MNN::Tensor::DimensionType)type, alloc_memory);
     return (mnn_tensor_t)newTensor;
   } catch (...) { return nullptr; }
@@ -123,8 +123,8 @@ mnn_tensor_t mnn_tensor_create_device(
 ) {
   if (!shape || shape_size <= 0) return nullptr;
   try {
-    const auto _shape = std::vector<int>(shape, shape + shape_size);
-    const auto _type = halide_type_t((halide_type_code_t)type.code, type.bits, type.lanes);
+    const auto   _shape = std::vector<int>(shape, shape + shape_size);
+    const auto   _type  = halide_type_t((halide_type_code_t)type.code, type.bits, type.lanes);
     MNN::Tensor *tensor =
         MNN::Tensor::createDevice(_shape, _type, (MNN::Tensor::DimensionType)dim_type);
     return (mnn_tensor_t)tensor;
@@ -132,16 +132,16 @@ mnn_tensor_t mnn_tensor_create_device(
 }
 
 mnn_tensor_t mnn_tensor_create_with_data(
-    const int *shape,
-    int shape_size,
-    halide_type_c_t type,
-    void *data,
+    const int           *shape,
+    int                  shape_size,
+    halide_type_c_t      type,
+    void                *data,
     mnn_dimension_type_t dim_type
 ) {
   if (!shape || shape_size <= 0 || !data) return nullptr;
   try {
-    auto _shape = std::vector<int>(shape, shape + shape_size);
-    const auto _type = halide_type_t((halide_type_code_t)type.code, type.bits, type.lanes);
+    auto         _shape = std::vector<int>(shape, shape + shape_size);
+    const auto   _type  = halide_type_t((halide_type_code_t)type.code, type.bits, type.lanes);
     MNN::Tensor *tensor =
         MNN::Tensor::create(_shape, _type, data, (MNN::Tensor::DimensionType)dim_type);
     return (mnn_tensor_t)tensor;
@@ -150,7 +150,10 @@ mnn_tensor_t mnn_tensor_create_with_data(
 
 // MNN::Tensor destruction
 void mnn_tensor_destroy(mnn_tensor_t self) {
-  if (self) { MNN::Tensor::destroy((MNN::Tensor *)self); self=nullptr; }
+  if (self) {
+    MNN::Tensor::destroy((MNN::Tensor *)self);
+    self = nullptr;
+  }
 }
 
 // MNN::Tensor operations
@@ -167,7 +170,7 @@ mnn_error_code_t mnn_tensor_copy_from_host(mnn_tensor_t self, mnn_tensor_t host_
   try {
     MNN::Tensor *dst = (MNN::Tensor *)self;
     MNN::Tensor *src = (MNN::Tensor *)host_tensor;
-    auto r = dst->copyFromHostTensor(src);
+    auto         r   = dst->copyFromHostTensor(src);
     return r ? MNNC_BOOL_TRUE : MNNC_BOOL_FALSE;
   } catch (...) { return MNNC_UNKNOWN_ERROR; }
 }
@@ -177,7 +180,7 @@ mnn_error_code_t mnn_tensor_copy_to_host(mnn_tensor_t self, mnn_tensor_t host_te
   try {
     MNN::Tensor *src = (MNN::Tensor *)self;
     MNN::Tensor *dst = (MNN::Tensor *)host_tensor;
-    auto r = src->copyToHostTensor(dst);
+    auto         r   = src->copyToHostTensor(dst);
     return r ? MNNC_BOOL_TRUE : MNNC_BOOL_FALSE;
   } catch (...) { return MNNC_UNKNOWN_ERROR; }
 }
@@ -264,16 +267,16 @@ uint64_t mnn_tensor_device_id(mnn_tensor_t self) {
 
 halide_buffer_c_t *mnn_tensor_buffer(mnn_tensor_t self) {
   if (!self) return nullptr;
-  auto _buf = ((MNN::Tensor *)self)->buffer();
-  halide_buffer_c_t *buf = (halide_buffer_c_t *)malloc(sizeof(halide_buffer_c_t));
-  buf->device = _buf.device;
-  buf->device_interface = _buf.device_interface;
-  buf->host = _buf.host;
-  buf->flags = _buf.flags;
-  buf->type = {(uint8_t)_buf.type.code, _buf.type.bits, _buf.type.lanes};
-  buf->dimensions = _buf.dimensions;
-  buf->dim = _buf.dim;
-  buf->padding = _buf.padding;
+  auto               _buf = ((MNN::Tensor *)self)->buffer();
+  halide_buffer_c_t *buf  = (halide_buffer_c_t *)malloc(sizeof(halide_buffer_c_t));
+  buf->device             = _buf.device;
+  buf->device_interface   = _buf.device_interface;
+  buf->host               = _buf.host;
+  buf->flags              = _buf.flags;
+  buf->type               = {(uint8_t)_buf.type.code, _buf.type.bits, _buf.type.lanes};
+  buf->dimensions         = _buf.dimensions;
+  buf->dim                = _buf.dim;
+  buf->padding            = _buf.padding;
   return buf;
 }
 
@@ -294,11 +297,11 @@ void mnn_tensor_set_type(mnn_tensor_t self, int type) {
 
 halide_type_c_t *mnn_tensor_get_type(mnn_tensor_t self) {
   if (!self) return nullptr;
-  auto _type = ((MNN::Tensor *)self)->getType();
-  halide_type_c_t *type = (halide_type_c_t *)malloc(sizeof(halide_type_c_t));
-  type->code = (uint8_t)_type.code;
-  type->bits = _type.bits;
-  type->lanes = _type.lanes;
+  auto             _type = ((MNN::Tensor *)self)->getType();
+  halide_type_c_t *type  = (halide_type_c_t *)malloc(sizeof(halide_type_c_t));
+  type->code             = (uint8_t)_type.code;
+  type->bits             = _type.bits;
+  type->lanes            = _type.lanes;
   return type;
 }
 

@@ -16,17 +16,17 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
-#include <memory>
-#include "MNN/HalideRuntime.h"
-#include "MNN/ImageProcess.hpp"
-#include "MNN/Matrix.h"
-#include "MNN/Rect.h"
+  #include "MNN/HalideRuntime.h"
+  #include "MNN/ImageProcess.hpp"
+  #include "MNN/Matrix.h"
+  #include "MNN/Rect.h"
+  #include <memory>
 extern "C" {
 #endif
 
 #ifdef __cplusplus
 typedef std::shared_ptr<MNN::CV::ImageProcess> *mnn_cv_image_process_t;
-typedef MNN::CV::Matrix *mnn_cv_matrix_t;
+typedef MNN::CV::Matrix                        *mnn_cv_matrix_t;
 #else
 typedef void *mnn_cv_image_process_t;
 typedef void *mnn_cv_matrix_t;
@@ -62,21 +62,21 @@ typedef struct {
 
 // Matrix operations
 MNN_C_API mnn_cv_matrix_t mnn_cv_matrix_create();
-MNN_C_API void mnn_cv_matrix_destroy(mnn_cv_matrix_t self);
+MNN_C_API void            mnn_cv_matrix_destroy(mnn_cv_matrix_t self);
 
 // Matrix setters
 MNN_C_API void mnn_cv_matrix_set(mnn_cv_matrix_t self, int index, float value);
 MNN_C_API void mnn_cv_matrix_set_all(
     mnn_cv_matrix_t self,
-    float scaleX,
-    float skewX,
-    float transX,
-    float skewY,
-    float scaleY,
-    float transY,
-    float pers0,
-    float pers1,
-    float pers2
+    float           scaleX,
+    float           skewX,
+    float           transX,
+    float           skewY,
+    float           scaleY,
+    float           transY,
+    float           pers0,
+    float           pers1,
+    float           pers2
 );
 MNN_C_API void mnn_cv_matrix_set_translate(mnn_cv_matrix_t self, float dx, float dy);
 MNN_C_API void
@@ -91,7 +91,7 @@ MNN_C_API void mnn_cv_matrix_set_concat(mnn_cv_matrix_t self, mnn_cv_matrix_t a,
 MNN_C_API float mnn_cv_matrix_get(mnn_cv_matrix_t self, int index);
 
 // Matrix type masks
-MNN_C_API int mnn_cv_matrix_get_type(mnn_cv_matrix_t self);
+MNN_C_API int  mnn_cv_matrix_get_type(mnn_cv_matrix_t self);
 MNN_C_API bool mnn_cv_matrix_is_identity(mnn_cv_matrix_t self);
 MNN_C_API bool mnn_cv_matrix_is_scale_translate(mnn_cv_matrix_t self);
 MNN_C_API bool mnn_cv_matrix_is_translate(mnn_cv_matrix_t self);
@@ -144,14 +144,14 @@ mnn_cv_matrix_set_scale_translate(mnn_cv_matrix_t self, float sx, float sy, floa
 
 ////////////////// ImageProcess //////////////////////////
 MNN_C_API mnn_cv_image_process_t mnn_cv_image_process_create(
-    const int sourceFormat,
-    const int destFormat,
+    const int    sourceFormat,
+    const int    destFormat,
     const float *means,
-    const int mean_count,
+    const int    mean_count,
     const float *normals,
-    const int normal_count,
-    const int filterType,
-    const int wrap,
+    const int    normal_count,
+    const int    filterType,
+    const int    wrap,
     mnn_tensor_t dst_tensor
 );
 
@@ -168,16 +168,16 @@ MNN_C_API mnn_error_code_t mnn_cv_image_process_convert(
 );
 MNN_C_API mnn_error_code_t mnn_cv_image_process_convert_1(
     mnn_cv_image_process_t self,
-    const uint8_t *src,
-    int iw,
-    int ih,
-    int stride,
-    void *dst,
-    int ow,
-    int oh,
-    int outputBpp,
-    int outputStride,
-    halide_type_c_t type
+    const uint8_t         *src,
+    int                    iw,
+    int                    ih,
+    int                    stride,
+    void                  *dst,
+    int                    ow,
+    int                    oh,
+    int                    outputBpp,
+    int                    outputStride,
+    halide_type_c_t        type
 );
 MNN_C_API mnn_tensor_t mnn_cv_image_process_create_image_tensor(
     halide_type_c_t type, int width, int height, int bytes_per_channel, void *p
@@ -186,13 +186,13 @@ MNN_C_API void mnn_cv_image_process_set_padding(mnn_cv_image_process_t self, uin
 MNN_C_API void mnn_cv_image_process_set_draw(mnn_cv_image_process_t self);
 MNN_C_API void mnn_cv_image_process_draw(
     mnn_cv_image_process_t self,
-    uint8_t *img,
-    int w,
-    int h,
-    int c,
-    const int *regions,
-    int num,
-    const uint8_t *color
+    uint8_t               *img,
+    int                    w,
+    int                    h,
+    int                    c,
+    const int             *regions,
+    int                    num,
+    const uint8_t         *color
 );
 
 #ifdef __cplusplus

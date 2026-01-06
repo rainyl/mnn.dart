@@ -151,26 +151,26 @@ void main() {
     });
 
     test('solvePnP', () {
-      final objectPoints = mnn.VARP.fromList3D<mnn.float32>([
-        [
-          [0.0, 0.0, 0.0],
-          [0.0, 1.0, 0.0],
-          [1.0, 1.0, 0.0],
-          [1.0, 0.0, 0.0],
-        ],
+      final objectPoints = mnn.VARP.fromList2D<mnn.float32>([
+        [0.0, 0.0, 0.0],
+        [0.0, -330.0, -65.0],
+        [-225.0, 170.0, -135.0],
+        [225.0, 170.0, -135.0],
+        [-150.0, -150.0, -125.0],
+        [150.0, -150.0, -125.0],
       ]);
-      final imagePoints = mnn.VARP.fromList3D<mnn.float32>([
-        [
-          [0.0, 0.0],
-          [0.0, 1.0],
-          [1.0, 1.0],
-          [1.0, 0.0],
-        ],
+      final imagePoints = mnn.VARP.fromList2D<mnn.float32>([
+        [359, 391],
+        [399, 561],
+        [337, 297],
+        [513, 301],
+        [345, 465],
+        [453, 469],
       ]);
       final cameraMatrix = mnn.VARP.fromList2D<mnn.float32>([
-        [1.0, 0.0, 0.5],
-        [0.0, 1.0, 0.5],
-        [0.0, 0.0, 1.0],
+        [1200, 0, 600],
+        [0, 1200, 337.5],
+        [0, 0, 1],
       ]);
       final distCoeffs = mnn.VARP.fromList2D<mnn.float32>([
         [0.0],

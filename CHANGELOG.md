@@ -1,3 +1,7 @@
+## 0.1.2
+
+- support get and set `lazyEval` property of `Executor`
+
 ## 0.1.1
 
 - feat(cv): add YUV NV21 image conversion and drawing functions

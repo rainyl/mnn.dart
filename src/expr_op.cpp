@@ -120,7 +120,7 @@ VARP_t mnn_expr_ReduceMean(VARP_t input_variable, VecI32 axis, bool keepDims) {
   return new MNN::Express::VARP(MNN::Express::_ReduceMean(*input_variable, *axis, keepDims));
 }
 VARP_t mnn_expr_ReduceVariance(VARP_t input_variable, VecI32 axis, bool keepDims) {
-  auto mean = _ReduceMean(*input_variable, *axis, true); // to use broadcast of subtract
+  auto mean     = _ReduceMean(*input_variable, *axis, true); // to use broadcast of subtract
   auto variance = _ReduceMean(_Square(_Subtract(*input_variable, mean)), *axis, keepDims);
   return new MNN::Express::VARP(variance);
 }
@@ -195,12 +195,12 @@ VARP_t mnn_expr_MatMul(VARP_t a, VARP_t b, bool tranposeA, bool tranposeB) {
   return new MNN::Express::VARP(MNN::Express::_MatMul(*a, *b, tranposeA, tranposeB));
 }
 VARP_t mnn_expr_Normalize(
-    VARP_t x,
-    int32_t acrossSpatial,
-    int32_t channelShared,
-    float eps,
+    VARP_t       x,
+    int32_t      acrossSpatial,
+    int32_t      channelShared,
+    float        eps,
     const float *scale,
-    size_t scaleLength
+    size_t       scaleLength
 ) {
   return new MNN::Express::VARP(
       MNN::Express::_Normalize(
@@ -271,7 +271,7 @@ VARP_t mnn_expr_CumProd(VARP_t x, int axis) {
   return new MNN::Express::VARP(MNN::Express::_CumProd(*x, axis));
 }
 VecVARP_t mnn_expr_Svd(VARP_t x) { return new MNN::Express::VARPS(MNN::Express::_Svd(*x)); }
-VARP_t mnn_expr_Histogram(VARP_t x, int bin, int min, int max, int channel) {
+VARP_t    mnn_expr_Histogram(VARP_t x, int bin, int min, int max, int channel) {
   return new MNN::Express::VARP(MNN::Express::_Histogram(*x, bin, min, max, channel));
 }
 
@@ -298,7 +298,7 @@ VARP_t mnn_expr_Scalar(const void *ptr, halide_type_c_t type) {
 VARP_t mnn_expr_Const(
     void *value, const int *shape, size_t shapeLength, int format, halide_type_c_t type
 ) {
-  auto _type = halide_type_t((halide_type_code_t)type.code, type.bits, type.lanes);
+  auto _type  = halide_type_t((halide_type_code_t)type.code, type.bits, type.lanes);
   auto _shape = std::vector<int>(shape, shape + shapeLength);
   return new MNN::Express::VARP(
       MNN::Express::_Const(value, _shape, static_cast<MNN::Express::Dimensionformat>(format), _type)
@@ -306,17 +306,17 @@ VARP_t mnn_expr_Const(
 }
 
 VARP_t mnn_expr_Conv(
-    VARP_t weight,
-    VARP_t bias,
-    VARP_t x,
-    int pad,
+    VARP_t     weight,
+    VARP_t     bias,
+    VARP_t     x,
+    int        pad,
     const int *stride,
-    size_t strideLength,
+    size_t     strideLength,
     const int *dilate,
-    size_t dilateLength,
-    int group,
+    size_t     dilateLength,
+    int        group,
     const int *pads,
-    size_t padsLength
+    size_t     padsLength
 ) {
   return new MNN::Express::VARP(
       MNN::Express::_Conv(
@@ -332,17 +332,17 @@ VARP_t mnn_expr_Conv(
   );
 }
 VARP_t mnn_expr_Deconv(
-    VARP_t weight,
-    VARP_t bias,
-    VARP_t x,
-    int pad,
+    VARP_t     weight,
+    VARP_t     bias,
+    VARP_t     x,
+    int        pad,
     const int *stride,
-    size_t strideLength,
+    size_t     strideLength,
     const int *dilate,
-    size_t dilateLength,
-    int group,
+    size_t     dilateLength,
+    int        group,
     const int *pads,
-    size_t padsLength
+    size_t     padsLength
 ) {
   return new MNN::Express::VARP(
       MNN::Express::_Deconv(
@@ -358,14 +358,14 @@ VARP_t mnn_expr_Deconv(
   );
 }
 VARP_t mnn_expr_MaxPool(
-    VARP_t x,
+    VARP_t     x,
     const int *kernel,
-    size_t kernelLength,
+    size_t     kernelLength,
     const int *stride,
-    size_t strideLength,
-    int pad,
+    size_t     strideLength,
+    int        pad,
     const int *pads,
-    size_t padsLength
+    size_t     padsLength
 ) {
   return new MNN::Express::VARP(
       MNN::Express::_MaxPool(
@@ -378,14 +378,14 @@ VARP_t mnn_expr_MaxPool(
   );
 }
 VARP_t mnn_expr_AvePool(
-    VARP_t x,
+    VARP_t     x,
     const int *kernel,
-    size_t kernelLength,
+    size_t     kernelLength,
     const int *stride,
-    size_t strideLength,
-    int pad,
+    size_t     strideLength,
+    int        pad,
     const int *pads,
-    size_t padsLength
+    size_t     padsLength
 ) {
   return new MNN::Express::VARP(
       MNN::Express::_AvePool(
@@ -453,10 +453,10 @@ VARP_t mnn_expr_Slice(VARP_t x, VARP_t starts, VARP_t sizes) {
   return new MNN::Express::VARP(MNN::Express::_Slice(*x, *starts, *sizes));
 }
 VARP_t mnn_expr_StridedSlice(
-    VARP_t input,
-    VARP_t begin,
-    VARP_t end,
-    VARP_t strided,
+    VARP_t  input,
+    VARP_t  begin,
+    VARP_t  end,
+    VARP_t  strided,
     int32_t beginMask,
     int32_t endMask,
     int32_t ellipsisMask,
@@ -478,11 +478,11 @@ VARP_t mnn_expr_StridedSlice(
   );
 }
 VARP_t mnn_expr_StridedSliceWrite(
-    VARP_t input,
-    VARP_t begin,
-    VARP_t end,
-    VARP_t strided,
-    VARP_t write,
+    VARP_t  input,
+    VARP_t  begin,
+    VARP_t  end,
+    VARP_t  strided,
+    VARP_t  write,
     int32_t beginMask,
     int32_t endMask,
     int32_t ellipsisMask,
@@ -565,8 +565,8 @@ VARP_t mnn_expr_CropAndResize(
     VARP_t boxes,
     VARP_t box_ind,
     VARP_t crop_size,
-    int method,
-    float extrapolation_value
+    int    method,
+    float  extrapolation_value
 ) {
   return new MNN::Express::VARP(
       MNN::Express::_CropAndResize(
@@ -662,12 +662,12 @@ VARP_t mnn_expr_Permute(VARP_t input, const int *dims, size_t dimsLength) {
 }
 VARP_t mnn_expr_Interp(
     VecVARP_t xs,
-    float widthScale,
-    float heightScale,
-    int outputWidth,
-    int outputHeight,
-    int resizeType,
-    bool alignCorners
+    float     widthScale,
+    float     heightScale,
+    int       outputWidth,
+    int       outputHeight,
+    int       resizeType,
+    bool      alignCorners
 ) {
   return new MNN::Express::VARP(
       MNN::Express::_Interp(
@@ -735,13 +735,13 @@ VARP_t mnn_expr_Raster(
   );
 }
 VARP_t mnn_expr_RasterRaw(
-    VecVARP_t vars,
-    const int *region,
-    size_t regionLength,
-    const int *shape,
-    size_t shapeLength,
+    VecVARP_t     vars,
+    const int    *region,
+    size_t        regionLength,
+    const int    *shape,
+    size_t        shapeLength,
     halide_type_t dataType,
-    int format
+    int           format
 ) {
   const auto _dtype =
       halide_type_t((halide_type_code_t)dataType.code, dataType.bits, dataType.lanes);
@@ -764,15 +764,15 @@ VARP_t mnn_expr_Nms(
   );
 }
 VARP_t mnn_expr_Im2Col(
-    VARP_t x,
+    VARP_t     x,
     const int *kernelSize,
-    size_t kernelSizeLength,
+    size_t     kernelSizeLength,
     const int *dilate,
-    size_t dilateLength,
+    size_t     dilateLength,
     const int *pads,
-    size_t padsLength,
+    size_t     padsLength,
     const int *stride,
-    size_t strideLength
+    size_t     strideLength
 ) {
   return new MNN::Express::VARP(
       MNN::Express::_Im2Col(
@@ -785,16 +785,16 @@ VARP_t mnn_expr_Im2Col(
   );
 }
 VARP_t mnn_expr_Col2Im(
-    VARP_t x,
-    VARP_t outputShape,
+    VARP_t     x,
+    VARP_t     outputShape,
     const int *kernelSize,
-    size_t kernelSizeLength,
+    size_t     kernelSizeLength,
     const int *dilate,
-    size_t dilateLength,
+    size_t     dilateLength,
     const int *pads,
-    size_t padsLength,
+    size_t     padsLength,
     const int *stride,
-    size_t strideLength
+    size_t     strideLength
 ) {
   return new MNN::Express::VARP(
       MNN::Express::_Col2Im(

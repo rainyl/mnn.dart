@@ -15,7 +15,7 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
-#include "MNN/AutoTime.hpp"
+  #include "MNN/AutoTime.hpp"
 extern "C" {
 #endif
 
@@ -23,7 +23,7 @@ extern "C" {
  * @brief Opaque pointer type representing a timer object
  */
 #ifdef __cplusplus
-typedef MNN::Timer *mnn_timer_t;
+typedef MNN::Timer    *mnn_timer_t;
 typedef MNN::AutoTime *mnn_auto_time_t;
 #else
 typedef void *mnn_timer_t;

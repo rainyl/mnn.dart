@@ -42,7 +42,10 @@ mnn_interpreter_create_from_buffer(const void *buffer, size_t size, mnn_callback
 }
 
 void mnn_interpreter_destroy(mnn_interpreter_t self) {
-  if (self) { MNN::Interpreter::destroy((MNN::Interpreter *)self); self = nullptr; }
+  if (self) {
+    MNN::Interpreter::destroy((MNN::Interpreter *)self);
+    self = nullptr;
+  }
 }
 
 const char *mnn_interpreter_biz_code(mnn_interpreter_t self) {
@@ -102,7 +105,7 @@ size_t mnn_interpreter_get_model_buffer(mnn_interpreter_t self, const void **buf
   if (!self || !buffer) return 0;
   try {
     auto pair = ((MNN::Interpreter *)self)->getModelBuffer();
-    *buffer = pair.first;
+    *buffer   = pair.first;
     return pair.second;
   } catch (...) {
     *buffer = nullptr;
@@ -133,9 +136,9 @@ mnn_interpreter_create_runtime(const mnn_schedule_config_t *configs, size_t coun
     std::vector<MNN::ScheduleConfig> vecConfigs;
     for (size_t i = 0; i < count; i++) {
       MNN::ScheduleConfig config;
-      config.type = static_cast<MNNForwardType>(configs[i].type);
-      config.numThread = configs[i].num_thread;
-      config.mode = configs[i].mode;
+      config.type          = static_cast<MNNForwardType>(configs[i].type);
+      config.numThread     = configs[i].num_thread;
+      config.mode          = configs[i].mode;
       config.backendConfig = (MNN::BackendConfig *)configs[i].backend_config;
       vecConfigs.push_back(config);
     }
@@ -145,7 +148,10 @@ mnn_interpreter_create_runtime(const mnn_schedule_config_t *configs, size_t coun
 }
 
 void mnn_runtime_info_destroy(mnn_runtime_info_t runtime) {
-  if (runtime) { delete (MNN::RuntimeInfo *)runtime; runtime = nullptr; }
+  if (runtime) {
+    delete (MNN::RuntimeInfo *)runtime;
+    runtime = nullptr;
+  }
 }
 
 // Session management
@@ -158,18 +164,18 @@ mnn_session_t mnn_interpreter_create_session(
   }
   try {
     MNN::ScheduleConfig scheduleConfig;
-    scheduleConfig.type = (MNNForwardType)config->type;
+    scheduleConfig.type      = (MNNForwardType)config->type;
     scheduleConfig.numThread = config->num_thread;
-    scheduleConfig.mode = config->mode;
+    scheduleConfig.mode      = config->mode;
 
     auto backendConfig = new MNN::BackendConfig();
     if (config->backend_config != nullptr) {
       backendConfig->memory = (MNN::BackendConfig::MemoryMode)config->backend_config->memory;
-      backendConfig->power = (MNN::BackendConfig::PowerMode)config->backend_config->power;
+      backendConfig->power  = (MNN::BackendConfig::PowerMode)config->backend_config->power;
       backendConfig->precision =
           (MNN::BackendConfig::PrecisionMode)config->backend_config->precision;
       backendConfig->sharedContext = config->backend_config->sharedContext;
-      backendConfig->flags = config->backend_config->flags;
+      backendConfig->flags         = config->backend_config->flags;
 
       scheduleConfig.backendConfig = backendConfig;
     }
@@ -187,10 +193,10 @@ mnn_session_t mnn_interpreter_create_session(
 }
 
 mnn_session_t mnn_interpreter_create_session_with_runtime(
-    mnn_interpreter_t self,
+    mnn_interpreter_t            self,
     const mnn_schedule_config_t *config,
-    mnn_runtime_info_t runtime,
-    mnn_callback_0 callback
+    mnn_runtime_info_t           runtime,
+    mnn_callback_0               callback
 ) {
   if (!self || !config || !runtime) {
     if (callback) callback();
@@ -198,10 +204,10 @@ mnn_session_t mnn_interpreter_create_session_with_runtime(
   }
   try {
     MNN::ScheduleConfig scheduleConfig;
-    scheduleConfig.type = (MNNForwardType)config->type;
-    scheduleConfig.numThread = config->num_thread;
+    scheduleConfig.type          = (MNNForwardType)config->type;
+    scheduleConfig.numThread     = config->num_thread;
     scheduleConfig.backendConfig = (MNN::BackendConfig *)config->backend_config;
-    auto r = (mnn_session_t)((MNN::Interpreter *)self)
+    auto r                       = (mnn_session_t)((MNN::Interpreter *)self)
                  ->createSession(scheduleConfig, *(MNN::RuntimeInfo *)runtime);
     if (callback) callback();
     return r;
@@ -311,21 +317,21 @@ mnn_error_code_t mnn_interpreter_get_session_info(
 
 mnn_error_code_t mnn_interpreter_get_session_output_all(
     mnn_interpreter_t self,
-    mnn_session_t session,
-    mnn_tensor_t **tensors,
-    const char ***names,
-    size_t *count
+    mnn_session_t     session,
+    mnn_tensor_t    **tensors,
+    const char     ***names,
+    size_t           *count
 ) {
   if (!self || !session || !tensors || !names || !count) return MNNC_INVALID_PTR;
   try {
     auto outputs = ((MNN::Interpreter *)self)->getSessionOutputAll((MNN::Session *)session);
-    *count = outputs.size();
-    *tensors = (mnn_tensor_t *)malloc(sizeof(mnn_tensor_t) * (*count));
-    *names = (const char **)malloc(sizeof(const char *) * (*count));
-    size_t i = 0;
+    *count       = outputs.size();
+    *tensors     = (mnn_tensor_t *)malloc(sizeof(mnn_tensor_t) * (*count));
+    *names       = (const char **)malloc(sizeof(const char *) * (*count));
+    size_t i     = 0;
     for (const auto &pair : outputs) {
       (*tensors)[i] = (mnn_tensor_t)pair.second;
-      (*names)[i] = strdup(pair.first.c_str());
+      (*names)[i]   = strdup(pair.first.c_str());
       i++;
     }
     return MNNC_NO_ERROR;
@@ -334,21 +340,21 @@ mnn_error_code_t mnn_interpreter_get_session_output_all(
 
 mnn_error_code_t mnn_interpreter_get_session_input_all(
     mnn_interpreter_t self,
-    mnn_session_t session,
-    mnn_tensor_t **tensors,
-    const char ***names,
-    size_t *count
+    mnn_session_t     session,
+    mnn_tensor_t    **tensors,
+    const char     ***names,
+    size_t           *count
 ) {
   if (!self || !session || !tensors || !names || !count) return MNNC_INVALID_PTR;
   try {
     auto inputs = ((MNN::Interpreter *)self)->getSessionInputAll((MNN::Session *)session);
-    *count = inputs.size();
-    *tensors = (mnn_tensor_t *)malloc(sizeof(mnn_tensor_t) * (*count));
-    *names = (const char **)malloc(sizeof(const char *) * (*count));
-    size_t i = 0;
+    *count      = inputs.size();
+    *tensors    = (mnn_tensor_t *)malloc(sizeof(mnn_tensor_t) * (*count));
+    *names      = (const char **)malloc(sizeof(const char *) * (*count));
+    size_t i    = 0;
     for (const auto &pair : inputs) {
       (*tensors)[i] = (mnn_tensor_t)pair.second;
-      (*names)[i] = strdup(pair.first.c_str());
+      (*names)[i]   = strdup(pair.first.c_str());
       i++;
     }
     return MNNC_NO_ERROR;
