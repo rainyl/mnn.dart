@@ -2112,3 +2112,11 @@ VARP where(VARP x) => VARP.fromPointer(C.mnn_expr_Where(x.ptr));
 
 VARP sort(VARP x, {int axis = -1, bool arg = false, bool descend = false}) =>
     VARP.fromPointer(C.mnn_expr_Sort(x.ptr, axis, arg, descend));
+
+VARP nms(
+  VARP boxes,
+  VARP scores,
+  int maxDetections, {
+  double iouThreshold = -1.0,
+  double scoreThreshold = -1.0,
+}) => VARP.fromPointer(C.mnn_expr_Nms(boxes.ptr, scores.ptr, maxDetections, iouThreshold, scoreThreshold));

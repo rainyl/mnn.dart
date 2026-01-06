@@ -1,3 +1,13 @@
+## 0.1.1
+
+- feat(cv): add YUV NV21 image conversion and drawing functions
+- Implement mnn_cv_buildImgVarpYuvNV21 to build VARP from YUV NV21
+- Add drawing functions including arrowedLine, circle, ellipse, line, rectangle
+- Add contour and polygon drawing functions (drawContours, fillPoly)
+- Implement image transformation functions (flip, rotate)
+- Add nms operation for non-maximum suppression
+- Add runtime manager info getters for memory and FLOPs
+
 ## 0.1.0
 
 - Note: breaking change

@@ -168,6 +168,14 @@ external VARP_t mnn_cv_buildImgVARP(
   int flags,
 );
 
+@ffi.Native<VARP_t Function(ffi.Pointer<ffi.Uint8>, ffi.Int, ffi.Int, ffi.Int)>()
+external VARP_t mnn_cv_buildImgVarpYuvNV21(
+  ffi.Pointer<ffi.Uint8> img,
+  int height,
+  int width,
+  int flags,
+);
+
 /// histograms.hpp
 @ffi.Native<VARP_t Function(VecVARP_t, VecI32, VARP_t, VecI32, VecF32, ffi.Bool)>()
 external VARP_t mnn_cv_calcHist(

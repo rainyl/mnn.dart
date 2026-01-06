@@ -50,6 +50,7 @@ MNN_C_API int mnn_cv_getVARPWidth(VARP_t var);
 MNN_C_API int mnn_cv_getVARPChannel(VARP_t var);
 MNN_C_API int mnn_cv_getVARPByte(VARP_t var);
 MNN_C_API VARP_t mnn_cv_buildImgVARP(uint8_t*img, int height, int width, int channel, int flags);
+MNN_C_API VARP_t mnn_cv_buildImgVarpYuvNV21(uint8_t*img, int height, int width, int flags);
 
 // core
 MNN_C_API bool mnn_cv_solve(VARP_t src1, VARP_t src2, int flags, VARP_t *out);

@@ -1011,6 +1011,33 @@ void main() {
       paddings.dispose();
       output.dispose();
     });
+
+    test('nms', () {
+      final boxes = mnn.VARP.fromList2D<mnn.float32>([
+        [0.0, 0.0, 10.0, 10.0],
+        [1.0, 1.0, 11.0, 11.0],
+        [20.0, 20.0, 30.0, 30.0],
+      ]);
+      final scores = mnn.VARP.fromList1D<mnn.float32>([0.9, 0.8, 0.7]);
+      const maxDetections = 10;
+      const iouThreshold = 0.5;
+      const scoreThreshold = 0.0;
+
+      final result = expr.nms(
+        boxes,
+        scores,
+        maxDetections,
+        iouThreshold: iouThreshold,
+        scoreThreshold: scoreThreshold,
+      );
+
+      final resultData = result.data?.map((e) => e.toInt()).where((e) => e != -1).toList();
+      expect(resultData, [0, 2]);
+
+      boxes.dispose();
+      scores.dispose();
+      result.dispose();
+    });
   });
 
   group('More Ops', () {
