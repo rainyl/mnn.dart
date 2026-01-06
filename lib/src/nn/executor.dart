@@ -234,8 +234,21 @@ class RuntimeManager extends NativeObject {
     C.mnn_runtime_manager_set_hint(ptr, mode.value, value);
   }
 
-  // TODO
-  // bool getInfo(Interpreter::SessionInfoCode code, void* ptr);
+  double get infoMemory {
+    final p = calloc<ffi.Float>();
+    final success = C.mnn_runtime_manager_get_info(ptr, SessionInfoCode.MEMORY.value, p.cast());
+    final memory = success ? p.value : 0.0;
+    calloc.free(p);
+    return memory;
+  }
+
+  double get infoFLOPs {
+    final p = calloc<ffi.Double>();
+    final success = C.mnn_runtime_manager_get_info(ptr, SessionInfoCode.FLOPS.value, p.cast());
+    final flops = success ? p.value : 0.0;
+    calloc.free(p);
+    return flops;
+  }
 
   static (bool success, String info) getDeviceInfo(String deviceKey, ForwardType type) {
     final cDeviceKey = deviceKey.toNativeUtf8();

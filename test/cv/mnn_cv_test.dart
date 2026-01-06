@@ -96,6 +96,18 @@ void main() {
       expect(varp.shape, [100, 100, 3]);
       varp.dispose();
     });
+
+    test('buildImgVarpYuvNV21', () {
+      const height = 1200;
+      const width = 1600;
+      final bytes = Uint8List(((height + height / 2) * width * 1).round());
+      final varp = cv.buildImgVarpYuvNV21(bytes, height, width, flags: cv.IMREAD_COLOR);
+      expect(cv.getVARPHeight(varp), equals(height));
+      expect(cv.getVARPWidth(varp), equals(width));
+      expect(cv.getVARPChannels(varp), equals(3));
+      expect(varp.shape, [height, width, 3]);
+      varp.dispose();
+    });
   });
 
   group('MNN CV Core and Calib3d', () {

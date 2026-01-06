@@ -58,6 +58,47 @@ VARP_t mnn_cv_buildImgVARP(uint8_t *img, int height, int width, int channel, int
   return new MNN::Express::VARP(res);
 }
 
+MNN_C_API VARP_t mnn_cv_buildImgVarpYuvNV21(uint8_t*src, int height, int width, int flags) {
+  auto rgb = (uint8_t*)malloc(sizeof(uint8_t) * width * height * 3);
+  auto nvStart = width * height;
+  int index = 0, rgbaIndex = 0;
+  int y, u, v;
+  int r, g, b;
+  int nvIndex = 0;
+
+  for (int i = 0; i < height; i++) {
+    for (int j = 0; j < width; j++) {
+      nvIndex = i / 2 * width + j - j % 2;
+
+      y = src[rgbaIndex];
+      u = src[nvStart + nvIndex];
+      v = src[nvStart + nvIndex + 1];
+
+      // r = y + (140 * (v - 128)) ~/ 100; // r
+      // g = y - (34 * (u - 128)) ~/ 100 - (71 * (v - 128)) ~/ 100; // g
+      // b = y + (177 * (u - 128)) ~/ 100; // b
+      r = y + (1.13983 * (v - 128)); // r
+      g = y - (0.39465 * (u - 128)) - (0.58060 * (v - 128)); // g
+      b = y + (2.03211 * (u - 128)); // b
+
+      r = r < 0 ? 0 : r > 255 ? 255 : r;
+      g = g < 0 ? 0 : g > 255 ? 255 : g;
+      b = b < 0 ? 0 : b > 255 ? 255 : b;
+
+      // index = rgbaIndex % width + (height - i - 1) * width;
+      index = rgbaIndex % width + i * width;
+      rgb[index * 3 + 0] = b;
+      rgb[index * 3 + 1] = g;
+      rgb[index * 3 + 2] = r;
+      rgbaIndex++;
+    }
+  }
+
+  auto res = mnn_cv_buildImgVARP(rgb, height, width, 3, flags);
+  free(rgb);
+  return res;
+}
+
 // core
 bool mnn_cv_solve(VARP_t src1, VARP_t src2, int flags, VARP_t *out) {
   auto v = MNN::CV::solve(*src1, *src2, flags);

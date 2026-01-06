@@ -11,6 +11,7 @@ import 'package:ffi/ffi.dart';
 import '../core/base.dart';
 import '../core/vec.dart';
 import '../expr/expr.dart';
+import '../expr/op.dart';
 import '../g/mnn.g.dart' as c;
 import 'enums.dart';
 import 'matrix.dart';
@@ -35,7 +36,17 @@ int getVARPByte(VARP varp) => c.mnn_cv_getVARPByte(varp.ptr);
 
 VARP buildImgVARP(Uint8List img, int height, int width, int channels, {int flags = IMREAD_COLOR}) {
   final pImg = calloc<ffi.Uint8>(img.length)..asTypedList(img.length).setAll(0, img);
+  // This uses `_Const` internally, which will copy data, so it's safe to free `pImg` after calling.
   final pOut = c.mnn_cv_buildImgVARP(pImg, height, width, channels, flags);
+  final rval = VARP.fromPointer(pOut);
+  calloc.free(pImg);
+  return rval;
+}
+
+VARP buildImgVarpYuvNV21(Uint8List img, int height, int width, {int flags = IMREAD_COLOR}) {
+  final pImg = calloc<ffi.Uint8>(img.length)..asTypedList(img.length).setAll(0, img);
+  // This uses `_Const` internally, which will copy data, so it's safe to free `pImg` after calling.
+  final pOut = c.mnn_cv_buildImgVarpYuvNV21(pImg, height, width, flags);
   final rval = VARP.fromPointer(pOut);
   calloc.free(pImg);
   return rval;
@@ -599,6 +610,161 @@ VARP sqrBoxFilter(
 }
 
 // draw.hpp
+void arrowedLine(
+  VARP img,
+  (double, double) pt1,
+  (double, double) pt2,
+  Scalar color, {
+  int thickness = 1,
+  int lineType = LINE_8,
+  int shift = 0,
+  double tipLength = 0.1,
+}) {
+  final cPt1 = Point.fromTuple(pt1);
+  final cPt2 = Point.fromTuple(pt2);
+  c.mnn_cv_arrowedLine(img.ptr, cPt1.ref, cPt2.ref, color.ref, thickness, lineType, shift, tipLength);
+  cPt1.dispose();
+  cPt2.dispose();
+}
+
+void circle(
+  VARP img,
+  (double, double) center,
+  int radius,
+  Scalar color, {
+  int thickness = 1,
+  int lineType = LINE_8,
+  int shift = 0,
+}) {
+  final cCenter = Point.fromTuple(center);
+  c.mnn_cv_circle(img.ptr, cCenter.ref, radius, color.ref, thickness, lineType, shift);
+  cCenter.dispose();
+}
+
+void ellipse(
+  VARP img,
+  (double, double) center,
+  (int, int) axes,
+  double angle,
+  double startAngle,
+  double endAngle,
+  Scalar color, {
+  int thickness = 1,
+  int lineType = LINE_8,
+  int shift = 0,
+}) {
+  final cCenter = Point.fromTuple(center);
+  final cAxes = Size.fromTuple(axes);
+  c.mnn_cv_ellipse(
+    img.ptr,
+    cCenter.ref,
+    cAxes.ref,
+    angle,
+    startAngle,
+    endAngle,
+    color.ref,
+    thickness,
+    lineType,
+    shift,
+  );
+  cCenter.dispose();
+  cAxes.dispose();
+}
+
+void line(
+  VARP img,
+  (double, double) pt1,
+  (double, double) pt2,
+  Scalar color, {
+  int thickness = 1,
+  int lineType = LINE_8,
+  int shift = 0,
+}) {
+  final cPt1 = Point.fromTuple(pt1);
+  final cPt2 = Point.fromTuple(pt2);
+  c.mnn_cv_line(img.ptr, cPt1.ref, cPt2.ref, color.ref, thickness, lineType, shift);
+  cPt1.dispose();
+  cPt2.dispose();
+}
+
+void rectangle(
+  VARP img,
+  (double, double) pt1,
+  (double, double) pt2,
+  Scalar color, {
+  int thickness = 1,
+  int lineType = LINE_8,
+  int shift = 0,
+}) {
+  final cPt1 = Point.fromTuple(pt1);
+  final cPt2 = Point.fromTuple(pt2);
+  c.mnn_cv_rectangle(img.ptr, cPt1.ref, cPt2.ref, color.ref, thickness, lineType, shift);
+  cPt1.dispose();
+  cPt2.dispose();
+}
+
+void drawContours(
+  VARP img,
+  List<List<Point>> contours,
+  int contourIdx,
+  Scalar color, {
+  int thickness = 1,
+  int lineType = LINE_8,
+}) {
+  final pContours = malloc<ffi.Pointer<c.mnn_cv_point_t>>(contours.length);
+  final pInnerLength = malloc<ffi.Int32>(contours.length);
+  pInnerLength.asTypedList(contours.length).setAll(0, contours.map((e) => e.length));
+  for (int i = 0; i < contours.length; i++) {
+    final pContour = malloc<c.mnn_cv_point_t>(contours[i].length);
+    for (int j = 0; j < contours[i].length; j++) {
+      pContour[j] = contours[i][j].ref;
+    }
+    pContours[i] = pContour;
+  }
+  c.mnn_cv_drawContours(
+    img.ptr,
+    pContours,
+    pInnerLength.cast(),
+    contours.length,
+    contourIdx,
+    color.ref,
+    thickness,
+    lineType,
+  );
+  for (int i = 0; i < contours.length; i++) {
+    malloc.free(pContours[i]);
+  }
+  malloc.free(pContours);
+  malloc.free(pInnerLength);
+}
+
+void fillPoly(
+  VARP img,
+  List<List<Point>> pts,
+  Scalar color, {
+  int lineType = LINE_8,
+  int shift = 0,
+  (double, double) offset = const (0, 0),
+}) {
+  final pPts = malloc<ffi.Pointer<c.mnn_cv_point_t>>(pts.length);
+  final pInnerLength = malloc<ffi.Int32>(pts.length);
+  pInnerLength.asTypedList(pts.length).setAll(0, pts.map((e) => e.length));
+  for (int i = 0; i < pts.length; i++) {
+    final pContour = malloc<c.mnn_cv_point_t>(pts[i].length);
+    for (int j = 0; j < pts[i].length; j++) {
+      pContour[j] = pts[i][j].ref;
+    }
+    pPts[i] = pContour;
+  }
+  final cOffset = Point.fromTuple(offset);
+  c.mnn_cv_fillPoly(img.ptr, pPts, pInnerLength.cast(), pts.length, color.ref, lineType, shift, cOffset.ref);
+  for (int i = 0; i < pts.length; i++) {
+    malloc.free(pPts[i]);
+  }
+  malloc.free(pPts);
+  malloc.free(pInnerLength);
+  cOffset.dispose();
+}
 
 // color.hpp
 VARP cvtColor(VARP src, int code, {int dstCn = 0}) {
@@ -618,4 +784,35 @@ VARP demosaicing(VARP src, int code, {int dstCn = 0}) {
   // final pOut = c.mnn_cv_demosaicing(src.ptr, code, dstCn);
   // final rval = VARP.fromPointer(pOut);
   // return rval;
+}
+
+VARP flip(VARP src, int flipCode) {
+  final h = getVARPHeight(src);
+  final w = getVARPWidth(src);
+  final m = Matrix.create();
+  List<double> values9 = [];
+  if (flipCode < 0) {
+    values9 = [-1.0, 0.0, w - 1.0, 0.0, -1.0, h - 1.0, 0.0, 0.0, 1.0];
+  } else if (flipCode == 0) {
+    values9 = [1.0, 0.0, 0.0, 0.0, -1.0, h - 1.0, 0.0, 0.0, 1.0];
+  } else {
+    values9 = [-1.0, 0.0, w - 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0];
+  }
+  m.set9(values9);
+  final rval = warpAffine(src, m, (w, h));
+  m.dispose();
+  return rval;
+}
+
+VARP rotate(VARP src, int mode) {
+  if (mode == ROTATE_90_CLOCKWISE) {
+    return flip(transpose(src, [1, 0, 2]), 1);
+  }
+  if (mode == ROTATE_180) {
+    return flip(src, -1);
+  }
+  if (mode == ROTATE_90_COUNTERCLOCKWISE) {
+    return flip(transpose(src, [1, 0, 2]), 0);
+  }
+  return src;
 }
