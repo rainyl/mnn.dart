@@ -385,39 +385,39 @@ external VARP_t mnn_cv_getStructuringElement(
   mnn_cv_size2i_t ksize,
 );
 
-@ffi.Native<ffi.Int Function(VARP_t)>()
+@ffi.Native<ffi.Int Function(VARP_t)>(isLeaf: true)
 external int mnn_cv_getVARPByte(
   VARP_t var$,
 );
 
-@ffi.Native<ffi.Int Function(VARP_t)>()
+@ffi.Native<ffi.Int Function(VARP_t)>(isLeaf: true)
 external int mnn_cv_getVARPChannel(
   VARP_t var$,
 );
 
-@ffi.Native<ffi.Int Function(VARP_t)>()
+@ffi.Native<ffi.Int Function(VARP_t)>(isLeaf: true)
 external int mnn_cv_getVARPHeight(
   VARP_t var$,
 );
 
-@ffi.Native<ffi.Int Function(VARP_t)>()
+@ffi.Native<ffi.Int Function(VARP_t)>(isLeaf: true)
 external int mnn_cv_getVARPWidth(
   VARP_t var$,
 );
 
 /// imgcodecs.hpp
-@ffi.Native<ffi.Bool Function(ffi.Pointer<ffi.Char>)>()
+@ffi.Native<ffi.Bool Function(ffi.Pointer<ffi.Char>)>(isLeaf: true)
 external bool mnn_cv_haveImageReader(
   ffi.Pointer<ffi.Char> filename,
 );
 
-@ffi.Native<ffi.Bool Function(ffi.Pointer<ffi.Uint8>, ffi.Size)>()
+@ffi.Native<ffi.Bool Function(ffi.Pointer<ffi.Uint8>, ffi.Size)>(isLeaf: true)
 external bool mnn_cv_haveImageReaderFromMemory(
   ffi.Pointer<ffi.Uint8> buf,
   int length,
 );
 
-@ffi.Native<ffi.Bool Function(ffi.Pointer<ffi.Char>)>()
+@ffi.Native<ffi.Bool Function(ffi.Pointer<ffi.Char>)>(isLeaf: true)
 external bool mnn_cv_haveImageWriter(
   ffi.Pointer<ffi.Char> filename,
 );
@@ -591,13 +591,14 @@ external mnn_cv_matrix_t mnn_cv_image_process_get_matrix(
   mnn_cv_image_process_t self$1,
 );
 
-@ffi.Native<ffi.Void Function(mnn_cv_image_process_t)>()
+@ffi.Native<ffi.Void Function(mnn_cv_image_process_t)>(isLeaf: true)
 external void mnn_cv_image_process_set_draw(
   mnn_cv_image_process_t self$1,
 );
 
 @ffi.Native<ffi.UnsignedInt Function(mnn_cv_image_process_t, mnn_cv_matrix_t)>(
   symbol: 'mnn_cv_image_process_set_matrix',
+  isLeaf: true,
 )
 external int _mnn_cv_image_process_set_matrix(
   mnn_cv_image_process_t self$1,
@@ -614,7 +615,7 @@ ErrorCode mnn_cv_image_process_set_matrix(
   ),
 );
 
-@ffi.Native<ffi.Void Function(mnn_cv_image_process_t, ffi.Uint8)>()
+@ffi.Native<ffi.Void Function(mnn_cv_image_process_t, ffi.Uint8)>(isLeaf: true)
 external void mnn_cv_image_process_set_padding(
   mnn_cv_image_process_t self$1,
   int value,
@@ -693,20 +694,20 @@ external void mnn_cv_matrix_dirty_matrix_type_cache(
 );
 
 /// Matrix getters
-@ffi.Native<ffi.Float Function(mnn_cv_matrix_t, ffi.Int)>()
+@ffi.Native<ffi.Float Function(mnn_cv_matrix_t, ffi.Int)>(isLeaf: true)
 external double mnn_cv_matrix_get(
   mnn_cv_matrix_t self$1,
   int index,
 );
 
-@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Pointer<ffi.Float>)>()
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Pointer<ffi.Float>)>(isLeaf: true)
 external void mnn_cv_matrix_get9(
   mnn_cv_matrix_t self$1,
   ffi.Pointer<ffi.Float> m,
 );
 
 /// Matrix type masks
-@ffi.Native<ffi.Int Function(mnn_cv_matrix_t)>()
+@ffi.Native<ffi.Int Function(mnn_cv_matrix_t)>(isLeaf: true)
 external int mnn_cv_matrix_get_type(
   mnn_cv_matrix_t self$1,
 );
@@ -717,17 +718,17 @@ external bool mnn_cv_matrix_invert(
   mnn_cv_matrix_t dst,
 );
 
-@ffi.Native<ffi.Bool Function(mnn_cv_matrix_t)>()
+@ffi.Native<ffi.Bool Function(mnn_cv_matrix_t)>(isLeaf: true)
 external bool mnn_cv_matrix_is_identity(
   mnn_cv_matrix_t self$1,
 );
 
-@ffi.Native<ffi.Bool Function(mnn_cv_matrix_t)>()
+@ffi.Native<ffi.Bool Function(mnn_cv_matrix_t)>(isLeaf: true)
 external bool mnn_cv_matrix_is_scale_translate(
   mnn_cv_matrix_t self$1,
 );
 
-@ffi.Native<ffi.Bool Function(mnn_cv_matrix_t)>()
+@ffi.Native<ffi.Bool Function(mnn_cv_matrix_t)>(isLeaf: true)
 external bool mnn_cv_matrix_is_translate(
   mnn_cv_matrix_t self$1,
 );
@@ -870,14 +871,14 @@ external void mnn_cv_matrix_reset(
 );
 
 /// Matrix setters
-@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Int, ffi.Float)>()
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Int, ffi.Float)>(isLeaf: true)
 external void mnn_cv_matrix_set(
   mnn_cv_matrix_t self$1,
   int index,
   double value,
 );
 
-@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Pointer<ffi.Float>)>()
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Pointer<ffi.Float>)>(isLeaf: true)
 external void mnn_cv_matrix_set9(
   mnn_cv_matrix_t self$1,
   ffi.Pointer<ffi.Float> m,
@@ -896,7 +897,7 @@ external void mnn_cv_matrix_set9(
     ffi.Float,
     ffi.Float,
   )
->()
+>(isLeaf: true)
 external void mnn_cv_matrix_set_all(
   mnn_cv_matrix_t self$1,
   double scaleX,
@@ -910,21 +911,21 @@ external void mnn_cv_matrix_set_all(
   double pers2,
 );
 
-@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, mnn_cv_matrix_t, mnn_cv_matrix_t)>()
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, mnn_cv_matrix_t, mnn_cv_matrix_t)>(isLeaf: true)
 external void mnn_cv_matrix_set_concat(
   mnn_cv_matrix_t self$1,
   mnn_cv_matrix_t a,
   mnn_cv_matrix_t b,
 );
 
-@ffi.Native<ffi.Void Function(mnn_cv_matrix_t)>()
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t)>(isLeaf: true)
 external void mnn_cv_matrix_set_identity(
   mnn_cv_matrix_t self$1,
 );
 
 @ffi.Native<
   ffi.Bool Function(mnn_cv_matrix_t, ffi.Pointer<mnn_cv_point_t>, ffi.Pointer<mnn_cv_point_t>, ffi.Int)
->()
+>(isLeaf: true)
 external bool mnn_cv_matrix_set_poly_to_poly(
   mnn_cv_matrix_t self$1,
   ffi.Pointer<mnn_cv_point_t> src,
@@ -932,7 +933,7 @@ external bool mnn_cv_matrix_set_poly_to_poly(
   int count,
 );
 
-@ffi.Native<ffi.Bool Function(mnn_cv_matrix_t, mnn_cv_rect_t, mnn_cv_rect_t, ffi.Int)>()
+@ffi.Native<ffi.Bool Function(mnn_cv_matrix_t, mnn_cv_rect_t, mnn_cv_rect_t, ffi.Int)>(isLeaf: true)
 external bool mnn_cv_matrix_set_rect_to_rect(
   mnn_cv_matrix_t self$1,
   mnn_cv_rect_t src,
@@ -940,7 +941,7 @@ external bool mnn_cv_matrix_set_rect_to_rect(
   int scale_to_fit,
 );
 
-@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float)>()
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float)>(isLeaf: true)
 external void mnn_cv_matrix_set_rotate(
   mnn_cv_matrix_t self$1,
   double degrees,
@@ -948,7 +949,7 @@ external void mnn_cv_matrix_set_rotate(
   double py,
 );
 
-@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>()
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>(isLeaf: true)
 external void mnn_cv_matrix_set_scale(
   mnn_cv_matrix_t self$1,
   double sx,
@@ -957,7 +958,7 @@ external void mnn_cv_matrix_set_scale(
   double py,
 );
 
-@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>()
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>(isLeaf: true)
 external void mnn_cv_matrix_set_scale_translate(
   mnn_cv_matrix_t self$1,
   double sx,
@@ -966,7 +967,7 @@ external void mnn_cv_matrix_set_scale_translate(
   double ty,
 );
 
-@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>()
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>(isLeaf: true)
 external void mnn_cv_matrix_set_sincos(
   mnn_cv_matrix_t self$1,
   double sin,
@@ -975,7 +976,7 @@ external void mnn_cv_matrix_set_sincos(
   double py,
 );
 
-@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>()
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float, ffi.Float, ffi.Float)>(isLeaf: true)
 external void mnn_cv_matrix_set_skew(
   mnn_cv_matrix_t self$1,
   double kx,
@@ -984,7 +985,7 @@ external void mnn_cv_matrix_set_skew(
   double py,
 );
 
-@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float)>()
+@ffi.Native<ffi.Void Function(mnn_cv_matrix_t, ffi.Float, ffi.Float)>(isLeaf: true)
 external void mnn_cv_matrix_set_translate(
   mnn_cv_matrix_t self$1,
   double dx,
@@ -1091,7 +1092,9 @@ external VARP_t mnn_cv_sqrBoxFilter(
 );
 
 /// types.h
-@ffi.Native<ffi.Void Function(VARP_t, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)>()
+@ffi.Native<ffi.Void Function(VARP_t, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>, ffi.Pointer<ffi.Int>)>(
+  isLeaf: true,
+)
 external void mnn_cv_static_getVARPSize(
   VARP_t var$,
   ffi.Pointer<ffi.Int> height,
@@ -1166,13 +1169,18 @@ external void mnn_executor_gc(
   int flag,
 );
 
-@ffi.Native<ffi.Int Function(mnn_executor_t, ffi.Int)>()
+@ffi.Native<ffi.Int Function(mnn_executor_t, ffi.Int)>(isLeaf: true)
 external int mnn_executor_get_current_runtime_status(
   mnn_executor_t self$1,
   int status_enum,
 );
 
-@ffi.Native<ffi.Uint32 Function(mnn_executor_t)>()
+@ffi.Native<ffi.Bool Function(mnn_executor_t)>(isLeaf: true)
+external bool mnn_executor_get_lazyEval(
+  mnn_executor_t self$1,
+);
+
+@ffi.Native<ffi.Uint32 Function(mnn_executor_t)>(isLeaf: true)
 external int mnn_executor_get_lazy_mode(
   mnn_executor_t self$1,
 );
@@ -1196,7 +1204,7 @@ external void mnn_executor_scope_destroy(
 @ffi.Native<mnn_executor_t Function()>()
 external mnn_executor_t mnn_executor_scope_static_current_executor();
 
-@ffi.Native<ffi.Void Function(mnn_executor_t, ffi.Int, mnn_backend_config_t, ffi.Int)>()
+@ffi.Native<ffi.Void Function(mnn_executor_t, ffi.Int, mnn_backend_config_t, ffi.Int)>(isLeaf: true)
 external void mnn_executor_set_global_executor_config(
   mnn_executor_t self$1,
   int type,
@@ -1204,7 +1212,13 @@ external void mnn_executor_set_global_executor_config(
   int num_thread,
 );
 
-@ffi.Native<ffi.Void Function(mnn_executor_t, ffi.Uint32)>()
+@ffi.Native<ffi.Void Function(mnn_executor_t, ffi.Bool)>(isLeaf: true)
+external void mnn_executor_set_lazyEval(
+  mnn_executor_t self$1,
+  bool enable,
+);
+
+@ffi.Native<ffi.Void Function(mnn_executor_t, ffi.Uint32)>(isLeaf: true)
 external void mnn_executor_set_lazy_mode(
   mnn_executor_t self$1,
   int mode,
@@ -3586,22 +3600,22 @@ ErrorCode mnn_module_forward(
   ),
 );
 
-@ffi.Native<mnn_module_info_t Function(mnn_module_t)>()
+@ffi.Native<mnn_module_info_t Function(mnn_module_t)>(isLeaf: true)
 external mnn_module_info_t mnn_module_get_info(
   mnn_module_t self$1,
 );
 
-@ffi.Native<ffi.Bool Function(mnn_module_t)>()
+@ffi.Native<ffi.Bool Function(mnn_module_t)>(isLeaf: true)
 external bool mnn_module_get_is_training(
   mnn_module_t self$1,
 );
 
-@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_t)>()
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_t)>(isLeaf: true)
 external ffi.Pointer<ffi.Char> mnn_module_get_name(
   mnn_module_t self$1,
 );
 
-@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_t)>()
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_t)>(isLeaf: true)
 external ffi.Pointer<ffi.Char> mnn_module_get_type(
   mnn_module_t self$1,
 );
@@ -3615,29 +3629,31 @@ external void mnn_module_info_destroy(
   mnn_module_info_t self$1,
 );
 
-@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_info_t)>()
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_info_t)>(isLeaf: true)
 external ffi.Pointer<ffi.Char> mnn_module_info_get_bizCode(
   mnn_module_info_t self$1,
 );
 
-@ffi.Native<ffi.Int Function(mnn_module_info_t)>()
+@ffi.Native<ffi.Int Function(mnn_module_info_t)>(isLeaf: true)
 external int mnn_module_info_get_default_format(
   mnn_module_info_t self$1,
 );
 
-@ffi.Native<ffi.Size Function(mnn_module_info_t, ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>>)>()
+@ffi.Native<ffi.Size Function(mnn_module_info_t, ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>>)>(
+  isLeaf: true,
+)
 external int mnn_module_info_get_input_names(
   mnn_module_info_t self$1,
   ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>> input_names,
 );
 
-@ffi.Native<ffi.Pointer<mnn_expr_Variable_Info> Function(mnn_module_info_t, ffi.Int)>()
+@ffi.Native<ffi.Pointer<mnn_expr_Variable_Info> Function(mnn_module_info_t, ffi.Int)>(isLeaf: true)
 external ffi.Pointer<mnn_expr_Variable_Info> mnn_module_info_get_inputs_at(
   mnn_module_info_t self$1,
   int index,
 );
 
-@ffi.Native<ffi.Size Function(mnn_module_info_t)>()
+@ffi.Native<ffi.Size Function(mnn_module_info_t)>(isLeaf: true)
 external int mnn_module_info_get_inputs_length(
   mnn_module_info_t self$1,
 );
@@ -3648,25 +3664,27 @@ external int mnn_module_info_get_inputs_length(
     ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>>,
     ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>>,
   )
->()
+>(isLeaf: true)
 external int mnn_module_info_get_metadata(
   mnn_module_info_t self$1,
   ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>> keys,
   ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>> values,
 );
 
-@ffi.Native<ffi.Size Function(mnn_module_info_t, ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>>)>()
+@ffi.Native<ffi.Size Function(mnn_module_info_t, ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>>)>(
+  isLeaf: true,
+)
 external int mnn_module_info_get_output_names(
   mnn_module_info_t self$1,
   ffi.Pointer<ffi.Pointer<ffi.Pointer<ffi.Char>>> output_names,
 );
 
-@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_info_t)>()
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_info_t)>(isLeaf: true)
 external ffi.Pointer<ffi.Char> mnn_module_info_get_uuid(
   mnn_module_info_t self$1,
 );
 
-@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_info_t)>()
+@ffi.Native<ffi.Pointer<ffi.Char> Function(mnn_module_info_t)>(isLeaf: true)
 external ffi.Pointer<ffi.Char> mnn_module_info_get_version(
   mnn_module_info_t self$1,
 );
@@ -3747,26 +3765,26 @@ ErrorCode mnn_module_on_forward(
   ),
 );
 
-@ffi.Native<ffi.Void Function(mnn_module_t, ffi.Bool)>()
+@ffi.Native<ffi.Void Function(mnn_module_t, ffi.Bool)>(isLeaf: true)
 external void mnn_module_set_is_training(
   mnn_module_t self$1,
   bool is_training,
 );
 
-@ffi.Native<ffi.Void Function(mnn_module_t, ffi.Pointer<ffi.Char>)>()
+@ffi.Native<ffi.Void Function(mnn_module_t, ffi.Pointer<ffi.Char>)>(isLeaf: true)
 external void mnn_module_set_name(
   mnn_module_t self$1,
   ffi.Pointer<ffi.Char> name,
 );
 
-@ffi.Native<ffi.Void Function(mnn_module_t, VARP_t, ffi.Int)>()
+@ffi.Native<ffi.Void Function(mnn_module_t, VARP_t, ffi.Int)>(isLeaf: true)
 external void mnn_module_set_parameter(
   mnn_module_t self$1,
   VARP_t parameter,
   int index,
 );
 
-@ffi.Native<ffi.Void Function(mnn_module_t, ffi.Pointer<ffi.Char>)>()
+@ffi.Native<ffi.Void Function(mnn_module_t, ffi.Pointer<ffi.Char>)>(isLeaf: true)
 external void mnn_module_set_type(
   mnn_module_t self$1,
   ffi.Pointer<ffi.Char> type,
@@ -3803,33 +3821,33 @@ external bool mnn_runtime_manager_is_backend_support(
   int backend,
 );
 
-@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Pointer<ffi.Char>)>()
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Pointer<ffi.Char>)>(isLeaf: true)
 external void mnn_runtime_manager_set_cache(
   mnn_runtime_manager_t self$1,
   ffi.Pointer<ffi.Char> cache_path,
 );
 
-@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Pointer<ffi.Char>)>()
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Pointer<ffi.Char>)>(isLeaf: true)
 external void mnn_runtime_manager_set_external_file(
   mnn_runtime_manager_t self$1,
   ffi.Pointer<ffi.Char> path,
 );
 
-@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Pointer<ffi.Char>, ffi.Int)>()
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Pointer<ffi.Char>, ffi.Int)>(isLeaf: true)
 external void mnn_runtime_manager_set_external_path(
   mnn_runtime_manager_t self$1,
   ffi.Pointer<ffi.Char> external_path,
   int type,
 );
 
-@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Int, ffi.Int)>()
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Int, ffi.Int)>(isLeaf: true)
 external void mnn_runtime_manager_set_hint(
   mnn_runtime_manager_t self$1,
   int mode,
   int value,
 );
 
-@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Int)>()
+@ffi.Native<ffi.Void Function(mnn_runtime_manager_t, ffi.Int)>(isLeaf: true)
 external void mnn_runtime_manager_set_mode(
   mnn_runtime_manager_t self$1,
   int mode,
@@ -7445,7 +7463,8 @@ final class mnn_module_config_t extends ffi.Struct {
   @ffi.Bool()
   external bool dynamic;
 
-  /// for static mode, if the shape is mutable, set true, otherwise set false to avoid resizeSession freqencily
+  /// for static mode, if the shape is mutable, set true, otherwise set false to avoid resizeSession
+  /// freqencily
   @ffi.Bool()
   external bool shape_mutable;
 

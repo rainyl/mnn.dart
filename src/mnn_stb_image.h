@@ -5,42 +5,42 @@
 #define STB_IMAGE_EXPORTS
 
 #ifdef STB_IMAGE_STATIC
-    #define STBIDEF static
-    #define STBIWDEF static
+  #define STBIDEF static
+  #define STBIWDEF static
 #else
-    #ifdef _WIN32
-        #ifdef STB_IMAGE_EXPORTS
-            #ifdef __cplusplus
-                #define STBIDEF extern "C" __declspec(dllexport)
-                #define STBIWDEF extern "C" __declspec(dllexport)
-                #define STBIRDEF extern "C" __declspec(dllexport)
-            #else
-                #define STBIDEF extern __declspec(dllexport)
-                #define STBIWDEF extern __declspec(dllexport)
-                #define STBIRDEF extern __declspec(dllexport)
-            #endif
-        #else
-            #ifdef __cplusplus
-                #define STBIDEF extern "C" __declspec(dllimport)
-                #define STBIWDEF extern "C" __declspec(dllimport)
-                #define STBIRDEF extern "C" __declspec(dllimport)
-            #else
-                #define STBIDEF extern __declspec(dllimport)
-                #define STBIWDEF extern __declspec(dllimport)
-                #define STBIRDEF extern __declspec(dllimport)
-            #endif
-        #endif
+  #ifdef _WIN32
+    #ifdef STB_IMAGE_EXPORTS
+      #ifdef __cplusplus
+        #define STBIDEF extern "C" __declspec(dllexport)
+        #define STBIWDEF extern "C" __declspec(dllexport)
+        #define STBIRDEF extern "C" __declspec(dllexport)
+      #else
+        #define STBIDEF extern __declspec(dllexport)
+        #define STBIWDEF extern __declspec(dllexport)
+        #define STBIRDEF extern __declspec(dllexport)
+      #endif
     #else
-        #ifdef __cplusplus
-            #define STBIDEF extern "C"
-            #define STBIWDEF extern "C"
-            #define STBIRDEF extern "C"
-        #else
-            #define STBIDEF extern
-            #define STBIWDEF extern
-            #define STBIRDEF extern
-        #endif
+      #ifdef __cplusplus
+        #define STBIDEF extern "C" __declspec(dllimport)
+        #define STBIWDEF extern "C" __declspec(dllimport)
+        #define STBIRDEF extern "C" __declspec(dllimport)
+      #else
+        #define STBIDEF extern __declspec(dllimport)
+        #define STBIWDEF extern __declspec(dllimport)
+        #define STBIRDEF extern __declspec(dllimport)
+      #endif
     #endif
+  #else
+    #ifdef __cplusplus
+      #define STBIDEF extern "C"
+      #define STBIWDEF extern "C"
+      #define STBIRDEF extern "C"
+    #else
+      #define STBIDEF extern
+      #define STBIWDEF extern
+      #define STBIRDEF extern
+    #endif
+  #endif
 #endif
 
 #ifdef __cplusplus

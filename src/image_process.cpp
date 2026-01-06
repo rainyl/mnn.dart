@@ -7,7 +7,10 @@
 mnn_cv_matrix_t mnn_cv_matrix_create() { return new MNN::CV::Matrix(); }
 
 void mnn_cv_matrix_destroy(mnn_cv_matrix_t self) {
-  if (self != nullptr) { delete (MNN::CV::Matrix *)self; self = nullptr; }
+  if (self != nullptr) {
+    delete (MNN::CV::Matrix *)self;
+    self = nullptr;
+  }
 }
 
 void mnn_cv_matrix_set(mnn_cv_matrix_t self, int index, float value) {
@@ -15,15 +18,15 @@ void mnn_cv_matrix_set(mnn_cv_matrix_t self, int index, float value) {
 }
 void mnn_cv_matrix_set_all(
     mnn_cv_matrix_t self,
-    float scaleX,
-    float skewX,
-    float transX,
-    float skewY,
-    float scaleY,
-    float transY,
-    float pers0,
-    float pers1,
-    float pers2
+    float           scaleX,
+    float           skewX,
+    float           transX,
+    float           skewY,
+    float           scaleY,
+    float           transY,
+    float           pers0,
+    float           pers1,
+    float           pers2
 ) {
   ((MNN::CV::Matrix *)self)
       ->setAll(scaleX, skewX, transX, skewY, scaleY, transY, pers0, pers1, pers2);
@@ -141,13 +144,13 @@ void mnn_cv_matrix_map_xy(
 }
 
 bool mnn_cv_matrix_map_rect(mnn_cv_matrix_t self, mnn_cv_rect_t *dst, mnn_cv_rect_t *src) {
-  auto _src = MNN::CV::Rect::MakeLTRB(src->left, src->top, src->right, src->bottom);
+  auto          _src = MNN::CV::Rect::MakeLTRB(src->left, src->top, src->right, src->bottom);
   MNN::CV::Rect _dst;
-  auto rval = ((MNN::CV::Matrix *)self)->mapRect(&_dst, _src);
-  dst->left = _dst.left();
-  dst->top = _dst.top();
-  dst->right = _dst.right();
-  dst->bottom = _dst.bottom();
+  auto          rval = ((MNN::CV::Matrix *)self)->mapRect(&_dst, _src);
+  dst->left          = _dst.left();
+  dst->top           = _dst.top();
+  dst->right         = _dst.right();
+  dst->bottom        = _dst.bottom();
   return rval;
 }
 
@@ -155,11 +158,11 @@ void mnn_cv_matrix_map_rect_scale_translate(
     mnn_cv_matrix_t self, mnn_cv_rect_t *dst, mnn_cv_rect_t *src
 ) {
   MNN::CV::Rect _dst;
-  auto _src = MNN::CV::Rect::MakeLTRB(src->left, src->top, src->right, src->bottom);
+  auto          _src = MNN::CV::Rect::MakeLTRB(src->left, src->top, src->right, src->bottom);
   ((MNN::CV::Matrix *)self)->mapRectScaleTranslate(&_dst, _src);
-  dst->left = _dst.left();
-  dst->top = _dst.top();
-  dst->right = _dst.right();
+  dst->left   = _dst.left();
+  dst->top    = _dst.top();
+  dst->right  = _dst.right();
   dst->bottom = _dst.bottom();
 }
 
@@ -225,21 +228,21 @@ mnn_cv_matrix_set_scale_translate(mnn_cv_matrix_t self, float sx, float sy, floa
 
 ////////////////// ImageProcess //////////////////////////
 mnn_cv_image_process_t mnn_cv_image_process_create(
-    const int sourceFormat,
-    const int destFormat,
+    const int    sourceFormat,
+    const int    destFormat,
     const float *means,
-    const int mean_count,
+    const int    mean_count,
     const float *normals,
-    const int normal_count,
-    const int filterType,
-    const int wrap,
+    const int    normal_count,
+    const int    filterType,
+    const int    wrap,
     mnn_tensor_t dst_tensor
 ) {
   MNN::CV::ImageProcess::Config config;
   config.sourceFormat = static_cast<MNN::CV::ImageFormat>(sourceFormat);
-  config.destFormat = static_cast<MNN::CV::ImageFormat>(destFormat);
-  config.filterType = static_cast<MNN::CV::Filter>(filterType);
-  config.wrap = static_cast<MNN::CV::Wrap>(wrap);
+  config.destFormat   = static_cast<MNN::CV::ImageFormat>(destFormat);
+  config.filterType   = static_cast<MNN::CV::Filter>(filterType);
+  config.wrap         = static_cast<MNN::CV::Wrap>(wrap);
 
   if (means != nullptr && mean_count > 0) {
     for (int i = 0; i < mean_count && i < 4; i++) { config.mean[i] = means[i]; }
@@ -258,12 +261,12 @@ mnn_cv_image_process_t mnn_cv_image_process_create_with_config(
 ) {
   MNN::CV::ImageProcess::Config cppConfig;
   cppConfig.sourceFormat = static_cast<MNN::CV::ImageFormat>(config.sourceFormat);
-  cppConfig.destFormat = static_cast<MNN::CV::ImageFormat>(config.destFormat);
-  cppConfig.filterType = static_cast<MNN::CV::Filter>(config.filterType);
-  cppConfig.wrap = static_cast<MNN::CV::Wrap>(config.wrap);
+  cppConfig.destFormat   = static_cast<MNN::CV::ImageFormat>(config.destFormat);
+  cppConfig.filterType   = static_cast<MNN::CV::Filter>(config.filterType);
+  cppConfig.wrap         = static_cast<MNN::CV::Wrap>(config.wrap);
 
   for (int i = 0; i < 4; i++) {
-    cppConfig.mean[i] = config.mean[i];
+    cppConfig.mean[i]   = config.mean[i];
     cppConfig.normal[i] = config.normal[i];
   }
 
@@ -300,19 +303,19 @@ mnn_error_code_t mnn_cv_image_process_convert(
 
 mnn_error_code_t mnn_cv_image_process_convert_1(
     mnn_cv_image_process_t self,
-    const uint8_t *src,
-    int iw,
-    int ih,
-    int stride,
-    void *dst,
-    int ow,
-    int oh,
-    int outputBpp,
-    int outputStride,
-    halide_type_c_t type
+    const uint8_t         *src,
+    int                    iw,
+    int                    ih,
+    int                    stride,
+    void                  *dst,
+    int                    ow,
+    int                    oh,
+    int                    outputBpp,
+    int                    outputStride,
+    halide_type_c_t        type
 ) {
   const auto _type = halide_type_t((halide_type_code_t)type.code, type.bits, type.lanes);
-  auto code =
+  auto       code =
       self->get()->convert(src, iw, ih, stride, dst, ow, oh, outputBpp, outputStride, _type);
   return static_cast<mnn_error_code_t>(code);
 }
@@ -321,7 +324,7 @@ mnn_tensor_t mnn_cv_image_process_create_image_tensor(
     halide_type_c_t type, int width, int height, int bytes_per_channel, void *p
 ) {
   const auto _type = halide_type_t((halide_type_code_t)type.code, type.bits, type.lanes);
-  auto tensor =
+  auto       tensor =
       MNN::CV::ImageProcess::createImageTensor(_type, width, height, bytes_per_channel, p);
   return (mnn_tensor_t)tensor;
 }
@@ -334,13 +337,13 @@ void mnn_cv_image_process_set_draw(mnn_cv_image_process_t self) { self->get()->s
 
 void mnn_cv_image_process_draw(
     mnn_cv_image_process_t self,
-    uint8_t *img,
-    int w,
-    int h,
-    int c,
-    const int *regions,
-    int num,
-    const uint8_t *color
+    uint8_t               *img,
+    int                    w,
+    int                    h,
+    int                    c,
+    const int             *regions,
+    int                    num,
+    const uint8_t         *color
 ) {
   self->get()->draw(img, w, h, c, regions, num, color);
 }

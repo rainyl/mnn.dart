@@ -9,7 +9,7 @@
 #include "mnn_type.h"
 
 #ifdef __cplusplus
-#include "MNN/expr/Expr.hpp"
+  #include "MNN/expr/Expr.hpp"
 extern "C" {
 #endif
 // Math Op
@@ -133,12 +133,12 @@ MNN_C_API VARP_t mnn_expr_Mod(VARP_t x, VARP_t y);
 MNN_C_API VARP_t mnn_expr_Cast(VARP_t x, halide_type_c_t dtype);
 MNN_C_API VARP_t mnn_expr_MatMul(VARP_t a, VARP_t b, bool tranposeA, bool tranposeB);
 MNN_C_API VARP_t mnn_expr_Normalize(
-    VARP_t x,
-    int32_t acrossSpatial,
-    int32_t channelShared,
-    float eps,
+    VARP_t       x,
+    int32_t      acrossSpatial,
+    int32_t      channelShared,
+    float        eps,
     const float *scale,
-    size_t scaleLength
+    size_t       scaleLength
 );
 MNN_C_API VARP_t mnn_expr_ArgMax(VARP_t input, int axis);
 MNN_C_API VARP_t mnn_expr_ArgMin(VARP_t input, int axis);
@@ -161,10 +161,10 @@ MNN_C_API VARP_t mnn_expr_LinSpace(VARP_t start, VARP_t stop, VARP_t num);
 MNN_C_API VARP_t mnn_expr_RandomUniform(
     VARP_t shape, halide_type_c_t dtype, float low, float high, int seed0, int seed1
 );
-MNN_C_API VARP_t mnn_expr_CumSum(VARP_t x, int axis, bool exclusive, bool reverse);
-MNN_C_API VARP_t mnn_expr_CumProd(VARP_t x, int axis);
+MNN_C_API VARP_t    mnn_expr_CumSum(VARP_t x, int axis, bool exclusive, bool reverse);
+MNN_C_API VARP_t    mnn_expr_CumProd(VARP_t x, int axis);
 MNN_C_API VecVARP_t mnn_expr_Svd(VARP_t x);
-MNN_C_API VARP_t mnn_expr_Histogram(VARP_t x, int bin, int min, int max, int channel);
+MNN_C_API VARP_t    mnn_expr_Histogram(VARP_t x, int bin, int min, int max, int channel);
 
 // Neural Network Ops
 MNN_C_API VARP_t
@@ -177,50 +177,50 @@ mnn_expr_Const(void *value, const int *shape, size_t shapeLength, int format, ha
 // MNN_PUBLIC VARP _InnerProduct(std::vector<float>&& weight, std::vector<float>&& bias, VARP x,
 // INTS outputShape);
 MNN_C_API VARP_t mnn_expr_Conv(
-    VARP_t weight,
-    VARP_t bias,
-    VARP_t x,
-    int pad,
+    VARP_t     weight,
+    VARP_t     bias,
+    VARP_t     x,
+    int        pad,
     const int *stride,
-    size_t strideLength,
+    size_t     strideLength,
     const int *dilate,
-    size_t dilateLength,
-    int group,
+    size_t     dilateLength,
+    int        group,
     const int *pads,
-    size_t padsLength
+    size_t     padsLength
 );
 MNN_C_API VARP_t mnn_expr_Deconv(
-    VARP_t weight,
-    VARP_t bias,
-    VARP_t x,
-    int pad,
+    VARP_t     weight,
+    VARP_t     bias,
+    VARP_t     x,
+    int        pad,
     const int *stride,
-    size_t strideLength,
+    size_t     strideLength,
     const int *dilate,
-    size_t dilateLength,
-    int group,
+    size_t     dilateLength,
+    int        group,
     const int *pads,
-    size_t padsLength
+    size_t     padsLength
 );
 MNN_C_API VARP_t mnn_expr_MaxPool(
-    VARP_t x,
+    VARP_t     x,
     const int *kernel,
-    size_t kernelLength,
+    size_t     kernelLength,
     const int *stride,
-    size_t strideLength,
-    int pad,
+    size_t     strideLength,
+    int        pad,
     const int *pads,
-    size_t padsLength
+    size_t     padsLength
 );
 MNN_C_API VARP_t mnn_expr_AvePool(
-    VARP_t x,
+    VARP_t     x,
     const int *kernel,
-    size_t kernelLength,
+    size_t     kernelLength,
     const int *stride,
-    size_t strideLength,
-    int pad,
+    size_t     strideLength,
+    int        pad,
     const int *pads,
-    size_t padsLength
+    size_t     padsLength
 );
 MNN_C_API VARP_t
 mnn_expr_Reshape(VARP_t x, const int *shape, size_t shapeLength, int original_format);
@@ -239,10 +239,10 @@ MNN_C_API VecVARP_t
 mnn_expr_Split(VARP_t value, const int *size_splits, size_t size_splitsLength, int axis);
 MNN_C_API VARP_t mnn_expr_Slice(VARP_t x, VARP_t starts, VARP_t sizes);
 MNN_C_API VARP_t mnn_expr_StridedSlice(
-    VARP_t input,
-    VARP_t begin,
-    VARP_t end,
-    VARP_t strided,
+    VARP_t  input,
+    VARP_t  begin,
+    VARP_t  end,
+    VARP_t  strided,
     int32_t beginMask,
     int32_t endMask,
     int32_t ellipsisMask,
@@ -250,11 +250,11 @@ MNN_C_API VARP_t mnn_expr_StridedSlice(
     int32_t shrinkAxisMask
 );
 MNN_C_API VARP_t mnn_expr_StridedSliceWrite(
-    VARP_t input,
-    VARP_t begin,
-    VARP_t end,
-    VARP_t strided,
-    VARP_t write,
+    VARP_t  input,
+    VARP_t  begin,
+    VARP_t  end,
+    VARP_t  strided,
+    VARP_t  write,
     int32_t beginMask,
     int32_t endMask,
     int32_t ellipsisMask,
@@ -284,8 +284,8 @@ MNN_C_API VARP_t mnn_expr_CropAndResize(
     VARP_t boxes,
     VARP_t box_ind,
     VARP_t crop_size,
-    int method,
-    float extrapolation_value
+    int    method,
+    float  extrapolation_value
 );
 MNN_C_API VARP_t mnn_expr_Fill(VARP_t dims, VARP_t value);
 MNN_C_API VARP_t mnn_expr_Tile(VARP_t input, VARP_t multiples);
@@ -304,14 +304,14 @@ MNN_C_API VARP_t mnn_expr_Threshold(VARP_t features, float alpha);
 MNN_C_API VARP_t mnn_expr_MatrixBandPart(VARP_t input, VARP_t num_lower, VARP_t num_upper);
 MNN_C_API VecVARP_t
 mnn_expr_Moments(VARP_t x, const int *axis, size_t axisLength, VARP_t shift, bool keepDims);
-MNN_C_API VARP_t mnn_expr_SetDiff1D(VARP_t x, VARP_t y);
-MNN_C_API VARP_t mnn_expr_SpaceToDepth(VARP_t input, int block_size);
-MNN_C_API VARP_t mnn_expr_SpaceToBatchND(VARP_t input, VARP_t block_shape, VARP_t paddings);
-MNN_C_API VARP_t mnn_expr_ZerosLike(VARP_t input);
+MNN_C_API VARP_t    mnn_expr_SetDiff1D(VARP_t x, VARP_t y);
+MNN_C_API VARP_t    mnn_expr_SpaceToDepth(VARP_t input, int block_size);
+MNN_C_API VARP_t    mnn_expr_SpaceToBatchND(VARP_t input, VARP_t block_shape, VARP_t paddings);
+MNN_C_API VARP_t    mnn_expr_ZerosLike(VARP_t input);
 MNN_C_API VecVARP_t mnn_expr_Unstack(VARP_t value, int axis);
-MNN_C_API VARP_t mnn_expr_Rank(VARP_t input);
-MNN_C_API VARP_t mnn_expr_Range(VARP_t start, VARP_t limit, VARP_t delta);
-MNN_C_API VARP_t mnn_expr_DepthToSpace(VARP_t input, int block_size);
+MNN_C_API VARP_t    mnn_expr_Rank(VARP_t input);
+MNN_C_API VARP_t    mnn_expr_Range(VARP_t start, VARP_t limit, VARP_t delta);
+MNN_C_API VARP_t    mnn_expr_DepthToSpace(VARP_t input, int block_size);
 // MNN_PUBLIC VARP _PriorBox(VARP feature, VARP image,
 //                             std::vector<float> min_size, std::vector<float> max_size,
 //                             std::vector<float>aspect_ratio, bool flip, bool clip,
@@ -331,12 +331,12 @@ MNN_C_API VARP_t mnn_expr_Permute(VARP_t input, const int *dims, size_t dimsLeng
 //                           bool use_regular_nms, std::vector<float> centersize_encoding);
 MNN_C_API VARP_t mnn_expr_Interp(
     VecVARP_t xs,
-    float widthScale,
-    float heightScale,
-    int outputWidth,
-    int outputHeight,
-    int resizeType,
-    bool alignCorners
+    float     widthScale,
+    float     heightScale,
+    int       outputWidth,
+    int       outputHeight,
+    int       resizeType,
+    bool      alignCorners
 );
 MNN_C_API VARP_t mnn_expr_ZeroGrad(VARP_t x);
 
@@ -370,7 +370,7 @@ mnn_expr_FloatToInt8_1(VARP_t x, VARP_t scale, int8_t minValue, int8_t maxValue,
 MNN_C_API VARP_t mnn_expr_Int8ToFloat(VARP_t x, VARP_t scale);
 MNN_C_API VARP_t mnn_expr_Int8ToFloat_1(VARP_t x, VARP_t scale, int8_t zeroPoint);
 
-MNN_C_API VARP_t mnn_expr_Select(VARP_t select, VARP_t input0, VARP_t input1);
+MNN_C_API VARP_t    mnn_expr_Select(VARP_t select, VARP_t input0, VARP_t input1);
 MNN_C_API VecVARP_t mnn_expr_TopKV2(VARP_t input0, VARP_t input1);
 // MNN_PUBLIC VARP _ImageProcess(VARP input, CV::ImageProcess::Config config, CV::Matrix matrix, int
 // oh, int ow, int oc, int dtype, uint8_t padVal = 0); mnn_expr_VARP_t
@@ -382,40 +382,40 @@ MNN_C_API VARP_t mnn_expr_Raster(
     VecVARP_t vars, const int *regions, size_t regionsLength, const int *shape, size_t shapeLength
 );
 MNN_C_API VARP_t mnn_expr_RasterRaw(
-    VecVARP_t vars,
-    const int *region,
-    size_t regionLength,
-    const int *shape,
-    size_t shapeLength,
+    VecVARP_t            vars,
+    const int           *region,
+    size_t               regionLength,
+    const int           *shape,
+    size_t               shapeLength,
     struct halide_type_t dataType,
-    int format
+    int                  format
 );
 
 MNN_C_API VARP_t mnn_expr_Nms(
     VARP_t boxes, VARP_t scores, int maxDetections, float iouThreshold, float scoreThreshold
 );
 MNN_C_API VARP_t mnn_expr_Im2Col(
-    VARP_t x,
+    VARP_t     x,
     const int *kernelSize,
-    size_t kernelSizeLength,
+    size_t     kernelSizeLength,
     const int *dilate,
-    size_t dilateLength,
+    size_t     dilateLength,
     const int *pads,
-    size_t padsLength,
+    size_t     padsLength,
     const int *stride,
-    size_t strideLength
+    size_t     strideLength
 );
 MNN_C_API VARP_t mnn_expr_Col2Im(
-    VARP_t x,
-    VARP_t outputShape,
+    VARP_t     x,
+    VARP_t     outputShape,
     const int *kernelSize,
-    size_t kernelSizeLength,
+    size_t     kernelSizeLength,
     const int *dilate,
-    size_t dilateLength,
+    size_t     dilateLength,
     const int *pads,
-    size_t padsLength,
+    size_t     padsLength,
     const int *stride,
-    size_t strideLength
+    size_t     strideLength
 );
 
 #ifdef __cplusplus

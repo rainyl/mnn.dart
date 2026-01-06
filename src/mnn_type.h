@@ -6,9 +6,9 @@
 #include <stdint.h>
 
 #ifdef _WIN32
-#define MNN_C_API __declspec(dllexport)
+  #define MNN_C_API __declspec(dllexport)
 #else
-#define MNN_C_API
+  #define MNN_C_API
 #endif
 
 #ifdef __cplusplus
@@ -16,8 +16,8 @@ extern "C" {
 #endif
 
 typedef struct {
-  uint8_t code;
-  uint8_t bits;
+  uint8_t  code;
+  uint8_t  bits;
   uint16_t lanes;
 } halide_type_c_t;
 
@@ -65,7 +65,7 @@ typedef struct {
   // mnn_precision_mode precision;
   int precision;
   union {
-    void *sharedContext;
+    void  *sharedContext;
     size_t flags;
   };
 } mnn_backend_config_t;

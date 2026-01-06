@@ -5,61 +5,68 @@
 #ifndef STDVEC_H
 #define STDVEC_H
 
+#include "mnn_type.h"
 #include <math.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "mnn_type.h"
 
 #ifdef __cplusplus
-#include <vector>
+  #include <vector>
 extern "C" {
 
-#define CVD_STD_VEC_FUNC_IMPL(TYPE, ELEM)                                                          \
-  CVD_STD_VEC_FUNC_IMPL_COMMON(TYPE);                                                              \
-  TYPE std_##TYPE##_new(size_t length) { return new std::vector<ELEM>(length); }                   \
-  TYPE std_##TYPE##_new_1(size_t length, ELEM val) { return new std::vector<ELEM>(length, val); }  \
-  TYPE std_##TYPE##_new_2(size_t length, ELEM *val_ptr) {                                          \
-    return new std::vector<ELEM>(val_ptr, val_ptr + length);                                       \
-  }                                                                                                \
-  void std_##TYPE##_push_back(TYPE self, ELEM val) { self->push_back(val); }                       \
-  ELEM std_##TYPE##_get(TYPE self, size_t index) { return self->at(index); }                       \
-  void std_##TYPE##_set(TYPE self, size_t index, ELEM val) { self->at(index) = val; }              \
-  ELEM *std_##TYPE##_data(TYPE self) { return self->data(); }                                      \
-  TYPE std_##TYPE##_clone(TYPE self) { return new std::vector<ELEM>(*(self)); }
+  #define CVD_STD_VEC_FUNC_IMPL(TYPE, ELEM)                                                        \
+    CVD_STD_VEC_FUNC_IMPL_COMMON(TYPE);                                                            \
+    TYPE std_##TYPE##_new(size_t length) { return new std::vector<ELEM>(length); }                 \
+    TYPE std_##TYPE##_new_1(size_t length, ELEM val) {                                             \
+      return new std::vector<ELEM>(length, val);                                                   \
+    }                                                                                              \
+    TYPE std_##TYPE##_new_2(size_t length, ELEM *val_ptr) {                                        \
+      return new std::vector<ELEM>(val_ptr, val_ptr + length);                                     \
+    }                                                                                              \
+    void  std_##TYPE##_push_back(TYPE self, ELEM val) { self->push_back(val); }                    \
+    ELEM  std_##TYPE##_get(TYPE self, size_t index) { return self->at(index); }                    \
+    void  std_##TYPE##_set(TYPE self, size_t index, ELEM val) { self->at(index) = val; }           \
+    ELEM *std_##TYPE##_data(TYPE self) { return self->data(); }                                    \
+    TYPE  std_##TYPE##_clone(TYPE self) { return new std::vector<ELEM>(*(self)); }
 
-#define CVD_STD_VEC_FUNC_IMPL_COMMON(TYPE)                                                         \
-  void std_##TYPE##_free(TYPE self) { if (self){delete self; self = nullptr;} }                                               \
-  size_t std_##TYPE##_length(TYPE self) { return self->size(); }                                   \
-  void std_##TYPE##_resize(TYPE self, size_t new_len) { self->resize(new_len); }                   \
-  void std_##TYPE##_reserve(TYPE self, size_t new_len) { self->reserve(new_len); }                 \
-  void std_##TYPE##_clear(TYPE self) { self->clear(); }                                            \
-  void std_##TYPE##_shrink_to_fit(TYPE self) { self->shrink_to_fit(); }                            \
-  void std_##TYPE##_extend(TYPE self, TYPE other) {                                                \
-    self->insert(self->end(), other->begin(), other->end());                                       \
-  }
+  #define CVD_STD_VEC_FUNC_IMPL_COMMON(TYPE)                                                       \
+    void std_##TYPE##_free(TYPE self) {                                                            \
+      if (self) {                                                                                  \
+        delete self;                                                                               \
+        self = nullptr;                                                                            \
+      }                                                                                            \
+    }                                                                                              \
+    size_t std_##TYPE##_length(TYPE self) { return self->size(); }                                 \
+    void   std_##TYPE##_resize(TYPE self, size_t new_len) { self->resize(new_len); }               \
+    void   std_##TYPE##_reserve(TYPE self, size_t new_len) { self->reserve(new_len); }             \
+    void   std_##TYPE##_clear(TYPE self) { self->clear(); }                                        \
+    void   std_##TYPE##_shrink_to_fit(TYPE self) { self->shrink_to_fit(); }                        \
+    void   std_##TYPE##_extend(TYPE self, TYPE other) {                                            \
+      self->insert(self->end(), other->begin(), other->end());                                   \
+    }
 #endif
 
 #define CVD_STD_VEC_FUNC_DEF(TYPE, ELEM)                                                           \
-  MNN_C_API TYPE std_##TYPE##_new(size_t length);                                                            \
-  MNN_C_API TYPE std_##TYPE##_new_1(size_t length, ELEM val);                                                \
-  MNN_C_API TYPE std_##TYPE##_new_2(size_t length, ELEM *val_ptr);                                           \
-  MNN_C_API void std_##TYPE##_free(TYPE self);                                                               \
-  MNN_C_API void std_##TYPE##_push_back(TYPE self, ELEM val);                                                \
-  MNN_C_API ELEM std_##TYPE##_get(TYPE self, size_t index);                                                  \
-  MNN_C_API void std_##TYPE##_set(TYPE self, size_t index, ELEM val);                                        \
-  MNN_C_API size_t std_##TYPE##_length(TYPE self);                                                           \
-  MNN_C_API ELEM *std_##TYPE##_data(TYPE self);                                                              \
-  MNN_C_API void std_##TYPE##_resize(TYPE self, size_t new_len);                                             \
-  MNN_C_API void std_##TYPE##_reserve(TYPE self, size_t new_len);                                            \
-  MNN_C_API void std_##TYPE##_clear(TYPE self);                                                              \
-  MNN_C_API void std_##TYPE##_shrink_to_fit(TYPE self);                                                      \
-  MNN_C_API void std_##TYPE##_extend(TYPE self, TYPE other);                                                 \
-  MNN_C_API TYPE std_##TYPE##_clone(TYPE self);
+  MNN_C_API TYPE   std_##TYPE##_new(size_t length);                                                \
+  MNN_C_API TYPE   std_##TYPE##_new_1(size_t length, ELEM val);                                    \
+  MNN_C_API TYPE   std_##TYPE##_new_2(size_t length, ELEM *val_ptr);                               \
+  MNN_C_API void   std_##TYPE##_free(TYPE self);                                                   \
+  MNN_C_API void   std_##TYPE##_push_back(TYPE self, ELEM val);                                    \
+  MNN_C_API ELEM   std_##TYPE##_get(TYPE self, size_t index);                                      \
+  MNN_C_API void   std_##TYPE##_set(TYPE self, size_t index, ELEM val);                            \
+  MNN_C_API size_t std_##TYPE##_length(TYPE self);                                                 \
+  MNN_C_API ELEM  *std_##TYPE##_data(TYPE self);                                                   \
+  MNN_C_API void   std_##TYPE##_resize(TYPE self, size_t new_len);                                 \
+  MNN_C_API void   std_##TYPE##_reserve(TYPE self, size_t new_len);                                \
+  MNN_C_API void   std_##TYPE##_clear(TYPE self);                                                  \
+  MNN_C_API void   std_##TYPE##_shrink_to_fit(TYPE self);                                          \
+  MNN_C_API void   std_##TYPE##_extend(TYPE self, TYPE other);                                     \
+  MNN_C_API TYPE   std_##TYPE##_clone(TYPE self);
 
 #ifdef __cplusplus
-#define CVD_TYPEDEF_STD_VEC(TYPE, NAME) typedef std::vector<TYPE> *NAME
+  #define CVD_TYPEDEF_STD_VEC(TYPE, NAME) typedef std::vector<TYPE> *NAME
 #else
-#define CVD_TYPEDEF_STD_VEC(TYPE, NAME) typedef void *NAME
+  #define CVD_TYPEDEF_STD_VEC(TYPE, NAME) typedef void *NAME
 #endif
 
 typedef unsigned char uchar;

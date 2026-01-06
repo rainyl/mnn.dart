@@ -115,6 +115,9 @@ class Executor extends NativeObject {
   LazyMode get lazyMode => LazyMode.fromValue(C.mnn_executor_get_lazy_mode(ptr));
   set lazyMode(LazyMode value) => C.mnn_executor_set_lazy_mode(ptr, value.value);
 
+  bool get lazyEval => C.mnn_executor_get_lazyEval(ptr);
+  set lazyEval(bool value) => C.mnn_executor_set_lazyEval(ptr, value);
+
   void setGlobalExecutorConfig(ForwardType type, BackendConfig config, int numThreads) {
     C.mnn_executor_set_global_executor_config(ptr, type.value, config.ref, numThreads);
   }
@@ -161,8 +164,7 @@ class ExecutorScope extends NativeObject {
     }
   }
 
-  factory ExecutorScope.current() =>
-      ExecutorScope.fromPointer(C.mnn_executor_scope_static_current_executor());
+  static Executor current() => Executor.fromPointer(C.mnn_executor_scope_static_current_executor());
 
   @override
   ffi.NativeFinalizer get finalizer => _finalizer;

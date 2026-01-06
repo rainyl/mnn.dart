@@ -112,4 +112,35 @@ void main() {
       }
     });
   });
+
+  test('ExecutorScope.current', () {
+    final executor = nn.ExecutorScope.current();
+    expect(executor.isEmpty, false);
+  });
+
+  test('Executor', () {
+    final executor = nn.Executor.create(mnn.ForwardType.MNN_FORWARD_CPU, mnn.BackendConfig.create(), 4);
+    expect(executor.isEmpty, false);
+
+    executor.lazyMode = nn.LazyMode.LAZY_CONTENT;
+    expect(executor.lazyMode, nn.LazyMode.LAZY_CONTENT);
+    executor.lazyEval = true;
+    expect(executor.lazyEval, true);
+
+    executor.gc(nn.GCFlag.PART);
+
+    final info = nn.Executor.getRuntimeInfo();
+    expect(info.isEmpty, false);
+
+    final status = executor.getCurrentRuntimeStatus(nn.RuntimeStatus.STATUS_COUNT);
+    expect(status, isA<int>());
+
+    executor.dispose();
+  });
+
+  test('Executor.global', () {
+    final executor = nn.Executor.global;
+    expect(executor.isEmpty, false);
+    executor.dispose();
+  });
 }

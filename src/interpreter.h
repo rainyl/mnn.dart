@@ -18,7 +18,7 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
-#include "MNN/Interpreter.hpp"
+  #include "MNN/Interpreter.hpp"
 extern "C" {
 #endif
 
@@ -27,12 +27,13 @@ extern "C" {
  */
 #ifdef __cplusplus
 typedef MNN::Interpreter *mnn_interpreter_t;
-typedef MNN::Session *mnn_session_t;
+typedef MNN::Session     *mnn_session_t;
+typedef MNN::RuntimeInfo *mnn_runtime_info_t;
 #else
 typedef void *mnn_interpreter_t;
 typedef void *mnn_session_t;
-#endif
 typedef void *mnn_runtime_info_t;
+#endif
 typedef void *mnn_backend_t;
 
 /** Forward type enum */
@@ -47,7 +48,7 @@ typedef struct mnn_schedule_config_t {
     int num_thread;
     int mode;
   };
-  mnn_forward_type_t backupType;
+  mnn_forward_type_t    backupType;
   mnn_backend_config_t *backend_config;
 } mnn_schedule_config_t;
 
@@ -111,10 +112,10 @@ MNN_C_API mnn_session_t mnn_interpreter_create_session(
  * @return Session instance or NULL if failed
  */
 MNN_C_API mnn_session_t mnn_interpreter_create_session_with_runtime(
-    mnn_interpreter_t self,
+    mnn_interpreter_t            self,
     const mnn_schedule_config_t *config,
-    mnn_runtime_info_t runtime,
-    mnn_callback_0 callback
+    mnn_runtime_info_t           runtime,
+    mnn_callback_0               callback
 );
 
 /**
@@ -283,10 +284,10 @@ MNN_C_API mnn_error_code_t mnn_interpreter_get_session_info(
  */
 MNN_C_API mnn_error_code_t mnn_interpreter_get_session_output_all(
     mnn_interpreter_t self,
-    mnn_session_t session,
-    mnn_tensor_t **tensors,
-    const char ***names,
-    size_t *count
+    mnn_session_t     session,
+    mnn_tensor_t    **tensors,
+    const char     ***names,
+    size_t           *count
 );
 
 /**
@@ -299,10 +300,10 @@ MNN_C_API mnn_error_code_t mnn_interpreter_get_session_output_all(
  */
 MNN_C_API mnn_error_code_t mnn_interpreter_get_session_input_all(
     mnn_interpreter_t self,
-    mnn_session_t session,
-    mnn_tensor_t **tensors,
-    const char ***names,
-    size_t *count
+    mnn_session_t     session,
+    mnn_tensor_t    **tensors,
+    const char     ***names,
+    size_t           *count
 );
 
 /**

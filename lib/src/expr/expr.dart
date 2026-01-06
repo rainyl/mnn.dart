@@ -704,11 +704,17 @@ class VARP extends NativeObject {
         'VARP.value can only be called on scalar or size-1 tensors. Current size: ${info.size}',
       );
     }
-    final data = this.data;
-    if (data == null || data.isEmpty) {
-      throw MNNException("$this is empty");
-    }
-    return data[0];
+    return switch (dtype) {
+      HalideType.u8 => readMap<ffi.Uint8>()[0],
+      HalideType.i8 => readMap<ffi.Int8>()[0],
+      HalideType.u32 => readMap<ffi.Uint32>()[0],
+      HalideType.i32 => readMap<ffi.Int32>()[0],
+      HalideType.f32 => readMap<ffi.Float>()[0],
+      HalideType.i64 => readMap<ffi.Int64>()[0],
+      HalideType.u64 => readMap<ffi.Uint64>()[0],
+      HalideType.f64 => readMap<ffi.Double>()[0],
+      _ => throw MNNException("Unsupported dtype $dtype"),
+    };
   }
 
   num item() => value;

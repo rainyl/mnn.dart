@@ -19,7 +19,7 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
-#include "MNN/Tensor.hpp"
+  #include "MNN/Tensor.hpp"
 extern "C" {
 #endif
 
@@ -37,13 +37,13 @@ typedef enum { MNN_HANDLE_NONE = 0, MNN_HANDLE_STRING = 1 } mnn_handle_data_type
 typedef enum { MNN_MAP_TENSOR_WRITE = 0, MNN_MAP_TENSOR_READ = 1 } mnn_map_type_t;
 
 typedef enum {
-  MNN_T_D_TYPE_F32_F64 = 0,
-  MNN_T_D_TYPE_BF16 = 1,
+  MNN_T_D_TYPE_F32_F64           = 0,
+  MNN_T_D_TYPE_BF16              = 1,
   MNN_T_D_TYPE_QI32_I32_BOOL_I64 = 2,
-  MNN_T_D_TYPE_QI8_I8 = 3,
-  MNN_T_D_TYPE_QU8_U8 = 4,
-  MNN_T_D_TYPE_QU16_U16 = 5,
-  MNN_T_D_TYPE_QI16_I16 = 6,
+  MNN_T_D_TYPE_QI8_I8            = 3,
+  MNN_T_D_TYPE_QU8_U8            = 4,
+  MNN_T_D_TYPE_QU16_U16          = 5,
+  MNN_T_D_TYPE_QI16_I16          = 6,
 } mnn_tensor_dtype;
 
 /**
@@ -86,10 +86,10 @@ MNN_C_API mnn_tensor_t mnn_tensor_create_device(
  * @return Tensor instance or NULL if failed
  */
 MNN_C_API mnn_tensor_t mnn_tensor_create_with_data(
-    const int *shape,
-    int shape_size,
-    halide_type_c_t type,
-    void *data,
+    const int           *shape,
+    int                  shape_size,
+    halide_type_c_t      type,
+    void                *data,
     mnn_dimension_type_t dim_type
 );
 

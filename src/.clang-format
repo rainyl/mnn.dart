@@ -3,8 +3,8 @@ Language: Cpp
 # WebKit Visual Studio GNU LLVM Google Mozilla Microsoft Chromium
 BasedOnStyle: LLVM
 AlignAfterOpenBracket: BlockIndent
-AlignConsecutiveAssignments: false
-AlignConsecutiveDeclarations: false
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
 AlignEscapedNewlines: Right
 AlignOperands: true
 AlignTrailingComments: true
@@ -20,6 +20,7 @@ BreakBeforeBraces: Attach
 ColumnLimit: 100
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 ConstructorInitializerIndentWidth: 2
+IndentPPDirectives: BeforeHash
 IndentWidth: 2
 PointerAlignment: Right
 Standard: c++11
