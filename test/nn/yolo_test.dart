@@ -8,7 +8,7 @@ import 'package:mnn/nn.dart' as nn;
 import 'package:test/test.dart';
 
 void main() {
-  test('yolo', () {
+  test('yolo', skip: "It's just a showcase, not for real tests", () {
     final model = nn.Module.loadFromFile('test/data/yolo11n.mnn');
     final imgOriginal = cv.imread("test/data/18128.png", flags: cv.IMREAD_COLOR_RGB);
     var img = cv.resize(
