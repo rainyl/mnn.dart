@@ -8,11 +8,11 @@
  * License: Apache License 2.0
  */
 
-#include "interpreter.h"
+#include "mnn_c/interpreter.h"
 #include "MNN/Interpreter.hpp"
 #include "MNN/MNNForwardType.h"
-#include "error_code.h"
-#include "tensor.h"
+#include "mnn_c/error_code.h"
+#include "mnn_c/tensor.h"
 #include <cstddef>
 #include <cstring>
 #include <string.h>

@@ -11,7 +11,7 @@
 #ifndef MNN_AUTOTIME_H
 #define MNN_AUTOTIME_H
 
-#include "mnn_type.h"
+#include "mnn_c/base.h"
 #include <stdint.h>
 
 #ifdef __cplusplus

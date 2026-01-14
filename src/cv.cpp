@@ -2,11 +2,11 @@
 // Created by rainy on 2026/1/1.
 //
 
-#include "cv.h"
-
+#include "mnn_c/cv.h"
+#include "cv/cv.hpp"
+#include "mnn_c/mnn_stb_image.h"
 #include <set>
 
-#include "mnn_stb_image.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -77,9 +77,9 @@ MNN_C_API VARP_t mnn_cv_buildImgVarpYuvNV21(uint8_t *src, int height, int width,
       // r = y + (140 * (v - 128)) ~/ 100; // r
       // g = y - (34 * (u - 128)) ~/ 100 - (71 * (v - 128)) ~/ 100; // g
       // b = y + (177 * (u - 128)) ~/ 100; // b
-      r = y + (1.13983 * (v - 128));                         // r
-      g = y - (0.39465 * (u - 128)) - (0.58060 * (v - 128)); // g
-      b = y + (2.03211 * (u - 128));                         // b
+      r = static_cast<int>(y + (1.13983 * (v - 128)));                         // r
+      g = static_cast<int>(y - (0.39465 * (u - 128)) - (0.58060 * (v - 128))); // g
+      b = static_cast<int>(y + (2.03211 * (u - 128)));                         // b
 
       r = r < 0 ? 0 : r > 255 ? 255 : r;
       g = g < 0 ? 0 : g > 255 ? 255 : g;
@@ -131,7 +131,7 @@ bool mnn_cv_haveImageReader(char *filename) {
 }
 bool mnn_cv_haveImageReaderFromMemory(uint8_t *buf, size_t length) {
   int width, height, channel;
-  return stbi_info_from_memory(buf, length, &width, &height, &channel);
+  return stbi_info_from_memory(buf, static_cast<int>(length), &width, &height, &channel);
 }
 bool mnn_cv_haveImageWriter(char *filename) {
   static const std::set<std::string> supportImages{
@@ -144,7 +144,7 @@ bool mnn_cv_haveImageWriter(char *filename) {
 }
 VARP_t mnn_cv_imdecode(uint8_t *buf, size_t length, int flags) {
   int  width, height, channel;
-  auto img = stbi_load_from_memory(buf, length, &width, &height, &channel, 3);
+  auto img = stbi_load_from_memory(buf, static_cast<int>(length), &width, &height, &channel, 3);
   if (nullptr == img) {
     MNN_ERROR("Can't decode\n");
     return nullptr;

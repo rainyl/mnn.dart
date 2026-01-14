@@ -8,7 +8,7 @@
  * License: Apache License 2.0
  */
 
-#include "autotime.h"
+#include "mnn_c/autotime.h"
 #include "MNN/AutoTime.hpp"
 
 extern "C" {

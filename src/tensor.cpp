@@ -8,11 +8,10 @@
  * License: Apache License 2.0
  */
 
-#include "tensor.h"
+#include "mnn_c/tensor.h"
 #include "MNN/HalideRuntime.h"
 #include "MNN/Tensor.hpp"
-#include "error_code.h"
-#include "mnn_type.h"
+#include "mnn_c/error_code.h"
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>

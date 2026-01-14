@@ -50,6 +50,7 @@ Future<void> _builder(BuildInput input, BuildOutputBuilder output) async {
     buildLocal: buildLocal,
     targets: ['install'],
     defines: {
+      'CMAKE_EXPORT_COMPILE_COMMANDS': 'ON',
       'CMAKE_INSTALL_PREFIX': input.outputDirectory.resolve('install').toFilePath(),
       'MNN_BUILD_BENCHMARK': 'OFF',
       'MNN_BUILD_TEST': 'OFF',

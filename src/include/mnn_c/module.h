@@ -4,10 +4,10 @@
 
 #ifndef MNN_C_API_MODULE_H
 #define MNN_C_API_MODULE_H
-#pragma warning(disable : 4996)
 
-#include "expr.h"
-#include "interpreter.h"
+#include "mnn_c/base.h"
+#include "mnn_c/expr.h"
+#include "mnn_c/interpreter.h"
 
 #ifdef __cplusplus
   #include "MNN/expr/Executor.hpp"

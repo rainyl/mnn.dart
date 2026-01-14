@@ -11,9 +11,9 @@
 #ifndef MNN_INTERPRETER_H
 #define MNN_INTERPRETER_H
 
-#include "error_code.h"
-#include "mnn_type.h"
-#include "tensor.h"
+#include "mnn_c/base.h"
+#include "mnn_c/error_code.h"
+#include "mnn_c/tensor.h"
 #include <stddef.h>
 #include <stdint.h>
 

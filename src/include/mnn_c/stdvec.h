@@ -5,7 +5,7 @@
 #ifndef STDVEC_H
 #define STDVEC_H
 
-#include "mnn_type.h"
+#include "mnn_c/base.h"
 #include <math.h>
 #include <stddef.h>
 #include <stdint.h>

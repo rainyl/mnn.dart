@@ -1,10 +1,9 @@
 #ifndef MNN_EXPR_H
 #define MNN_EXPR_H
 
-#include "base.h"
-#include "mnn_type.h"
-#include "stdvec.h"
-#include "tensor.h"
+#include "mnn_c/base.h"
+#include "mnn_c/stdvec.h"
+#include "mnn_c/tensor.h"
 #include <stddef.h>
 
 #ifdef __cplusplus

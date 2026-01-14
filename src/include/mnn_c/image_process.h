@@ -10,16 +10,14 @@
 #ifndef MNN_IMAGE_PROCESS_H
 #define MNN_IMAGE_PROCESS_H
 
-#include "error_code.h"
-#include "mnn_type.h"
-#include "tensor.h"
+#include "mnn_c/base.h"
+#include "mnn_c/error_code.h"
+#include "mnn_c/tensor.h"
 #include <stdint.h>
 
 #ifdef __cplusplus
-  #include "MNN/HalideRuntime.h"
   #include "MNN/ImageProcess.hpp"
   #include "MNN/Matrix.h"
-  #include "MNN/Rect.h"
   #include <memory>
 extern "C" {
 #endif

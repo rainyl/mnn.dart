@@ -79,7 +79,6 @@ if (ANDROID)
     if (MNN_VULKAN)
       set(MNNC_LINK_LIBS ${MNNC_LINK_LIBS} MNN_Vulkan)
     endif(MNN_VULKAN)
-
 elseif (APPLE AND IOS)
     # https://github.com/opencv/opencv/blob/450e741f8d53ff12b4e194c7762adaefb952555a/platforms/ios/build_framework.py#L386
     set(MNNC_LINK_LIBS ${MNNC_LINK_LIBS}
@@ -121,13 +120,12 @@ set(SOURCES
     "mnn_stb_image.cpp"
     "expr_op.cpp"
     "module.cpp"
-    "module.h"
     "cv.cpp"
-    "cv.h"
 )
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${MNN_SOURCE_DIR}/include
     ${MNN_SOURCE_DIR}/tools/cv/include
 )

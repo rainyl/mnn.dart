@@ -16,6 +16,7 @@ export 'src/core/runtime_info.dart';
 export 'src/core/schedule.dart';
 export 'src/core/session.dart';
 export 'src/core/tensor.dart';
+export 'src/core/vec.dart';
 export 'src/expr/expr.dart';
 export 'src/expr/formatter.dart';
 export 'src/expr/utils.dart';

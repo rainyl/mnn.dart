@@ -2,7 +2,7 @@
 // Created by rainy on 2024/12/16.
 //
 
-#include "stdvec.h"
+#include "mnn_c/stdvec.h"
 
 #include <cstddef>
 #include <iostream>

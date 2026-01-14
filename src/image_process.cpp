@@ -1,7 +1,7 @@
-#include "image_process.h"
+#include "mnn_c/image_process.h"
 #include "MNN/ImageProcess.hpp"
 #include "MNN/Matrix.h"
-#include "error_code.h"
+#include "mnn_c/error_code.h"
 #include <memory>
 
 mnn_cv_matrix_t mnn_cv_matrix_create() { return new MNN::CV::Matrix(); }

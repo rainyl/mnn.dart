@@ -1,7 +1,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
-#include "mnn_stb_image.h"
+#include "mnn_c/mnn_stb_image.h"
 
 #ifdef __cplusplus
 extern "C" {

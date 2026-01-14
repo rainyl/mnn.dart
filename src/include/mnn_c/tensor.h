@@ -11,9 +11,8 @@
 #ifndef MNN_TENSOR_H
 #define MNN_TENSOR_H
 
-#include "MNN/HalideRuntime.h"
-#include "error_code.h"
-#include "mnn_type.h"
+#include "mnn_c/base.h"
+#include "mnn_c/error_code.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>

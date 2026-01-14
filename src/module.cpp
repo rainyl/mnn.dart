@@ -3,7 +3,7 @@
 // Created by rainy on 2026/1/1.
 //
 
-#include "module.h"
+#include "mnn_c/module.h"
 #include <cstring>
 #include <string>
 #include <vector>

@@ -5,11 +5,10 @@
 #ifndef MNN_EXPR_OP_H
 #define MNN_EXPR_OP_H
 
-#include "expr.h"
-#include "mnn_type.h"
+#include "mnn_c/base.h"
+#include "mnn_c/expr.h"
 
 #ifdef __cplusplus
-  #include "MNN/expr/Expr.hpp"
 extern "C" {
 #endif
 // Math Op

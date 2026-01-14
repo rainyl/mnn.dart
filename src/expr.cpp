@@ -3,13 +3,11 @@
 // Created by rainy on 2025/9/10.
 //
 
-#include "expr.h"
-
+#include "mnn_c/expr.h"
 #include "MNN/expr/Expr.hpp"
-#include "base.h"
+#include "mnn_c/base.h"
 #include <cstdlib>
 #include <cstring>
-#include <iostream>
 
 VecVARP_t mnn_expr_VecVARP_create(size_t length, VARP_t value) {
   if (value) return new std::vector<MNN::Express::VARP>(length, *value);

@@ -4,13 +4,11 @@
 
 #ifndef MNN_C_API_CV_H
 #define MNN_C_API_CV_H
-#include "expr.h"
-#include "image_process.h"
-#include "stdvec.h"
+#include "mnn_c/expr.h"
+#include "mnn_c/image_process.h"
+#include "mnn_c/stdvec.h"
 
 #ifdef __cplusplus
-  #include "MNN/expr/Expr.hpp"
-  #include "cv/cv.hpp"
 extern "C" {
 #endif
 

@@ -7102,21 +7102,6 @@ final class halide_buffer_c_t extends ffi.Struct {
   external ffi.Pointer<ffi.Void> padding;
 }
 
-enum halide_buffer_flags {
-  halide_buffer_flag_host_dirty(1),
-  halide_buffer_flag_device_dirty(2)
-  ;
-
-  final int value;
-  const halide_buffer_flags(this.value);
-
-  static halide_buffer_flags fromValue(int value) => switch (value) {
-    1 => halide_buffer_flag_host_dirty,
-    2 => halide_buffer_flag_device_dirty,
-    _ => throw ArgumentError('Unknown value for halide_buffer_flags: $value'),
-  };
-}
-
 /// The raw representation of an image passed around by generated
 /// Halide code. It includes some stuff to track whether the image is
 /// not actually in main memory, but instead on a device (like a

@@ -1,9 +1,18 @@
-#ifndef MNN_FORWARD_TYPE_H
-#define MNN_FORWARD_TYPE_H
+//
+// Created by rainy on 2025/9/15.
+//
+
+#ifndef MNN_C_API_BASE_H
+#define MNN_C_API_BASE_H
+#pragma warning(disable : 4996)
 
 #include "MNN/HalideRuntime.h"
 #include <stddef.h>
 #include <stdint.h>
+
+#if WIN32
+  #include <Windows.h>
+#endif
 
 #ifdef _WIN32
   #define MNN_C_API __declspec(dllexport)
@@ -74,4 +83,4 @@ typedef struct {
 }
 #endif
 
-#endif // MNN_FORWARD_TYPE_H
+#endif // MNN_C_API_BASE_H

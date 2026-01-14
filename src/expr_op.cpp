@@ -2,7 +2,7 @@
 // Created by rainy on 2025/9/11.
 //
 
-#include "expr_op.h"
+#include "mnn_c/expr_op.h"
 #include "MNN/expr/MathOp.hpp"
 #include "MNN/expr/NeuralNetWorkOp.hpp"
 
