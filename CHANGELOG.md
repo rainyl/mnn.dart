@@ -1,3 +1,8 @@
+## 0.1.3
+
+- bump MNN to 3.5.0
+- bump native_toolchain_cmake to 0.2.5
+
 ## 0.1.2
 
 - support get and set `lazyEval` property of `Executor`
